@@ -17,3 +17,65 @@
     'Segoe UI',
     sans-serif;
 }
+
+@layer base {
+  /* 헤딩  */
+  h1 {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+  }
+  h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+  }
+  h3 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+  }
+  h4 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+  }
+  h5 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+  /* 본문 */
+}
+@theme {
+  /* Primary Colors */
+  --color-primary-50: #fefce8;
+  --color-primary-100: #fef9c3;
+  --color-primary-200: #fef08a;
+  --color-primary-300: #fde047;
+  --color-primary-400: #facc15;
+  --color-primary-500: #eab308;
+  --color-primary-600: #ca8a04;
+  --color-primary-700: #a16207;
+  --color-primary-800: #854d0e;
+  --color-primary-900: #713f12;
+
+  /* Gray Colors */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Success Colors */
+  --color-success-100: #dcfce7;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-800: #166534;
+
+  /* Error/Danger Colors */
+  --color-danger-100: #fca5a5;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-800: #991b1b;
+}
