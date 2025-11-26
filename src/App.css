@@ -50,91 +50,6 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  /* 헤딩  */
-  h1 {
-    font-size: var(--text-4xl);
-    font-weight: 700;
-  }
-  h2 {
-    font-size: var(--text-3xl);
-    font-weight: 700;
-  }
-  h3 {
-    font-size: var(--text-2xl);
-    font-weight: 700;
-  }
-  h4 {
-    font-size: var(--text-xl);
-    font-weight: 600;
-  }
-  h5 {
-    font-size: var(--text-lg);
-    font-weight: 600;
-  }
-}
-@theme {
-  /* Primary Colors */
-  --color-primary-50: #fefce8;
-  --color-primary-100: #fef9c3;
-  --color-primary-200: #fef08a;
-  --color-primary-300: #fde047;
-  --color-primary-400: #facc15;
-  --color-primary-500: #eab308;
-  --color-primary-600: #ca8a04;
-  --color-primary-700: #a16207;
-  --color-primary-800: #854d0e;
-  --color-primary-900: #713f12;
-
-  /* Gray Colors */
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1f2937;
-  --color-gray-900: #111827;
-
-  /* Success Colors */
-  --color-success-100: #dcfce7;
-  --color-success-500: #22c55e;
-  --color-success-600: #16a34a;
-  --color-success-800: #166534;
-
-  /* Error/Danger Colors */
-  --color-danger-100: #fca5a5;
-  --color-danger-500: #ef4444;
-  --color-danger-600: #dc2626;
-  --color-danger-800: #991b1b;
-
-  /* Accent Colors (background/text) */
-  --color-accent-blue-bg: #dbeafe;
-  --color-accent-blue-text: #2563eb;
-  --color-accent-green-bg: #dcfce7;
-  --color-accent-green-text: #16a34a;
-  --color-accent-red-bg: #fee2e2;
-  --color-accent-red-text: #dc2626;
-  --color-accent-purple-bg: #f3e8ff;
-  --color-accent-purple-text: #9333ea;
-  --color-accent-orange-bg: #ffedd5;
-  --color-accent-orange-text: #ea580c;
-  --color-accent-indigo-bg: #e0e7ff;
-  --color-accent-indigo-text: #4f46e5;
-  --color-accent-pink-bg: #fce7f3;
-  --color-accent-pink-text: #db2777;
-  --color-accent-teal-bg: #ccfbf1;
-  --color-accent-teal-text: #0d9488;
-}
-
 .flex-center {
   display: flex;
   justify-content: center;
@@ -196,6 +111,68 @@
   background-color: var(--color-accent-teal-bg);
   color: var(--color-accent-teal-text);
 }
+
+/* 버튼 커스텀 클래스 색상
+지원내역의 파란색 버튼임
+ */
+.btn-active-blue {
+  background-color: var(--color-blue-500);
+  color: white;
+}
+.btn-active-blue:hover {
+  background-color: var(--color-blue-600);
+}
+.btn-active-blue:active {
+  background-color: var(--color-blue-700);
+}
+
+.btn-active-red:hover {
+  background-color: var(--color-danger-500);
+  border: none;
+  color: white;
+}
+.btn-active-red:active {
+  background-color: var(--color-danger-600);
+}
+
+.btn-active-yellow:hover {
+  background-color: var(--color-primary-500);
+  border: none;
+  color: white;
+}
+.btn-active-yellow:active {
+  background-color: var(--color-primary-600);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  /* 헤딩  */
+  h1 {
+    font-size: var(--text-4xl);
+    font-weight: 700;
+  }
+  h2 {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+  }
+  h3 {
+    font-size: var(--text-2xl);
+    font-weight: 700;
+  }
+  h4 {
+    font-size: var(--text-xl);
+    font-weight: 600;
+  }
+  h5 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+}
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -233,17 +210,58 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
-@layer components {
-  /* 버튼 커스텀 클래스 색상
-  지원내역의 파란색 버튼임
-   */
-  .btn-active-blue {
-    @apply bg-blue-500! text-white! hover:bg-blue-600! active:bg-blue-700!;
-  }
-  .btn-active-red {
-    @apply hover:bg-danger-500! active:bg-danger-600! hover:border-none! hover:text-white!;
-  }
-  .btn-active-yellow {
-    @apply hover:bg-primary-500! active:bg-primary-600! hover:border-none! hover:text-white!;
-  }
+@theme {
+  /* Primary Colors */
+  --color-primary-50: #fefce8;
+  --color-primary-100: #fef9c3;
+  --color-primary-200: #fef08a;
+  --color-primary-300: #fde047;
+  --color-primary-400: #facc15;
+  --color-primary-500: #eab308;
+  --color-primary-600: #ca8a04;
+  --color-primary-700: #a16207;
+  --color-primary-800: #854d0e;
+  --color-primary-900: #713f12;
+
+  /* Gray Colors */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  /* Success Colors */
+  --color-success-100: #dcfce7;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  --color-success-800: #166534;
+
+  /* Error/Danger Colors */
+  --color-danger-100: #fca5a5;
+  --color-danger-500: #ef4444;
+  --color-danger-600: #dc2626;
+  --color-danger-800: #991b1b;
+
+  /* Accent Colors (background/text) */
+  --color-accent-blue-bg: #dbeafe;
+  --color-accent-blue-text: #2563eb;
+  --color-accent-green-bg: #dcfce7;
+  --color-accent-green-text: #16a34a;
+  --color-accent-red-bg: #fee2e2;
+  --color-accent-red-text: #dc2626;
+  --color-accent-purple-bg: #f3e8ff;
+  --color-accent-purple-text: #9333ea;
+  --color-accent-orange-bg: #ffedd5;
+  --color-accent-orange-text: #ea580c;
+  --color-accent-indigo-bg: #e0e7ff;
+  --color-accent-indigo-text: #4f46e5;
+  --color-accent-pink-bg: #fce7f3;
+  --color-accent-pink-text: #db2777;
+  --color-accent-teal-bg: #ccfbf1;
+  --color-accent-teal-text: #0d9488;
 }
