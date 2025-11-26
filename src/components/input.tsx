@@ -1,0 +1,69 @@
+import React from 'react'
+
+interface InputProps {
+  id?: string
+  label?: string
+  value?: string
+  placeholder?: string
+  type?: string
+  disabled?: boolean
+  error?: string
+  helperText?: string
+  prefix?: React.ReactNode
+  suffix?: React.ReactNode
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export function Input({
+  id,
+  label,
+  value,
+  placeholder,
+  type = 'text',
+  disabled = false,
+  error,
+  helperText,
+  prefix,
+  suffix,
+  onChange,
+}: InputProps) {
+  const inputId =
+    id ||
+    (typeof crypto !== 'undefined' && crypto.randomUUID
+      ? `input-${crypto.randomUUID()}`
+      : `input-${Math.random().toString(36).slice(2, 11)}`) //id 미지정 시 자동으로 id 생성
+
+  return (
+    <div className="flex w-full flex-col gap-1">
+      {label && (
+        <label htmlFor={inputId} className="text-sm font-medium text-gray-700">
+          {label}
+        </label>
+      )}
+
+      <div
+        className={`flex w-full items-center gap-2 rounded-md border bg-white px-4 py-2 transition-colors placeholder:text-gray-400 ${disabled ? 'cursor-not-allowed bg-gray-100 opacity-60' : ''} ${error ? 'border-red-500' : 'border-gray-300'} ${!error && !disabled ? 'focus-within:border-gray-400' : ''}`} //상태 우선순위: disabled -> error -> focus
+      >
+        {prefix && <span className="text-gray-500">{prefix}</span>}
+
+        <input
+          id={inputId}
+          type={type}
+          value={value}
+          disabled={disabled}
+          placeholder={placeholder}
+          onChange={onChange}
+          className="w-full bg-transparent text-gray-800 outline-none"
+        />
+
+        {suffix && <span className="text-gray-500">{suffix}</span>}
+      </div>
+
+      {error ? (
+        <p className="text-xs text-red-600">{error}</p>
+      ) : helperText ? (
+        <p className="text-xs text-gray-500">{helperText}</p>
+      ) : null}
+    </div>
+  )
+}
