@@ -51,6 +51,12 @@
 }
 
 @layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
   /* 헤딩  */
   h1 {
     font-size: var(--text-4xl);
@@ -147,12 +153,17 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+@layer components {
+  /* 버튼 커스텀 클래스 색상
+  지원내역의 파란색 버튼임
+   */
+  .btn-active-blue {
+    @apply bg-blue-500! text-white! hover:bg-blue-600! active:bg-blue-700!;
   }
-  body {
-    @apply bg-background text-foreground;
+  .btn-active-red {
+    @apply hover:bg-danger-500! active:bg-danger-600! hover:border-none! hover:text-white!;
+  }
+  .btn-active-yellow {
+    @apply hover:bg-primary-500! active:bg-primary-600! hover:border-none! hover:text-white!;
   }
 }
