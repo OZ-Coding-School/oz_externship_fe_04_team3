@@ -211,9 +211,6 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 @theme {
-  /* spacing */
-  --spacing: 1px;
-
   /* Primary Colors */
   --color-primary-50: #fefce8;
   --color-primary-100: #fef9c3;
