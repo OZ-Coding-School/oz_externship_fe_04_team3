@@ -22,6 +22,12 @@ function User() {
   const { data } = useUserData()
   return (
     <div className="ml-auto flex">
+      {isAlarmOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/30 md:hidden"
+          onClick={() => setIsAlarmOpen(false)}
+        />
+      )}
       <div className="flex items-center gap-8 text-base text-gray-700">
         <div className="hidden md:flex md:gap-8">
           <a href="" className="hover:text-primary-600 cursor-pointer">

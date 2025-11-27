@@ -93,7 +93,7 @@ export default function AlarmModal() {
         : mockAlarms
 
   return (
-    <div className="absolute top-10 right-0 z-50 max-h-[475px] w-[384px] overflow-hidden rounded-lg border border-gray-200 bg-gray-50 pb-[45px] shadow-xl">
+    <div className="fixed inset-x-0 bottom-0 z-50 max-h-[475px] w-full overflow-hidden rounded-t-2xl border border-gray-200 bg-gray-50 pb-[45px] shadow-[0_-8px_24px_rgba(0,0,0,0.08)] md:absolute md:inset-auto md:top-10 md:right-0 md:w-[384px] md:rounded-lg md:shadow-xl">
       <div className="flex-between h-[60px] border-b border-gray-200 bg-white p-4">
         <h5>알람</h5>
         <button className="text-primary-600 text-sm">모두 읽음</button>
