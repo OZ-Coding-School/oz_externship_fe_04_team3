@@ -2,6 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
 import './index.css'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { BrowserRouter } from 'react-router'
 
 async function enableMocking() {
   if (process.env.NODE_ENV !== 'development') {
@@ -14,11 +16,15 @@ async function enableMocking() {
     onUnhandledRequest: 'bypass',
   })
 }
-
+const queryClient = new QueryClient()
 enableMocking().then(() => {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </QueryClientProvider>
     </StrictMode>
   )
 })

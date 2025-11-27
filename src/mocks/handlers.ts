@@ -1,4 +1,5 @@
 import { http, HttpResponse } from 'msw'
+import { userInformationHandler } from './handlers/user'
 
 type User = { id: number; name: string; email: string }
 
@@ -8,6 +9,9 @@ let users: User[] = [
 ]
 
 export const handlers = [
+  // 1팀 User 관련 핸들러
+  ...userInformationHandler,
+
   http.get('/api/users', () => {
     return HttpResponse.json(users)
   }),
