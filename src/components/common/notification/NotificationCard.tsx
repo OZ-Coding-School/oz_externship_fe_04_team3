@@ -11,7 +11,7 @@ import {
 
 import type { AccentKey, AlarmIconType } from '@/types/alarm'
 
-type AlarmCardProps = {
+type NotificationCardProps = {
   message: string
   date: string
   isRead?: boolean
@@ -30,13 +30,13 @@ const accentClasses: Record<AccentKey, string> = {
   teal: 'accent-teal',
 }
 
-export default function AlarmCard({
+export default function NotificationCard({
   message,
   date,
   isRead = false,
   accent = 'blue',
   iconType = 'apply',
-}: AlarmCardProps) {
+}: NotificationCardProps) {
   const icon = (() => {
     switch (iconType) {
       case 'apply':

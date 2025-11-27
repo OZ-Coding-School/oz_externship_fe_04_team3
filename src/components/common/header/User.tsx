@@ -4,7 +4,7 @@ import topArrow from '@/assets/icons/topArrow.svg'
 import useUserData from '@/hooks/quries/useUserData'
 
 import { useState } from 'react'
-import AlarmModal from '../alarm/Alarm'
+import NotificationModal from '../notification/Notification'
 import UserModal from './UserModal'
 function User() {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
@@ -51,7 +51,7 @@ function User() {
             onClick={handleAlarmModal}
           />
           {/* 알림개수 연동 예정 */}
-          {isAlarmOpen && <AlarmModal />}
+          {isAlarmOpen && <NotificationModal />}
         </div>
       </div>
       {/* 클릭하면 유저 모달 나오게 */}
