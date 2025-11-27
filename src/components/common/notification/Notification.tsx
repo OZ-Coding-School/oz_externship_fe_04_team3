@@ -1,6 +1,10 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router'
 
-import { useNotifications } from '@/hooks/quries/useNotifications'
+import {
+  useNotificationActions,
+  useNotifications,
+} from '@/hooks/quries/useNotifications'
 
 import NotificationCard from './NotificationCard'
 
@@ -8,7 +12,9 @@ export default function NotificationModal() {
   const [activeFilter, setActiveFilter] = useState<'all' | 'unread' | 'read'>(
     'all'
   )
-  const { data, isLoading, error } = useNotifications(activeFilter)
+  const { data, isLoading, error, refetch } = useNotifications(activeFilter)
+  const { markAllRead, markRead } = useNotificationActions()
+  const navigate = useNavigate()
   const alarms = data?.alarms ?? []
   const errorMessage = error ? error.message : null
   const totalCount = data?.totalCount ?? 0
@@ -25,7 +31,17 @@ export default function NotificationModal() {
     <div className="fixed inset-x-0 bottom-0 z-50 max-h-[475px] w-full overflow-hidden rounded-t-2xl border border-gray-200 bg-gray-50 pb-[45px] shadow-[0_-8px_24px_rgba(0,0,0,0.08)] md:absolute md:inset-auto md:top-10 md:right-0 md:w-[384px] md:rounded-lg md:shadow-xl">
       <div className="flex-between h-[60px] border-b border-gray-200 bg-white p-4">
         <h5>알람</h5>
-        <button className="text-primary-600 text-sm">모두 읽음</button>
+        <button
+          className="text-primary-600 text-sm"
+          onClick={() => {
+            // 전체 읽기 요청 후 목록을 새로 불러온다
+            markAllRead().finally(() => {
+              refetch()
+            })
+          }}
+        >
+          모두 읽음
+        </button>
       </div>
       <div className="flex h-[47px] items-center border-b border-gray-100 bg-white text-sm font-medium">
         {filterOptions.map(({ key, label, count }) => {
@@ -53,18 +69,39 @@ export default function NotificationModal() {
         {errorMessage && (
           <div className="p-4 text-sm text-red-500">{errorMessage}</div>
         )}
-        {!isLoading &&
-          !errorMessage &&
-          alarms.map((alarm) => (
-            <NotificationCard
-              key={alarm.id}
-              message={alarm.message}
-              date={alarm.date}
-              isRead={alarm.isRead}
-              accent={alarm.accent}
-              iconType={alarm.iconType}
-            />
-          ))}
+        {!isLoading && !errorMessage && (
+          <>
+            {alarms.length === 0 && (
+              <div className="flex flex-col items-center justify-center gap-2 p-6 text-sm text-gray-500">
+                <span className="text-base font-semibold text-gray-700">
+                  알림이 없습니다
+                </span>
+                <span className="text-xs text-gray-400">
+                  새로운 알림이 오면 이곳에 표시됩니다
+                </span>
+              </div>
+            )}
+            {alarms.length > 0 &&
+              alarms.map((alarm) => (
+                <NotificationCard
+                  key={alarm.id}
+                  message={alarm.message}
+                  date={alarm.date}
+                  isRead={alarm.isRead}
+                  accent={alarm.accent}
+                  iconType={alarm.iconType}
+                  onClick={() => {
+                    // 개별 읽기 요청 후 목록 새로고침
+                    // TODO: 백엔드에서 내려주는 back_url_link로 이동시키기
+                    markRead(alarm.id).finally(() => {
+                      refetch()
+                      navigate('/')
+                    })
+                  }}
+                />
+              ))}
+          </>
+        )}
       </div>
     </div>
   )

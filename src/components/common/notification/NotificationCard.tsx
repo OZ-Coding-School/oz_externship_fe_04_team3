@@ -17,6 +17,7 @@ type NotificationCardProps = {
   isRead?: boolean
   accent?: AccentKey
   iconType?: AlarmIconType
+  onClick?: () => void
 }
 
 const accentClasses: Record<AccentKey, string> = {
@@ -36,6 +37,7 @@ export default function NotificationCard({
   isRead = false,
   accent = 'blue',
   iconType = 'apply',
+  onClick,
 }: NotificationCardProps) {
   const icon = (() => {
     switch (iconType) {
@@ -64,7 +66,8 @@ export default function NotificationCard({
     <div
       className={`relative flex items-start gap-3 border-b border-gray-100 p-4 last:border-b-0 ${
         isRead ? 'bg-white' : 'bg-[#fefce8]'
-      }`}
+      } ${onClick ? 'cursor-pointer' : ''}`}
+      onClick={onClick}
     >
       <div
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${accentClasses[accent]}`}
