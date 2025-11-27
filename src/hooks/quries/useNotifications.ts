@@ -8,14 +8,27 @@ import {
 } from '@/mappers/notification/mapper'
 import type { AlarmItem } from '@/types/alarm'
 
-// 알림 목록을 가져와서 AlarmItem 배열로 변환
-const fetchNotifications = async (): Promise<AlarmItem[]> => {
+type FilterKey = 'all' | 'unread' | 'read'
+
+// 알림 목록을 가져와서 AlarmItem 배열로 변환 + 카운트 메타 반환
+const fetchNotifications = async (filter: FilterKey) => {
+  const isReadParam = filter === 'all' ? undefined : filter === 'read'
+
   try {
     const { data } = await axiosInstance.get<NotificationListResponse>(
       '/api/v1/notifications',
-      { params: { page_size: 10 } }
+      {
+        params: {
+          page_size: 10,
+          ...(typeof isReadParam === 'boolean' ? { is_read: isReadParam } : {}),
+        },
+      }
     )
-    return data.results.map(alarmMapper)
+    return {
+      alarms: data.results.map(alarmMapper),
+      totalCount: data.total_count,
+      unreadCount: data.unread_count,
+    }
   } catch (err) {
     if (isAxiosError(err)) {
       const detail = (
@@ -27,10 +40,16 @@ const fetchNotifications = async (): Promise<AlarmItem[]> => {
   }
 }
 
-export const useNotifications = () =>
-  useQuery<AlarmItem[], Error>({
-    queryKey: ['notifications'],
-    queryFn: fetchNotifications,
-    // 컴포넌트에서 초기 렌더 시 map 오류가 나지 않도록 빈 배열을 기본값으로 둔다
-    initialData: [] as AlarmItem[],
+export const useNotifications = (filter: FilterKey) =>
+  useQuery<
+    { alarms: AlarmItem[]; totalCount: number; unreadCount: number },
+    Error
+  >({
+    queryKey: ['notifications', filter],
+    queryFn: () => fetchNotifications(filter),
+    // 초기 로딩 중에도 안전하게 사용
+    initialData: { alarms: [] as AlarmItem[], totalCount: 0, unreadCount: 0 },
+    staleTime: 0, // 실시간성을 위해 캐싱하지 않고 매번 신선하게 취급
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   })
