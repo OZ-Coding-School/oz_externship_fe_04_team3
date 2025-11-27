@@ -4,10 +4,16 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
+export type SelectData = {
+  itemValue: string
+  itemText: string
+}[]
+
 type SelectProps = {
-  data: { itemValue: string; itemText: string }[]
+  data: SelectData
   placeHolder: string
-  title: string
+  title?: string
+  icon?: React.ReactNode
   onValueChange?: (value: string) => void
 }
 
@@ -15,6 +21,7 @@ export default function Select({
   placeHolder,
   data,
   title,
+  icon,
   onValueChange,
 }: SelectProps) {
   return (
@@ -22,7 +29,8 @@ export default function Select({
       {' '}
       <label>{title}</label>
       <SelectField onValueChange={onValueChange}>
-        <SelectTrigger className="w-[280px]">
+        <SelectTrigger>
+          {icon}
           <SelectValue placeholder={placeHolder} />
         </SelectTrigger>
         <SelectContent>

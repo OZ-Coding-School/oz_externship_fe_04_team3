@@ -1,20 +1,20 @@
 import Select from '@/components/common/Select'
+import { categoryData, sortData } from '@/mocks/selectMockData'
+import { Folder } from 'lucide-react'
 
 export default function YeeunTest() {
-  const sampledata = [
-    { itemValue: '1', itemText: '사과' }, // itemValue에 서버 ID로 매핑
-    { itemValue: '2', itemText: '바나나' },
-    { itemValue: '123', itemText: '오렌지' },
-  ]
   return (
-    <div>
-      YeeunTest
+    <div className="flex-center my-4 h-50 flex-col gap-4">
+      {/* 아이콘있고 타이틀 없는 버전 */}
       <Select
-        data={sampledata}
-        title="과일 선택"
-        placeHolder="좋아하는 과일을 고르세요"
+        icon={<Folder />}
+        data={categoryData}
+        placeHolder="전체카테고리"
         onValueChange={(e) => console.log(e)} //디버깅
       ></Select>
+
+      {/* 아이콘없고 타이틀 있는 버전 */}
+      <Select title="정렬" placeHolder="최신순" data={sortData} />
     </div>
   )
 }
