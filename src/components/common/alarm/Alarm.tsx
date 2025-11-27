@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import AlarmCard from './AlarmCard'
 
-import type { AlarmItem } from '../../types/alarm'
+import type { AlarmItem } from '@/types/alarm'
 
 const mockAlarms: AlarmItem[] = [
   {
@@ -93,7 +93,7 @@ export default function AlarmModal() {
         : mockAlarms
 
   return (
-    <div className="absolute top-10 left-20 max-h-[475px] max-w-[384px] overflow-hidden rounded-lg border border-gray-200 bg-gray-50 pb-[45px] shadow-xl">
+    <div className="absolute top-10 right-0 z-50 max-h-[475px] w-[384px] overflow-hidden rounded-lg border border-gray-200 bg-gray-50 pb-[45px] shadow-xl">
       <div className="flex-between h-[60px] border-b border-gray-200 bg-white p-4">
         <h5>알람</h5>
         <button className="text-primary-600 text-sm">모두 읽음</button>

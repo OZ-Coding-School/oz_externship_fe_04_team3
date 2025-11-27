@@ -9,7 +9,7 @@ import {
   X,
 } from 'lucide-react'
 
-import type { AccentKey, AlarmIconType } from '../../types/alarm'
+import type { AccentKey, AlarmIconType } from '@/types/alarm'
 
 type AlarmCardProps = {
   message: string
@@ -78,7 +78,7 @@ export default function AlarmCard({
         <span className="text-xs text-gray-500">{date}</span>
       </div>
       {!isRead && (
-        <span className="bg-primary-500 absolute top-1/3 right-3 h-2.5 w-2.5 -translate-y-1/2 rounded-full" />
+        <span className="bg-primary-500 absolute top-1/4 right-3 h-2.5 w-2.5 -translate-y-1/2 rounded-full" />
       )}
     </div>
   )
