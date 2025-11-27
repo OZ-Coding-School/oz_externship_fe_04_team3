@@ -26,7 +26,6 @@ export default function Select({
 }: SelectProps) {
   return (
     <div>
-      {' '}
       <label>{title}</label>
       <SelectField onValueChange={onValueChange}>
         <SelectTrigger>
