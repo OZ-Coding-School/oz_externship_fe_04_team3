@@ -4,12 +4,20 @@ import topArrow from '@/assets/icons/topArrow.svg'
 import useUserData from '@/hooks/quries/useUserData'
 
 import { useState } from 'react'
+import AlarmModal from '../alarm/Alarm'
 import UserModal from './UserModal'
 function User() {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
+  const [isAlarmOpen, setIsAlarmOpen] = useState(false)
   // 로그인했을때의 모달 상태 관리
   const handleUserModal = () => {
     setIsUserModalOpen((prev) => !prev)
+  }
+  const handleAlarmModal = () => {
+    setIsAlarmOpen((prev) => !prev)
+    if (isUserModalOpen) {
+      setIsUserModalOpen(false)
+    }
   }
   const { data } = useUserData()
   return (
@@ -29,13 +37,16 @@ function User() {
           </a>
           {/* 클릭하면 구인공고 페이지 렌더링 */}
         </div>
-        <img
-          src={notificationIcon}
-          alt="notificationIcon"
-          className="h-[30px] w-[30px] cursor-pointer"
-        />
-        {/* 이것도 알림개수 연동시키기 */}
-        {/* 클릭하면 알림 모달 창 나타나게 */}
+        <div className="relative">
+          <img
+            src={notificationIcon}
+            alt="notificationIcon"
+            className="h-[30px] w-[30px] cursor-pointer"
+            onClick={handleAlarmModal}
+          />
+          {/* 알림개수 연동 예정 */}
+          {isAlarmOpen && <AlarmModal />}
+        </div>
       </div>
       {/* 클릭하면 유저 모달 나오게 */}
       <div
