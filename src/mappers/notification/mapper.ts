@@ -11,6 +11,8 @@ export type NotificationApiItem = {
 
 export type NotificationListResponse = {
   results: NotificationApiItem[]
+  total_count: number
+  unread_count: number
 }
 
 // ISO 날짜 문자열을 "12월 1일" 형태로 포맷
