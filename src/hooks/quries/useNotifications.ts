@@ -3,6 +3,10 @@ import { isAxiosError } from 'axios'
 
 import { axiosInstance } from '@/api/axios'
 import {
+  readAllNotificationsApi,
+  readNotificationApi,
+} from '@/api/notification'
+import {
   alarmMapper,
   type NotificationListResponse,
 } from '@/mappers/notification/mapper'
@@ -53,3 +57,12 @@ export const useNotifications = (filter: FilterKey) =>
     refetchOnMount: true,
     refetchOnWindowFocus: true,
   })
+
+export const useNotificationActions = () => {
+  // 전체 읽기 요청
+  const markAllRead = () => readAllNotificationsApi()
+  // 개별 읽기 요청
+  const markRead = (id: string) => readNotificationApi(id)
+
+  return { markAllRead, markRead }
+}
