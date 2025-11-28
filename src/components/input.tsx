@@ -11,6 +11,7 @@ interface InputProps {
   helperText?: string
   prefix?: React.ReactNode
   suffix?: React.ReactNode
+  required?: boolean
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -25,6 +26,7 @@ export function Input({
   helperText,
   prefix,
   suffix,
+  required = false,
   onChange,
 }: InputProps) {
   const inputId =
@@ -38,6 +40,7 @@ export function Input({
       {label && (
         <label htmlFor={inputId} className="text-sm font-medium text-gray-700">
           {label}
+          {required && <span className="ml-1 text-red-500">*</span>}
         </label>
       )}
 
@@ -52,6 +55,7 @@ export function Input({
           value={value}
           disabled={disabled}
           placeholder={placeholder}
+          required={required}
           onChange={onChange}
           className="w-full bg-transparent text-gray-800 outline-none"
         />
