@@ -9,14 +9,15 @@ import {
   X,
 } from 'lucide-react'
 
-import type { AccentKey, AlarmIconType } from '../../types/alarm'
+import type { AccentKey, AlarmIconType } from '@/types/alarm'
 
-type AlarmCardProps = {
+type NotificationCardProps = {
   message: string
   date: string
   isRead?: boolean
   accent?: AccentKey
   iconType?: AlarmIconType
+  onClick?: () => void
 }
 
 const accentClasses: Record<AccentKey, string> = {
@@ -30,13 +31,14 @@ const accentClasses: Record<AccentKey, string> = {
   teal: 'accent-teal',
 }
 
-export default function AlarmCard({
+export default function NotificationCard({
   message,
   date,
   isRead = false,
   accent = 'blue',
   iconType = 'apply',
-}: AlarmCardProps) {
+  onClick,
+}: NotificationCardProps) {
   const icon = (() => {
     switch (iconType) {
       case 'apply':
@@ -64,7 +66,8 @@ export default function AlarmCard({
     <div
       className={`relative flex items-start gap-3 border-b border-gray-100 p-4 last:border-b-0 ${
         isRead ? 'bg-white' : 'bg-[#fefce8]'
-      }`}
+      } ${onClick ? 'cursor-pointer' : ''}`}
+      onClick={onClick}
     >
       <div
         className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${accentClasses[accent]}`}
@@ -78,7 +81,7 @@ export default function AlarmCard({
         <span className="text-xs text-gray-500">{date}</span>
       </div>
       {!isRead && (
-        <span className="bg-primary-500 absolute top-1/3 right-3 h-2.5 w-2.5 -translate-y-1/2 rounded-full" />
+        <span className="bg-primary-500 absolute top-1/4 right-3 h-2.5 w-2.5 -translate-y-1/2 rounded-full" />
       )}
     </div>
   )
