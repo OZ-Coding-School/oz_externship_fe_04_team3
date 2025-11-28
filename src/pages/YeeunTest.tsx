@@ -1,92 +1,75 @@
-import { Button } from '@/components/common/Button'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/common/Modal'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Separator } from '@/components/ui/separator'
-import { Send } from 'lucide-react'
+import Modal from '@/components/common/Modal'
+import { BookText, Check, Plus, Send, X } from 'lucide-react'
+import { useState } from 'react'
 
-type ModalProps = {
-  title: string
-  description: string
-  contents: string[] //form,card,grid등등 올 예정
-}
 export default function YeeunTest() {
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
+
   return (
     <div className="flex-center my-4 h-50 flex-col gap-4">
-      <Dialog>
-        <form>
-          <DialogTrigger asChild>
-            <Button variant="primary">
-              <Send />
-              지원하기
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="w-auto min-w-[400px] sm:max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>스터디 지원서 작성</DialogTitle>
-              <DialogDescription>
-                Unity 게임 개발 프로젝트 팀원 모집
-              </DialogDescription>
-            </DialogHeader>
-
-            <Separator
-              style={{
-                marginLeft: '-24px',
-                marginRight: '-24px',
-                width: 'calc(100% + 48px)',
-                maxWidth: 'none',
-              }}
-            />
-            {/* props로 전달받은 다양한 형태의 childProps컴포넌트들 */}
-            <div className="grid gap-4">
-              <div className="grid gap-3">
-                <Label htmlFor="name-1">Name</Label>
-                <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-              </div>
-              <div className="grid gap-3">
-                <Label htmlFor="username-1">Username</Label>
-                <Input
-                  id="username-1"
-                  name="username"
-                  defaultValue="@peduarte"
-                />
-              </div>
-            </div>
-
-            <Separator
-              style={{
-                marginLeft: '-24px',
-                marginRight: '-24px',
-                width: 'calc(100% + 48px)',
-                maxWidth: 'none',
-              }}
-            />
-
-            {/* 옵셔널임  */}
-            <DialogFooter>
-              <DialogDescription>
-                *표시된 항목은 필수 입력 사항입니다.
-              </DialogDescription>
-              <DialogClose asChild>
-                <Button variant="outline">취소</Button>
-              </DialogClose>
-              <Button type="submit">
-                <Send />
-                지원하기
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </form>
-      </Dialog>
+      <Modal
+        trigger={{ text: '지원하기', variant: 'primary', icon: <Send /> }}
+        title="스터디 지원"
+        description="지원서 작성"
+        content={<div>컨텐츠내용</div>}
+        footer={{
+          description: '*필수 항목입니다',
+          closeButton: { text: '취소' },
+          submitButton: {
+            text: '지원하기',
+            icon: <Send />,
+          },
+        }}
+      />
+      <Modal
+        trigger={{
+          text: '지원내역',
+          className: 'btn-active-blue',
+          icon: <BookText />,
+        }}
+        title="지원 현황 관리"
+        description="Node.js 백엔드 개발 스터디원 구합니다 - 총 3명이 지원했습니다"
+        content={
+          <div
+            onClick={() => setIsDetailModalOpen(!isDetailModalOpen)}
+            className="border"
+          >
+            지원자 현황 카드 리스트
+          </div>
+        }
+      />
+      {isDetailModalOpen && (
+        <Modal
+          open={isDetailModalOpen}
+          onOpenChange={setIsDetailModalOpen}
+          title="지원자 상세 정보"
+          content={<div>컨텐츠내용</div>}
+          footer={{
+            closeButton: { text: '거절', variant: 'danger', icon: <X /> },
+            submitButton: {
+              text: '승인',
+              variant: 'success',
+              icon: <Check />,
+            },
+          }}
+        />
+      )}
+      <Modal
+        trigger={{
+          text: '태그검색',
+          icon: <Plus />,
+        }}
+        title="태그 선택"
+        description="공고에 추가할 태그를 선택하세요 (0/5)"
+        content={<div>컨텐츠내용</div>}
+        footer={{
+          description: '선택된 태그가 없습니다',
+          closeButton: { text: '취소' },
+          submitButton: {
+            text: '선택완료',
+          },
+        }}
+      />
     </div>
   )
 }
