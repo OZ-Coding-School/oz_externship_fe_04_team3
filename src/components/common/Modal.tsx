@@ -1,8 +1,111 @@
-import * as React from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { XIcon } from 'lucide-react'
+import * as React from 'react'
 
 import { cn } from '@/lib/utils'
+import type { ModalProps } from '@/types/modal'
+import { Separator } from '../ui/separator'
+import { Button } from './Button'
+/**
+ * @file Modal.tsx
+ * @description 재사용 가능한 공통 Modal 컴포넌트
+ *
+ * @features
+ * - trigger 버튼으로 모달 열기 (옵셔널)
+ * - open/onOpenChange props로 프로그래밍 방식 제어 (2중 모달 지원)
+ * - content: 어떤 컴포넌트든 전달 가능 (폼, 카드, 그리드 등)
+ * - footer: 옵셔널, description + 버튼 커스터마이징 가능
+ * - variant 디폴트: closeButton='outline', submitButton='primary'
+ *
+ * @example
+ *  1. trigger 버튼으로 사용
+ * <Modal
+ *   trigger={{ text: '열기', variant: 'primary', icon: <Send /> }}
+ *   title="제목"
+ *   content={<YourComponent />}
+ *   footer={{ closeButton: {...}, submitButton: {...} }}
+ * />
+ *
+ * @example
+ *  2. trigger 버튼 없는 2중 모달창
+ * <Modal
+ *   open={isOpen}
+ *   onOpenChange={setIsOpen}
+ *   title="제목"
+ *   content={<YourComponent />}
+ * />
+ *
+ * @author 예은
+ * @created 2025-11-28
+ */
+
+export default function Modal({
+  title,
+  description,
+  content,
+  footer,
+  trigger,
+  open,
+  onOpenChange,
+}: ModalProps) {
+  return (
+    <div>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <form>
+          {trigger && (
+            <DialogTrigger asChild>
+              <Button variant={trigger.variant} className={trigger.className}>
+                {trigger.icon}
+                {trigger.text}
+              </Button>
+            </DialogTrigger>
+          )}
+          <DialogContent className="w-auto min-w-[400px] sm:max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>{title}</DialogTitle>
+              <DialogDescription>{description}</DialogDescription>
+            </DialogHeader>
+            <Separator
+              style={{
+                marginLeft: '-24px',
+                marginRight: '-24px',
+                width: 'calc(100% + 48px)',
+                maxWidth: 'none',
+              }}
+            />
+            {content}
+            {footer && (
+              <>
+                <Separator
+                  style={{
+                    marginLeft: '-24px',
+                    marginRight: '-24px',
+                    width: 'calc(100% + 48px)',
+                    maxWidth: 'none',
+                  }}
+                />
+                <DialogFooter className="sm:justify-between">
+                  <DialogDescription>{footer.description}</DialogDescription>
+                  <div className="flex gap-2">
+                    <DialogClose asChild>
+                      <Button variant={footer.closeButton.variant ?? 'outline'}>
+                        {footer.closeButton.text}
+                      </Button>
+                    </DialogClose>
+                    <Button type="submit" variant={footer.submitButton.variant}>
+                      {footer.submitButton.icon}
+                      {footer.submitButton.text}
+                    </Button>
+                  </div>
+                </DialogFooter>
+              </>
+            )}
+          </DialogContent>
+        </form>
+      </Dialog>
+    </div>
+  )
+}
 
 function Dialog({
   ...props
@@ -127,15 +230,4 @@ function DialogDescription({
   )
 }
 
-export {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogOverlay,
-  DialogPortal,
-  DialogTitle,
-  DialogTrigger,
-}
+export { Dialog }
