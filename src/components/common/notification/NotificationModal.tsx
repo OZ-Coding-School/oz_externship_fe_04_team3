@@ -90,13 +90,6 @@ export default function NotificationModal({
       <div className="mx-auto mt-2 h-1.5 w-12 rounded-full bg-gray-200 md:hidden" />
       <div className="flex-between h-[60px] border-b border-gray-100 px-4">
         <div className="flex items-center gap-2">
-          <button
-            aria-label="알림 닫기"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 md:hidden"
-            onClick={onClose}
-          >
-            ×
-          </button>
           <h5>알림</h5>
         </div>
         <button
