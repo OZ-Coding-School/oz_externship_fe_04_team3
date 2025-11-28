@@ -19,27 +19,9 @@ export type ModalProps = {
   footer?: {
     // 모달의 footer는 옵셔널
     description?: string
-    closeButton: {
+    closeButton?: {
       text: string
-      icon?: React.ReactNode
-      variant?:
-        | 'primary'
-        | 'outline'
-        | 'secondary'
-        | 'danger'
-        | 'success'
-        | 'ghost'
     }
-    submitButton: {
-      text: string
-      variant?:
-        | 'primary'
-        | 'outline'
-        | 'secondary'
-        | 'danger'
-        | 'success'
-        | 'ghost'
-      icon?: React.ReactNode
-    }
+    footerButtons: React.ReactNode
   }
 }

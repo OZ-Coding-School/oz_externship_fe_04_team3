@@ -88,14 +88,13 @@ export default function Modal({
                   <DialogDescription>{footer.description}</DialogDescription>
                   <div className="flex gap-2">
                     <DialogClose asChild>
-                      <Button variant={footer.closeButton.variant ?? 'outline'}>
-                        {footer.closeButton.text}
-                      </Button>
+                      {footer.closeButton?.text && (
+                        <Button variant={'outline'}>
+                          {footer.closeButton?.text}
+                        </Button>
+                      )}
                     </DialogClose>
-                    <Button type="submit" variant={footer.submitButton.variant}>
-                      {footer.submitButton.icon}
-                      {footer.submitButton.text}
-                    </Button>
+                    {footer.footerButtons}
                   </div>
                 </DialogFooter>
               </>
