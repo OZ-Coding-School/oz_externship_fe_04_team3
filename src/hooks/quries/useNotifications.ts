@@ -54,6 +54,7 @@ export const useNotifications = (filter: FilterKey) =>
     // 초기 로딩 중에도 안전하게 사용
     initialData: { alarms: [] as AlarmItem[], totalCount: 0, unreadCount: 0 },
     staleTime: 0, // 실시간성을 위해 캐싱하지 않고 매번 신선하게 취급
+    gcTime: 0,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
   })
