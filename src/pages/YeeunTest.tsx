@@ -1,9 +1,11 @@
-import LectureCardSkeleton from '@/components/common/LectureCardSkeleton'
+import LectureCard from '@/components/lecture/LectureCard'
 
 export default function YeeunTest() {
   return (
-    <div className="gap- my-4 flex h-full justify-center">
-      <LectureCardSkeleton></LectureCardSkeleton>
+    <div className="m-2 flex gap-2">
+      <LectureCard></LectureCard>
+      <LectureCard></LectureCard>
+      <LectureCard></LectureCard>
     </div>
   )
 }

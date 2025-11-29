@@ -2,7 +2,7 @@ import { Star } from 'lucide-react'
 import { Skeleton } from '../ui/skeleton'
 import { Button } from './Button'
 
-export default function LectureCardSkeleton() {
+export default function CardSkeleton() {
   return (
     <div className="relative flex w-full max-w-sm flex-col gap-3 rounded-lg border border-gray-200 p-4">
       <div className="flex space-x-4">
