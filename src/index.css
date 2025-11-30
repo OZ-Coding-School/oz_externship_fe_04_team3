@@ -268,3 +268,19 @@
   /* Basic Colors */
   --color-basic-white: #ffffff;
 }
+
+/* 2팀 toast 알림 관련 스타일 */
+:root {
+  --toastify-color-light: transparent;
+  --toastify-color-progress-success: #22c55e;
+  --toastify-color-progress-warning: #facc15;
+  --toastify-color-progress-error: #dc2626;
+}
+
+.Toastify__toast {
+  @apply relative mb-4 flex min-h-0 cursor-pointer justify-between overflow-hidden rounded-lg bg-transparent p-0 shadow-none;
+}
+
+.Toastify__toast-body {
+  @apply m-0 p-0;
+}
