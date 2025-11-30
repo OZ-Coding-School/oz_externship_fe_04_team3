@@ -11,24 +11,24 @@ import { Separator } from '@radix-ui/react-select'
 import { Button } from '../common/Button'
 import { Badge } from '../ui/badge'
 
-type Categories = {
-  id: number
-  name: string
-}
-type LectureCardProps = {
-  id: number
-  title: string
-  instructor: string
-  thumbnailUrl: string
-  categories: Categories[]
-  difficulty: string
-  originalPrice: number
-  discountedPrice: number
-  platform: 'Udemy' | 'Inflearn'
-  rating: number
-  lectureLink: string
-  isBookmarked?: boolean // 북마크 상태 (옵션)
-}
+// type Categories = {
+//   id: number
+//   name: string
+// }
+// type LectureCardProps = {
+//   id: number
+//   title: string
+//   instructor: string
+//   thumbnailUrl: string
+//   categories: Categories[]
+//   difficulty: string
+//   originalPrice: number
+//   discountedPrice: number
+//   platform: 'Udemy' | 'Inflearn'
+//   rating: number
+//   lectureLink: string
+//   isBookmarked?: boolean // 북마크 상태 (옵션)
+// }
 export default function LectureCard() {
   // {
   // id,
