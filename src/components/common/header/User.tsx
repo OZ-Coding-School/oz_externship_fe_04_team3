@@ -2,6 +2,7 @@ import notificationIcon from '@/assets/icons/notification.svg'
 import profileIcon from '@/assets/icons/profileImg.svg'
 import topArrow from '@/assets/icons/topArrow.svg'
 import useUserData from '@/hooks/quries/useUserData'
+import useIsDesktop from '@/hooks/useIsDesktop'
 
 import { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
@@ -12,6 +13,7 @@ function User() {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
   const [isAlarmOpen, setIsAlarmOpen] = useState(false)
   const [isAlarmAnimating, setIsAlarmAnimating] = useState(false)
+  const isDesktop = useIsDesktop()
   // 로그인했을때의 모달 상태 관리
   const handleUserModal = () => {
     setIsUserModalOpen((prev) => !prev)
@@ -51,7 +53,8 @@ function User() {
             onClick={handleAlarmModal}
           />
           {/* 알림 모달,바텀시트 오픈 */}
-          {isAlarmOpen && (
+          {/* 모바일일 때만 배경 오버레이 렌더링 */}
+          {!isDesktop && isAlarmOpen && (
             <div
               className="fixed inset-0 z-40 bg-black/30 md:bg-transparent"
               onClick={() => {
@@ -66,6 +69,7 @@ function User() {
           >
             {isAlarmOpen && (
               <NotificationModal
+                isDesktop={isDesktop}
                 onClose={() => {
                   setIsAlarmAnimating(true)
                   setIsAlarmOpen(false)
