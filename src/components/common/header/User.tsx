@@ -4,16 +4,22 @@ import topArrow from '@/assets/icons/topArrow.svg'
 import useUserData from '@/hooks/quries/useUserData'
 
 import { useState } from 'react'
-import NotificationModal from '../notification/Notification'
+import { AnimatePresence } from 'framer-motion'
+
+import NotificationModal from '../notification/NotificationModal'
 import UserModal from './UserModal'
 function User() {
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
   const [isAlarmOpen, setIsAlarmOpen] = useState(false)
+  const [isAlarmAnimating, setIsAlarmAnimating] = useState(false)
   // 로그인했을때의 모달 상태 관리
   const handleUserModal = () => {
     setIsUserModalOpen((prev) => !prev)
   }
+  // 알림 모달 토글 (애니메이션 중에는 연타 방지)
   const handleAlarmModal = () => {
+    if (isAlarmAnimating) return
+    setIsAlarmAnimating(true)
     setIsAlarmOpen((prev) => !prev)
     if (isUserModalOpen) {
       setIsUserModalOpen(false)
@@ -22,12 +28,6 @@ function User() {
   const { data } = useUserData()
   return (
     <div className="ml-auto flex">
-      {isAlarmOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/30 md:hidden"
-          onClick={() => setIsAlarmOpen(false)}
-        />
-      )}
       <div className="flex items-center gap-8 text-base text-gray-700">
         <div className="hidden md:flex md:gap-8">
           <a href="" className="hover:text-primary-600 cursor-pointer">
@@ -50,8 +50,36 @@ function User() {
             className="h-[30px] w-[30px] cursor-pointer"
             onClick={handleAlarmModal}
           />
-          {/* 알림개수 연동 예정 */}
-          {isAlarmOpen && <NotificationModal />}
+          {/* 알림 모달,바텀시트 오픈 */}
+          {isAlarmOpen && (
+            <div
+              className="fixed inset-0 z-40 bg-black/30 md:bg-transparent"
+              onClick={() => setIsAlarmOpen(false)}
+            />
+          )}
+          {isAlarmOpen && (
+            <div
+              className="fixed inset-0 z-40 bg-black/30 md:bg-transparent"
+              onClick={() => {
+                setIsAlarmAnimating(true)
+                setIsAlarmOpen(false)
+              }}
+            />
+          )}
+          <AnimatePresence
+            mode="wait"
+            onExitComplete={() => setIsAlarmAnimating(false)}
+          >
+            {isAlarmOpen && (
+              <NotificationModal
+                onClose={() => {
+                  setIsAlarmAnimating(true)
+                  setIsAlarmOpen(false)
+                }}
+                onAnimationComplete={() => setIsAlarmAnimating(false)}
+              />
+            )}
+          </AnimatePresence>
         </div>
       </div>
       {/* 클릭하면 유저 모달 나오게 */}

@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { motion, useAnimation } from 'framer-motion'
 
 import {
   useNotificationActions,
@@ -8,7 +9,15 @@ import {
 
 import NotificationCard from './NotificationCard'
 
-export default function NotificationModal() {
+type NotificationModalProps = {
+  onClose?: () => void
+  onAnimationComplete?: () => void
+}
+
+export default function NotificationModal({
+  onClose,
+  onAnimationComplete,
+}: NotificationModalProps) {
   const [activeFilter, setActiveFilter] = useState<'all' | 'unread' | 'read'>(
     'all'
   )
@@ -20,6 +29,22 @@ export default function NotificationModal() {
   const totalCount = data?.totalCount ?? 0
   const unreadCount = data?.unreadCount ?? 0
   const readCount = totalCount - unreadCount
+  const controls = useAnimation()
+  const originalOverflow = useRef<string>('')
+  const [isDesktop, setIsDesktop] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia('(min-width: 768px)').matches
+  })
+
+  // 모달이 열려있는 동안 배경 스크롤 잠금 + 진입 위치 초기화
+  useEffect(() => {
+    originalOverflow.current = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    controls.start({ y: 0, opacity: 1 })
+    return () => {
+      document.body.style.overflow = originalOverflow.current
+    }
+  }, [controls])
 
   const filterOptions = [
     { key: 'all' as const, label: '전체보기', count: totalCount },
@@ -27,10 +52,46 @@ export default function NotificationModal() {
     { key: 'read' as const, label: '읽음', count: readCount },
   ]
 
+  // 데스크톱 여부 감지해 애니메이션/드래그 범위 분기
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mql = window.matchMedia('(min-width: 768px)')
+    const handle = () => setIsDesktop(mql.matches)
+    handle()
+    mql.addEventListener('change', handle)
+    return () => mql.removeEventListener('change', handle)
+  }, [])
+
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 max-h-[475px] w-full overflow-hidden rounded-t-2xl border border-gray-200 bg-gray-50 pb-[45px] shadow-[0_-8px_24px_rgba(0,0,0,0.08)] md:absolute md:inset-auto md:top-10 md:right-0 md:w-[384px] md:rounded-lg md:shadow-xl">
-      <div className="flex-between h-[60px] border-b border-gray-200 bg-white p-4">
-        <h5>알람</h5>
+    <motion.div
+      key={isDesktop ? 'desktop' : 'mobile'}
+      initial={isDesktop ? { y: 20, opacity: 0 } : { y: '100%', opacity: 0 }}
+      animate={controls}
+      exit={isDesktop ? { y: 20, opacity: 0 } : { y: '100%', opacity: 0 }}
+      transition={{ type: 'spring', stiffness: 360, damping: 32 }}
+      drag={isDesktop ? false : 'y'}
+      dragConstraints={isDesktop ? undefined : { top: 0, bottom: 800 }}
+      dragElastic={isDesktop ? undefined : 0.2}
+      dragMomentum={false}
+      onDragEnd={
+        isDesktop
+          ? undefined
+          : (_, info) => {
+              if (info.offset.y > 80 && onClose) {
+                onClose()
+              } else {
+                controls.start({ y: 0, opacity: 1 })
+              }
+            }
+      }
+      onAnimationComplete={onAnimationComplete}
+      className="fixed inset-x-0 bottom-0 z-50 h-[70dvh] w-full overflow-hidden rounded-t-2xl border border-gray-200 bg-white pb-[45px] shadow-[0_-10px_30px_rgba(0,0,0,0.14)] md:absolute md:inset-auto md:top-10 md:right-0 md:h-[475px] md:w-[384px] md:rounded-lg md:shadow-xl"
+    >
+      <div className="mx-auto mt-2 h-1.5 w-12 rounded-full bg-gray-200 md:hidden" />
+      <div className="flex-between h-[60px] border-b border-gray-100 px-4">
+        <div className="flex items-center gap-2">
+          <h5>알림</h5>
+        </div>
         <button
           className="text-primary-600 text-sm"
           onClick={() => {
@@ -103,6 +164,6 @@ export default function NotificationModal() {
           </>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }
