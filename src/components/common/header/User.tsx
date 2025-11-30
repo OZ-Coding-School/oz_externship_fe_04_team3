@@ -54,12 +54,6 @@ function User() {
           {isAlarmOpen && (
             <div
               className="fixed inset-0 z-40 bg-black/30 md:bg-transparent"
-              onClick={() => setIsAlarmOpen(false)}
-            />
-          )}
-          {isAlarmOpen && (
-            <div
-              className="fixed inset-0 z-40 bg-black/30 md:bg-transparent"
               onClick={() => {
                 setIsAlarmAnimating(true)
                 setIsAlarmOpen(false)

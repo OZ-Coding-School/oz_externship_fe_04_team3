@@ -35,6 +35,7 @@ export default function NotificationModal({
     if (typeof window === 'undefined') return false
     return window.matchMedia('(min-width: 768px)').matches
   })
+  const prevIsDesktop = useRef<boolean>(isDesktop)
 
   // 모달이 열려있는 동안 배경 스크롤 잠금 + 진입 위치 초기화
   useEffect(() => {
@@ -61,6 +62,14 @@ export default function NotificationModal({
     mql.addEventListener('change', handle)
     return () => mql.removeEventListener('change', handle)
   }, [])
+
+  // PC에서 열린 상태로 모바일 사이즈로 전환되면 모달을 닫아 초기화
+  useEffect(() => {
+    if (prevIsDesktop.current && !isDesktop && onClose) {
+      onClose()
+    }
+    prevIsDesktop.current = isDesktop
+  }, [isDesktop, onClose])
 
   return (
     <motion.div
