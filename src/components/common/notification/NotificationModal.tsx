@@ -10,11 +10,13 @@ import {
 import NotificationCard from './NotificationCard'
 
 type NotificationModalProps = {
+  isDesktop: boolean
   onClose?: () => void
   onAnimationComplete?: () => void
 }
 
 export default function NotificationModal({
+  isDesktop,
   onClose,
   onAnimationComplete,
 }: NotificationModalProps) {
@@ -31,10 +33,6 @@ export default function NotificationModal({
   const readCount = totalCount - unreadCount
   const controls = useAnimation()
   const originalOverflow = useRef<string>('')
-  const [isDesktop, setIsDesktop] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false
-    return window.matchMedia('(min-width: 768px)').matches
-  })
 
   // 모달이 열려있는 동안 배경 스크롤 잠금 + 진입 위치 초기화
   useEffect(() => {
@@ -51,20 +49,13 @@ export default function NotificationModal({
     { key: 'unread' as const, label: '읽지않음', count: unreadCount },
     { key: 'read' as const, label: '읽음', count: readCount },
   ]
-
-  // 데스크톱 여부 감지해 애니메이션/드래그 범위 분기
+  // 뷰포트 전환 시 보이지 않게 되는 걸 방지: 항상 보이는 위치/opacity로 맞춰줌
   useEffect(() => {
-    if (typeof window === 'undefined') return
-    const mql = window.matchMedia('(min-width: 768px)')
-    const handle = () => setIsDesktop(mql.matches)
-    handle()
-    mql.addEventListener('change', handle)
-    return () => mql.removeEventListener('change', handle)
-  }, [])
+    controls.start({ y: 0, opacity: 1 })
+  }, [controls, isDesktop])
 
   return (
     <motion.div
-      key={isDesktop ? 'desktop' : 'mobile'}
       initial={isDesktop ? { y: 20, opacity: 0 } : { y: '100%', opacity: 0 }}
       animate={controls}
       exit={isDesktop ? { y: 20, opacity: 0 } : { y: '100%', opacity: 0 }}
