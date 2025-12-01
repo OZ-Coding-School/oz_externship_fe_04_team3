@@ -3,10 +3,6 @@ import { isAxiosError } from 'axios'
 
 import { axiosInstance } from '@/api/axios'
 import {
-  readAllNotificationsApi,
-  readNotificationApi,
-} from '@/api/notification'
-import {
   alarmMapper,
   type NotificationListResponse,
 } from '@/mappers/notification/mapper'
@@ -61,9 +57,10 @@ export const useNotifications = (filter: FilterKey) =>
 
 export const useNotificationActions = () => {
   // 전체 읽기 요청
-  const markAllRead = () => readAllNotificationsApi()
+  const markAllRead = () => axiosInstance.post('/api/v1/notifications/read-all')
   // 개별 읽기 요청
-  const markRead = (id: string) => readNotificationApi(id)
+  const markRead = (id: string | number) =>
+    axiosInstance.post(`/api/v1/notifications/${id}/read`)
 
   return { markAllRead, markRead }
 }
