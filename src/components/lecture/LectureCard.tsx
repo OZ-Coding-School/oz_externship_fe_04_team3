@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Separator } from '@radix-ui/react-select'
+import { ArrowDown, Bookmark, Star } from 'lucide-react'
 import { Button } from '../common/Button'
 import { Badge } from '../ui/badge'
 
@@ -47,19 +47,41 @@ export default function LectureCard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Card Title</CardTitle>
-        <CardDescription>Card Description</CardDescription>
-        <CardAction>Card Action</CardAction>
+        <CardAction className="flex-row items-start justify-between">
+          <div className="flex flex-col gap-2">
+            <Badge variant={'primary'}>Inflearn</Badge>
+            <Badge variant={'danger'}>32% 할인</Badge>
+          </div>
+          <Button variant="outline" size="icon" className="rounded-full">
+            <Bookmark />
+          </Button>
+        </CardAction>
+        <img
+          src={`https://i.pinimg.com/736x/5a/6e/f3/5a6ef30c1993b1e96dbf3837cadcd4b8.jpg`}
+          alt={'예시'}
+          className="object-cover"
+        />
       </CardHeader>
       <CardContent>
-        <Badge>기본</Badge>
-        <Badge variant="primary">주요</Badge>
-        <Badge variant="danger">위험</Badge>
-        <Badge variant="success">성공</Badge>
+        <Badge>초급자</Badge>
+        <CardTitle>Vue.js 실전 프로젝트</CardTitle>
+        <CardDescription>정뷰</CardDescription>
+        <div className="flex gap-2">
+          <div className="flex">
+            <Star></Star>
+            <Star></Star>
+            <Star></Star>
+            <Star></Star>
+            <Star></Star>
+          </div>
+          <p>4.5</p>
+        </div>
       </CardContent>
-      <Separator className="my-4"></Separator>
       <CardFooter>
-        <div>리뷰 보러 가기</div>
+        <div className="text-primary-500 flex">
+          <ArrowDown />
+          리뷰 보러 가기
+        </div>
         <Button>강의보러가기</Button>
       </CardFooter>
     </Card>
