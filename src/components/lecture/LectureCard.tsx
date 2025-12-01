@@ -47,7 +47,7 @@ export default function LectureCard() {
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardAction className="flex-row items-start justify-between">
+        <CardAction className="">
           <div className="flex flex-col gap-2">
             <Badge variant={'primary'}>Inflearn</Badge>
             <Badge variant={'danger'}>32% 할인</Badge>
