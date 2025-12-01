@@ -53,7 +53,7 @@ function CardAction({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card-action"
       className={cn(
-        'absolute z-10 col-start-2 row-span-2 row-start-1 flex w-full flex-col justify-evenly p-2',
+        'absolute z-10 col-start-2 row-span-2 row-start-1 flex w-full justify-between px-1 py-2',
         className
       )}
       {...props}
