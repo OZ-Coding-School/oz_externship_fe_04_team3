@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import type { Lecture } from '@/types/lecture'
-import { ArrowDown, Bookmark, Star, StarHalf } from 'lucide-react'
+import { Bookmark, ChevronDown, Star, StarHalf } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Button } from '../common/Button'
@@ -42,7 +42,7 @@ export default function LectureCard(lecture: Lecture) {
   }, [isBookMarked])
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full">
       <CardHeader>
         <CardAction className="absolute z-10 justify-between px-3 py-3">
           <div className="top-2 flex flex-col gap-2">
@@ -60,7 +60,7 @@ export default function LectureCard(lecture: Lecture) {
             <Bookmark
               className="size-[18px]"
               fill={isBookMarked ? '#EAB308' : 'none'}
-              stroke={isBookMarked ? 'none' : '#EAB308'}
+              stroke={isBookMarked ? 'none' : 'gray'}
             />
           </Button>
         </CardAction>
@@ -85,24 +85,26 @@ export default function LectureCard(lecture: Lecture) {
             <div className="flex">
               <Star fill="#FACC15" strokeWidth={0} />
               <Star fill="#FACC15" strokeWidth={0} />
+              <Star fill="#FACC15" strokeWidth={0} />
+              <Star fill="#FACC15" strokeWidth={0} />
               <StarHalf fill="#FACC15" strokeWidth={0} />
             </div>
           </div>
-          <p>{average_rating}</p>
+          <p className="text-sm font-medium">{average_rating}</p>
         </div>
-        <div className="Card-Content-price flex gap-2">
-          <h4>₩ {discounted_price.toLocaleString('ko-KR')}</h4>
-          <h4 className="text-gray-400 line-through">
-            ₩ {original_price.toLocaleString('ko-KR')}
-          </h4>
+        <div className="Card-Content-price flex items-center gap-2">
+          <h4>₩{discounted_price.toLocaleString('ko-KR')}</h4>
+          <h6 className="text-sm text-gray-400 line-through">
+            ₩{original_price.toLocaleString('ko-KR')}
+          </h6>
         </div>
       </CardContent>
       <CardFooter>
         <div
-          className="text-primary-500 flex"
+          className="text-primary-500 flex items-center gap-1"
           onClick={() => navigate(`${url_link}`)}
         >
-          <ArrowDown />
+          <ChevronDown size={14} />
           리뷰 보러 가기
         </div>
         <Button aria-label={`${title} 강의 페이지로 이동`}>강의보러가기</Button>

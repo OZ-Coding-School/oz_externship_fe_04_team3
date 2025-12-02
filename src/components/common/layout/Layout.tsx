@@ -6,17 +6,19 @@ import { Outlet } from 'react-router'
 function Layout() {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false)
   return (
-    <>
+    <div className="bg-gray-50">
       <Header
         isSideBarOpen={isSideBarOpen}
         setIsSideBarOpen={setIsSideBarOpen}
       />
-      <Outlet />
+      <main className="wrapper">
+        <Outlet />
+      </main>
       <Footer />
       {isSideBarOpen && (
         <div className="fixed top-[0px] left-0 h-full w-full bg-black opacity-50 md:hidden"></div>
       )}
-    </>
+    </div>
   )
 }
 export default Layout

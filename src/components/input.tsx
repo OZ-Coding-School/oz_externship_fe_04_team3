@@ -12,6 +12,7 @@ interface InputProps {
   prefix?: React.ReactNode
   suffix?: React.ReactNode
   required?: boolean
+  className: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -27,6 +28,7 @@ export function Input({
   prefix,
   suffix,
   required = false,
+  className,
   onChange,
 }: InputProps) {
   const inputId =
@@ -45,7 +47,7 @@ export function Input({
       )}
 
       <div
-        className={`flex w-full items-center gap-2 rounded-md border bg-white px-4 py-2 transition-colors placeholder:text-gray-400 ${disabled ? 'cursor-not-allowed bg-gray-100 opacity-60' : ''} ${error ? 'border-red-500' : 'border-gray-300'} ${!error && !disabled ? 'focus-within:border-gray-400' : ''}`} //상태 우선순위: disabled -> error -> focus
+        className={`flex w-full items-center gap-2 rounded-md border bg-white px-4 py-2 transition-colors placeholder:text-gray-400 ${disabled ? 'cursor-not-allowed bg-gray-100 opacity-60' : ''} ${error ? 'border-red-500' : 'border-gray-300'} ${!error && !disabled ? 'focus-within:border-gray-400' : ''} ${className}`} //상태 우선순위: disabled -> error -> focus
       >
         {prefix && <span className="text-gray-500">{prefix}</span>}
 
