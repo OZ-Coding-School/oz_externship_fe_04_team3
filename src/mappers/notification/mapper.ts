@@ -1,4 +1,5 @@
 import type { AlarmItem } from '@/types/alarm'
+import type { IconName } from '@/helpers/icons'
 
 export type NotificationApiItem = {
   id: number
@@ -36,7 +37,7 @@ const typeToAccent = {
 } as const
 
 // 타입별 아이콘 지정
-const typeToIcon = {
+const typeToIcon: Record<string, IconName> = {
   STUDY_NOTE_CREATE: 'note',
   TODAY_SCHEDULE: 'today',
   UPCOMING_SCHEDULE: 'upcoming',
