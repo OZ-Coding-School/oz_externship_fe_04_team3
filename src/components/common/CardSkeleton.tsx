@@ -4,7 +4,7 @@ import { Button } from './Button'
 
 export default function CardSkeleton() {
   return (
-    <div className="relative flex w-full max-w-sm flex-col gap-3 rounded-lg border border-gray-200 p-4">
+    <div className="relative flex w-full max-w-sm flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex space-x-4">
         <Skeleton className="h-8 w-12" />
         <div className="space-y-2">
