@@ -16,9 +16,9 @@ const buttonVariants = cva(
         success:
           'bg-success-500 text-white hover:bg-success-600 active:bg-success-800 dark:focus-visible:ring-success-400',
         outline:
-          'border bg-background shadow-xs hover:bg-gray-50 text-accent-foreground active:bg-gray-100',
+          'border bg-white/80 shadow-xs hover:bg-gray-50 text-accent-foreground active:bg-gray-100',
         'outline-primary':
-          'border border-primary-500 bg-background shadow-xs text-primary-600 hover:bg-primary-50 active:bg-primary-100',
+          'border border-primary-500 bg-inherit shadow-xs text-primary-600 hover:bg-primary-50 active:bg-primary-100',
 
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-gray-200 active:bg-gray-300 active:text-white',
