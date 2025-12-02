@@ -1,6 +1,5 @@
 import { Star } from 'lucide-react'
 import { Skeleton } from '../ui/skeleton'
-import { Button } from './Button'
 
 export default function CardSkeleton() {
   return (
@@ -20,10 +19,10 @@ export default function CardSkeleton() {
         <Skeleton className="bg-primary-100 h-5 w-12" />
         <Skeleton className="bg-primary-100 h-5 w-16" />
       </div>
-      <div className="absolute -top-4 -right-4 flex flex-col gap-8">
-        <Button className="rounded-full" size={'icon'}>
-          <Star />
-        </Button>
+      <div className="absolute -top-2 -right-2 flex flex-col gap-8">
+        <div className="bg-primary-400 h-full w-full rounded-full border-none">
+          <Star className="m-1" fill="white" strokeWidth={0} size={12} />
+        </div>
       </div>
     </div>
   )

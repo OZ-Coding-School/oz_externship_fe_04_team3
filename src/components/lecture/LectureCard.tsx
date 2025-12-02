@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/card'
 import type { Lecture } from '@/types/lecture'
 import { ArrowDown, Bookmark, Star, StarHalf } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Button } from '../common/Button'
 import { Badge } from '../ui/badge'
@@ -28,29 +29,39 @@ export default function LectureCard(lecture: Lecture) {
     url_link,
   } = lecture
 
-  // 난이도 매핑
   const difficultyMap = {
-    EASY: '초급자',
-    NORMAL: '중급자',
-    HARD: '고급자',
+    EASY: '초급',
+    NORMAL: '중급',
+    HARD: '고급',
   }
 
+  /* 북마크 확인용 */
+  const [isBookMarked, setIsBookMarked] = useState(false)
+  useEffect(() => {
+    console.log(isBookMarked)
+  }, [isBookMarked])
+
   return (
-    <Card className="w-full max-w-sm" onClick={() => navigate(`${url_link}`)}>
+    <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardAction className="absolute z-10 justify-between px-1 py-2">
-          <div className="flex flex-col gap-2">
-            <Badge variant={'primary'}>{platform}</Badge>
+        <CardAction className="absolute z-10 justify-between px-3 py-3">
+          <div className="top-2 flex flex-col gap-2">
+            <Badge variant={'platform'}>{platform}</Badge>
             {/* 할인율계산은 추후 헬퍼함수를 통해 구현할 예정 */}
-            <Badge variant={'danger'}>32% 할인</Badge>
+            <Badge variant={'discount'}>32% 할인</Badge>
           </div>
           <Button
             variant="outline"
-            size="icon"
-            className="rounded-full"
+            size={'icon'}
+            className="rounded-full border-none"
             aria-label="강의 북마크하기"
+            onClick={() => setIsBookMarked(!isBookMarked)}
           >
-            <Bookmark />
+            <Bookmark
+              className="size-[18px]"
+              fill={isBookMarked ? '#EAB308' : 'none'}
+              stroke={isBookMarked ? 'none' : '#EAB308'}
+            />
           </Button>
         </CardAction>
         <img
