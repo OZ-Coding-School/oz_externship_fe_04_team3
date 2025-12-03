@@ -1,12 +1,13 @@
-import type { AccentKey, AlarmIconType } from '@/types/alarm'
 import { getTypeIcon } from '@/helpers/icons'
+import type { AccentKey } from '@/types/alarm'
+import type { IconName } from '@/helpers/icons'
 
 type NotificationCardProps = {
   message: string
   date: string
   isRead?: boolean
   accent?: AccentKey
-  iconType?: AlarmIconType
+  iconType?: IconName
   onClick?: () => void
 }
 

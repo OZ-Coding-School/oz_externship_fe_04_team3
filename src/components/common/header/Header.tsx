@@ -18,7 +18,7 @@ function Header({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) {
   }
 
   return (
-    <div className="w-full border-b border-solid border-[#E5E7EB]">
+    <div className="w-full border-b border-solid border-[#E5E7EB] bg-white">
       <div className="mx-auto flex h-[64px] max-w-[1440px] items-center justify-between px-8">
         {isSideBarOpen && <MobileModal setIsModalOpen={setIsSideBarOpen} />}
         <div className="flex items-center gap-[15px] md:hidden">

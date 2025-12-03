@@ -80,6 +80,10 @@
 }
 
 /* Accent helpers */
+.accent-gray {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-600);
+}
 .accent-blue {
   background-color: var(--color-accent-blue-bg);
   color: var(--color-accent-blue-text);
