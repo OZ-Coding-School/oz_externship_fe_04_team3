@@ -3,25 +3,44 @@ import {
   CalendarDays,
   CalendarRange,
   Check,
+  Clock3,
+  FileText,
   FileSignature,
+  Megaphone,
   UserPlus,
   UsersRound,
   X,
 } from 'lucide-react'
 
-import type { AlarmIconType } from '@/types/alarm'
-import type { JSX } from 'react'
-
-const iconByType: Record<AlarmIconType, JSX.Element> = {
-  apply: <UserPlus size={16} />,
-  approved: <Check size={16} />,
-  rejected: <X size={16} />,
-  newMember: <UsersRound size={16} />,
-  studyEnd: <CalendarCheck size={16} />,
-  upcoming: <CalendarRange size={16} />,
-  today: <CalendarDays size={16} />,
-  note: <FileSignature size={16} />,
+// 도메인별 아이콘 그룹
+const notificationIcons = {
+  apply: UserPlus,
+  approved: Check,
+  rejected: X,
+  newMember: UsersRound,
+  studyEnd: CalendarCheck,
+  upcoming: CalendarRange,
+  today: CalendarDays,
+  note: FileSignature,
 }
 
-export const getTypeIcon = (iconType: AlarmIconType) =>
-  iconByType[iconType] ?? iconByType.apply
+const manageIcons = {
+  total: FileText,
+  open: Megaphone,
+  closed: Clock3,
+}
+
+// 평탄화된 맵 (어디서든 재사용)
+const iconByType = {
+  ...notificationIcons,
+  ...manageIcons,
+}
+
+export type NotificationIconName = keyof typeof notificationIcons
+export type ManageIconName = keyof typeof manageIcons
+export type IconName = keyof typeof iconByType
+
+export const getTypeIcon = (iconType: IconName, size = 16) => {
+  const IconComp = iconByType[iconType] ?? iconByType.apply
+  return <IconComp size={size} />
+}
