@@ -1,4 +1,5 @@
-import mockData from '@/mocks/크롤링강의page1.json'
+import mockData from '@/mocks/data/크롤링강의page1.json'
+
 import type { Lecture } from '@/types/lecture'
 import { Badge } from '../ui/badge'
 import LectureCard from './LectureCard'

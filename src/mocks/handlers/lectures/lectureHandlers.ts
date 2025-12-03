@@ -1,4 +1,4 @@
-import mockData from '@/mocks/handlers/lectures/lectureList.json'
+import mockData from '@/mocks/data/크롤링강의page1.json'
 import type { Lecture } from '@/types/lecture'
 import { http, HttpResponse } from 'msw'
 const generateMockData = () => {
