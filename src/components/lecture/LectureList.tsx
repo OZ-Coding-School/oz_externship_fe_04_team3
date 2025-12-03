@@ -1,5 +1,5 @@
-import mockData from '@/mocks/handlers/lectures/lectureList.json'
 import type { Lecture } from '@/types/lecture'
+import mockData from '@/mocks/data/lectureList.json'
 import LectureCard from './LectureCard'
 
 export default function LectureList() {
