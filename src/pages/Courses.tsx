@@ -21,7 +21,7 @@ export default function Courses() {
           description="로그인하시면 관심 분야를 바탕으로 맞춤형 강의"
         ></GuestRecommendSection>
       </section>
-      <section className="courses_filter flex gap-4 rounded-md border-2 border-gray-200 bg-white p-6">
+      <section className="courses_filter flex gap-4 rounded-md border border-gray-200 bg-white p-6">
         <Input prefix={<Search />} className="h-[38px]"></Input>
         <Select
           icon={<Folder />}
@@ -36,7 +36,7 @@ export default function Courses() {
           onValueChange={(e) => console.log(e)} //디버깅
         ></Select>
       </section>
-      <section className="courses_cardlist border-2">
+      <section className="courses_cardlist">
         <LectureList></LectureList>
       </section>
     </div>
