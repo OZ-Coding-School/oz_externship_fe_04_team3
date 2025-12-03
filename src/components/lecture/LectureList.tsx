@@ -46,7 +46,7 @@ export default function LectureList() {
           className="bg-primary-500 flex-center mt-12 h-12 rounded-full text-center text-white"
           ref={ref}
         >
-          더많은 공고 보기
+          더많은 강의 보기
         </div>
       )}
     </>
