@@ -8,8 +8,11 @@ export default function useGetLectures() {
     queryFn: ({ pageParam }) => {
       return getLecturesApi({ page: pageParam })
     },
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.next ? allPages.length + 1 : undefined
+    getNextPageParam: (last, allPages) => {
+      if (last.next) {
+        return allPages.length + 1
+      }
+      return undefined
     },
     initialPageParam: 1,
   })
