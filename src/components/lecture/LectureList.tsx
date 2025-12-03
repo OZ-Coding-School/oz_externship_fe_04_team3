@@ -35,10 +35,7 @@ export default function LectureList() {
       </div>
       {/* 페이지 로드하고, 더이상 보여줄 페이지가 없다면? 없다는 텍스트 노출 */}
       {!hasNextPage ? (
-        <div
-          className="flex-center mt-12 h-12 rounded-full bg-gray-200 text-center text-white"
-          ref={ref}
-        >
+        <div className="flex-center mt-12 h-12 rounded-full bg-gray-200 text-center text-white">
           더 이상 강의가 없습니다.
         </div>
       ) : (
