@@ -1,4 +1,5 @@
 import Layout from '@/components/common/layout/Layout'
+import Courses from '@/pages/Courses'
 import Main from '@/pages/main'
 import YeeunTest from '@/pages/YeeunTest'
 import { Route, Routes } from 'react-router'
@@ -8,6 +9,7 @@ function AppRoutes() {
       <Route element={<Layout />}>
         {/* 이곳에 라우팅 추가하기 */}
         <Route index element={<Main />} />
+        <Route path="/courses" element={<Courses></Courses>}></Route>
         <Route path="/yeeun" element={<YeeunTest></YeeunTest>}></Route>
       </Route>
     </Routes>

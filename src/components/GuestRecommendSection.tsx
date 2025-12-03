@@ -12,7 +12,7 @@ export default function GuestRecommendSection({
 }: DataProps) {
   const navigate = useNavigate()
   return (
-    <div className="border-primary-200 w-5/6 rounded-xl border bg-linear-to-r from-[#FFF7ED] to-[#FEFCE8] px-4 py-8 md:p-8">
+    <div className="border-primary-200 max-w-[1216px] rounded-xl border bg-linear-to-r from-[#FFF7ED] to-[#FEFCE8] px-4 py-8 md:p-8">
       <div className="text-center">
         <h3 className="text-balance text-gray-900">
           개인 맞춤 {title} 받아보세요

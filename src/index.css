@@ -18,7 +18,7 @@
     'Segoe UI',
     sans-serif;
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: #f9fafb;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -288,4 +288,8 @@
 
 .Toastify__toast-body {
   @apply m-0 p-0;
+}
+
+.wrapper {
+  @apply m-auto w-full max-w-[1280px] p-8;
 }
