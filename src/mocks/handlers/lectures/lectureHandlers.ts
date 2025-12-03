@@ -28,7 +28,7 @@ interface PaginatedResponse {
 }
 
 export const lectureHandlers = [
-  http.get('/v1/lectures', async ({ request }) => {
+  http.get('/api/v1/lectures', async ({ request }) => {
     const url = new URL(request.url)
     const page = parseInt(url.searchParams.get('page') || '1')
     const page_size = parseInt(url.searchParams.get('page_size') || '12')
@@ -41,11 +41,11 @@ export const lectureHandlers = [
       count: allLectures.length,
       next:
         endIndex < allLectures.length
-          ? `/v1/lectures?page=${page + 1}&page_size=${page_size}`
+          ? `/api/v1/lectures?page=${page + 1}&page_size=${page_size}`
           : null,
       previous:
         page > 1
-          ? `/v1/lectures?page=${page - 1}&page_size=${page_size}`
+          ? `/api/v1/lectures?page=${page - 1}&page_size=${page_size}`
           : null,
       results: paginatedLectures,
     }
