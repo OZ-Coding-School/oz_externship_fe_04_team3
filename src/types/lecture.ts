@@ -33,3 +33,26 @@ export type LecturePageResponse = {
   previous: string | null
   results: Lecture[]
 }
+
+//요청 params
+export interface LecturesParams {
+  page?: number
+  page_size?: number
+  search?: string
+  sort?:
+    | 'latest'
+    | 'oldest'
+    | 'low_price'
+    | 'high_price'
+    | 'high_rating'
+    | 'low_rating'
+  category?:
+    | 'artificial-intelligence'
+    | 'Applied-ai'
+    | 'it-programming'
+    | 'game-dev-all'
+    | 'data-science'
+    | 'it'
+    | 'hardware'
+    | 'design'
+}

@@ -1,4 +1,4 @@
-import useGetLectures from '@/hooks/useGetLecture'
+import useGetLectures from '@/hooks/quries/useGetLecture'
 import LectureCard from './LectureCard'
 
 export default function LectureList() {
