@@ -8,8 +8,9 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import type { Lecture } from '@/types/lecture'
-import { Bookmark, ChevronDown, Star, StarHalf } from 'lucide-react'
+import { Bookmark, ChevronDown } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { FaRegStar, FaStar, FaStarHalfAlt } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
 import { Button } from '../common/Button'
 import { Badge } from '../ui/badge'
@@ -80,15 +81,13 @@ export default function LectureCard(lecture: Lecture) {
         </div>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{instructor}</CardDescription>
-        <div className="flex">
+        <div className="flex items-center gap-2">
           <div className="star-rating flex">
-            <div className="flex">
-              <Star fill="#FACC15" strokeWidth={0} />
-              <Star fill="#FACC15" strokeWidth={0} />
-              <Star fill="#FACC15" strokeWidth={0} />
-              <Star fill="#FACC15" strokeWidth={0} />
-              <StarHalf fill="#FACC15" strokeWidth={0} />
-            </div>
+            <FaStar size={20} fill="#FACC15"></FaStar>
+            <FaStar size={20} fill="#FACC15"></FaStar>
+            <FaStar size={20} fill="#FACC15"></FaStar>
+            <FaStarHalfAlt size={20} fill="#FACC15"></FaStarHalfAlt>
+            <FaRegStar size={20} fill="#FACC15" />
           </div>
           <p className="text-sm font-medium">{average_rating}</p>
         </div>
