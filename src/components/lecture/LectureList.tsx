@@ -1,12 +1,16 @@
-import useGetLectures from '@/hooks/quries/useGetLecture'
+import getLecturesApi from '@/api/lecture'
+import useInfiniteScroll from '@/hooks/quries/useInfiniteScroll'
 import React, { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 import LectureCard from './LectureCard'
 
 export default function LectureList() {
-  //data 불러오기
+  //무한쿼리 불러오기
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useGetLectures()
+    useInfiniteScroll({
+      queryKey: ['lectures'],
+      queryFn: (page) => getLecturesApi({ page }),
+    })
 
   //무한스크롤
   const { ref, inView } = useInView({
@@ -19,8 +23,7 @@ export default function LectureList() {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage()
     }
-    console.log('화면에 있니???', inView)
-  }, [inView])
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
   return (
     <>
