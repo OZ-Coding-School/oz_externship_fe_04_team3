@@ -1,6 +1,9 @@
 import React from 'react'
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+type InputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'prefix' | 'suffix'
+> & {
   label?: string
   error?: string
   helperText?: string
@@ -45,11 +48,6 @@ export function Input({
         className={`relative flex w-full items-center gap-2 rounded-md border bg-white px-4 py-2 transition-colors placeholder:text-gray-400 ${disabled ? 'cursor-not-allowed bg-gray-100 opacity-60' : ''} ${error ? 'border-red-500' : 'border-gray-300'} ${!error && !disabled ? 'focus-within:border-gray-400' : ''} ${className}`} //상태 우선순위: disabled -> error -> focus
       >
         {prefix && <span className="text-gray-500">{prefix}</span>}
-        {icon && (
-          <div className="text-custom-gray-400 absolute top-1/2 left-3 -translate-y-1/2">
-            {icon}
-          </div>
-        )}
         <input
           id={inputId}
           type={type}
@@ -58,7 +56,7 @@ export function Input({
           placeholder={placeholder}
           required={required}
           {...props}
-          className={`w-full bg-transparent text-gray-800 outline-none ${icon ? 'cursor-pointer pl-8' : ''}`}
+          className="w-full bg-transparent text-gray-800 outline-none"
         />
 
         {suffix && <span className="text-gray-500">{suffix}</span>}

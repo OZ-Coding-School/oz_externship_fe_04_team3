@@ -51,7 +51,7 @@ export function DatePickerInput({
         value={displayValue}
         onClick={handleToggle}
         className="cursor-pointer"
-        icon={<Calendar className="h-4 w-4" />}
+        suffix={<Calendar className="h-4 w-4 text-black" />}
         readOnly
       />
 
