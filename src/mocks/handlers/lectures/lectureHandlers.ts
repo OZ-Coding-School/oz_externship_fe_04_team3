@@ -1,6 +1,6 @@
 import mockData from '@/mocks/data/lectureList.json'
 
-import type { Lecture } from '@/types/lecture'
+import type { Lecture, LecturePageResponse } from '@/types/lecture'
 import { http, HttpResponse } from 'msw'
 const generateMockData = () => {
   const base = mockData.results as Lecture[]
@@ -19,28 +19,64 @@ const generateMockData = () => {
 
   return multiplied
 }
-
-interface PaginatedResponse {
-  count: number
-  next: string | null
-  previous: string | null
-  results: Lecture[]
-}
+const allLectures = generateMockData()
 
 export const lectureHandlers = [
   http.get('/api/v1/lectures', async ({ request }) => {
     const url = new URL(request.url)
     const page = parseInt(url.searchParams.get('page') || '1')
     const page_size = parseInt(url.searchParams.get('page_size') || '12')
-    const allLectures = generateMockData()
+    const search = url.searchParams.get('search')
+    const sort = url.searchParams.get('sort')
+    const category = url.searchParams.get('category')
+
+    let filtered = [...allLectures] // 복제된 원본배열을 사용하기.
+    // const copyFiltered = [...filtered]
+
+    // 1. 검색 필터
+    if (search) {
+      filtered = filtered.filter((lecture) =>
+        lecture.title.toLowerCase().includes(search.toLowerCase())
+      )
+    }
+
+    // 2. 카테고리 필터 (파라미터 있을 때만)
+    if (category) {
+      filtered = filtered.filter((lecture) =>
+        lecture.categories.some((i) => i.name === category)
+      )
+    }
+
+    // 3. 정렬 (선택이 된 데이터를 원본으로 설정했기 떄문에, 역주행으로 갈 경우에는 , 이미 변동이 된 원본을 보여주는 것 뿐.... )
+    if (sort) {
+      filtered = filtered.sort((a, b) => {
+        switch (sort) {
+          case 'latest':
+            return b.id - a.id
+          case 'oldest':
+            return a.id - b.id
+          case 'low_price':
+            return a.discounted_price - b.discounted_price
+          case 'high_price':
+            return b.discounted_price - a.discounted_price
+          case 'high_rating':
+            return parseFloat(b.average_rating) - parseFloat(a.average_rating)
+          case 'low_rating':
+            return parseFloat(a.average_rating) - parseFloat(b.average_rating)
+          default:
+            return 0
+        }
+      })
+    }
+
     const startIndex = (page - 1) * page_size
     const endIndex = startIndex + page_size
-    const paginatedLectures = allLectures.slice(startIndex, endIndex)
+    const paginatedLectures = filtered.slice(startIndex, endIndex)
 
-    const response: PaginatedResponse = {
-      count: allLectures.length,
+    const response: LecturePageResponse = {
+      count: filtered.length,
       next:
-        endIndex < allLectures.length
+        endIndex < filtered.length
           ? `/api/v1/lectures?page=${page + 1}&page_size=${page_size}`
           : null,
       previous:
