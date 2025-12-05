@@ -3,6 +3,7 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react'
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
+import { Label } from '@radix-ui/react-label'
 
 export type SelectData = {
   itemValue: string
@@ -10,9 +11,13 @@ export type SelectData = {
 }[]
 
 type SelectProps = {
+  name: string
   data: SelectData
   placeHolder: string
   title?: string
+  value?: string
+  required?: boolean
+  disabled?: boolean
   icon?: React.ReactNode
   onValueChange?: (value: string) => void
 }
@@ -22,27 +27,46 @@ export default function Select({
   data,
   title,
   icon,
+  value,
+  disabled,
+  required,
+  name,
+
   onValueChange,
 }: SelectProps) {
   return (
-    <>
-      <label>{title}</label>
-      <SelectField onValueChange={onValueChange}>
-        <SelectTrigger>
+    <div className="flex w-full flex-col">
+      <Label htmlFor={name}>
+        {required ? (
+          <div className="flex">
+            <p> {title}</p>
+            <p className="text-red-500">*</p>
+          </div>
+        ) : (
+          title
+        )}
+      </Label>
+      <SelectField
+        name={name}
+        value={value}
+        onValueChange={onValueChange}
+        key={name}
+      >
+        <SelectTrigger id={name} disabled={disabled} aria-required={required}>
           {icon}
           <SelectValue placeholder={placeHolder} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            {data.map((i) => (
-              <SelectItem key={i.itemValue} value={i.itemValue}>
+            {data.map((i, idx) => (
+              <SelectItem key={idx} value={i.itemValue}>
                 {i.itemText}
               </SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>
       </SelectField>
-    </>
+    </div>
   )
 }
 
