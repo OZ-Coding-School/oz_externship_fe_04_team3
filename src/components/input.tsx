@@ -1,5 +1,3 @@
-import React from 'react'
-
 type InputProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
   'prefix' | 'suffix'
@@ -24,7 +22,7 @@ export function Input({
   helperText,
   prefix,
   suffix,
-  icon,
+  icon: _icon,
   required = false,
   className = '',
   ...props

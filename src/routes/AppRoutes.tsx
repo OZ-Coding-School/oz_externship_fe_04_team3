@@ -27,7 +27,7 @@ function AppRoutes() {
           }
         />
 
-        <Route path="/yeoun" element={<YeeunTest />} />
+        <Route path="/yeeun" element={<YeeunTest />} />
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/manage" element={<ManagePage />} />
         <Route path="/write" element={<WritePage />} />
