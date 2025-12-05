@@ -21,8 +21,7 @@ const MOCK_RECRUITMENTS: ManageRecruitment[] = [
   {
     uuid: 'b8dbd77f-cf73-4ef4-9914-4394d5ab366e',
     title: '[급구] 파이썬 주 1회 스터디원 구합니다.',
-    thumbnailImgUrl:
-      'https://placehold.co/160x120/png?text=Recruitment+1',
+    thumbnailImgUrl: 'https://placehold.co/160x120/png?text=Recruitment+1',
     expectedHeadcount: 10,
     closeAt: '2025-11-20T00:00:05.875842+09:00',
     viewsCount: 100,
@@ -40,8 +39,7 @@ const MOCK_RECRUITMENTS: ManageRecruitment[] = [
   {
     uuid: 'c1d2e3f4-cf73-4ef4-9914-4394d5ab366e',
     title: '프론트엔드(React) 스터디 모집',
-    thumbnailImgUrl:
-      'https://placehold.co/160x120/png?text=Recruitment+2',
+    thumbnailImgUrl: 'https://placehold.co/160x120/png?text=Recruitment+2',
     expectedHeadcount: 8,
     closeAt: '2024-05-10T00:00:05.875842+09:00',
     viewsCount: 240,

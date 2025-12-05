@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw'
-import { userInformationHandler } from './handlers/user'
+import { lectureHandlers } from './handlers/lectures/lectureHandlers'
 import { notificationHandlers } from './handlers/notification'
+import { userInformationHandler } from './handlers/user'
 
 type User = { id: number; name: string; email: string }
 
@@ -14,6 +15,8 @@ export const handlers = [
   ...userInformationHandler,
   // 알림 핸들러
   ...notificationHandlers,
+  // 강의목록 핸들러
+  ...lectureHandlers,
 
   http.get('/api/users', () => {
     return HttpResponse.json(users)
