@@ -35,7 +35,7 @@ export default function Select({
   onValueChange,
 }: SelectProps) {
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className="flex w-full flex-col">
       <Label htmlFor={name}>
         {required ? (
           <div className="flex">

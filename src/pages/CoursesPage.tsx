@@ -61,7 +61,7 @@ export default function Courses() {
           description="로그인하시면 관심 분야를 바탕으로 맞춤형 강의"
         ></GuestRecommendSection>
       </section>
-      <section className="courses_filter flex gap-4 rounded-md border border-gray-200 bg-white p-6">
+      <section className="courses_filter flex gap-2 rounded-md border border-gray-200 bg-white p-6">
         <Input
           prefix={<Search />}
           className="h-[38px]"
@@ -70,12 +70,10 @@ export default function Courses() {
         ></Input>
         <Select
           icon={<Folder />}
-          title="카테고리"
           name="category"
           value={category ?? 'default'}
           data={categoryData}
           placeHolder="카테고리"
-          required
           onValueChange={(value) => {
             setCategory(
               value === 'default'
@@ -102,7 +100,6 @@ export default function Courses() {
       <section className="courses_cardlist">
         <LectureList data={data}></LectureList>
       </section>
-      {/* 페이지 로드하고, 더이상 보여줄 페이지가 없다면? 없다는 텍스트 노출 */}
       {!hasNextPage ? (
         <div className="flex-center mt-12 h-12 rounded-md bg-gray-400 text-center text-white">
           더 이상 강의가 없습니다.
