@@ -7,16 +7,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { LectureLevel } from '@/mappers/lectures/lecture'
 import type { Lecture } from '@/types/lecture'
-import { Bookmark, ChevronDown } from 'lucide-react'
+import { Bookmark, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { FaRegStar, FaStar, FaStarHalfAlt } from 'react-icons/fa'
-import { useNavigate } from 'react-router'
 import { Button } from '../common/Button'
 import { Badge } from '../ui/badge'
+import LectureReviewCard from './LectureReviewCard'
 
 export default function LectureCard(lecture: Lecture) {
-  const navigate = useNavigate()
   const {
     title,
     instructor,
@@ -30,14 +30,10 @@ export default function LectureCard(lecture: Lecture) {
     url_link,
   } = lecture
 
-  const difficultyMap = {
-    EASY: '초급',
-    NORMAL: '중급',
-    HARD: '고급',
-  }
-
-  /* 북마크 확인용 */
+  /* 북마크 및 리뷰보기 모달창 상태 */
   const [isBookMarked, setIsBookMarked] = useState(false)
+  const [showReviewModal, setReviewShowModal] = useState(false)
+  console.log(`showReviewModal ${showReviewModal}`)
   useEffect(() => {
     console.log(isBookMarked)
   }, [isBookMarked])
@@ -74,7 +70,7 @@ export default function LectureCard(lecture: Lecture) {
       </CardHeader>
       <CardContent>
         <div className="Card-Content-badge flex gap-1">
-          <Badge variant={'success'}>{difficultyMap[difficulty]}</Badge>
+          <Badge variant={'success'}>{LectureLevel[difficulty]}</Badge>
           {categories.map((i) => (
             <Badge key={i.id}>{i.name}</Badge>
           ))}
@@ -99,14 +95,29 @@ export default function LectureCard(lecture: Lecture) {
         </div>
       </CardContent>
       <CardFooter>
-        <div
-          className="text-primary-500 flex items-center gap-1"
-          onClick={() => navigate(`${url_link}`)}
+        <Button
+          variant={'ghost'}
+          aria-label={`${title} 리뷰 페이지로 이동`}
+          onClick={() => setReviewShowModal(!showReviewModal)}
         >
-          <ChevronDown size={14} />
+          <Plus size={14} />
           리뷰 보러 가기
-        </div>
-        <Button aria-label={`${title} 강의 페이지로 이동`}>강의보러가기</Button>
+        </Button>
+        {showReviewModal && (
+          <LectureReviewCard
+            open={showReviewModal}
+            setOpen={setReviewShowModal}
+            lectures={lecture}
+          ></LectureReviewCard>
+        )}
+        <Button
+          aria-label={`${title} 강의 페이지로 이동`}
+          onClick={() => {
+            window.open(url_link, '_blank')
+          }}
+        >
+          강의보러가기
+        </Button>
       </CardFooter>
     </Card>
   )
