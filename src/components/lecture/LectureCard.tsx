@@ -14,7 +14,6 @@ import { useEffect, useState } from 'react'
 import { FaRegStar, FaStar, FaStarHalfAlt } from 'react-icons/fa'
 import { Button } from '../common/Button'
 import { Badge } from '../ui/badge'
-import LectureReviewCard from './LectureReviewCard'
 
 export default function LectureCard(lecture: Lecture) {
   const {
