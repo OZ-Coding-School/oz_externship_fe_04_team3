@@ -2,7 +2,8 @@ import { Select } from '@/components/common'
 import GuestRecommendSection from '@/components/GuestRecommendSection'
 import { Input } from '@/components/input'
 import LectureList from '@/components/lecture/LectureList'
-import { categoryData, sortData } from '@/mocks/data/selectMockData'
+import { categoryData, sortData } from '@/mappers/lectures/lecture'
+
 import { ArrowDownWideNarrow, Folder, Search } from 'lucide-react'
 
 export default function Courses() {
