@@ -29,10 +29,7 @@ export const lectureHandlers = [
     const search = url.searchParams.get('search')
     const sort = url.searchParams.get('sort')
     const category = url.searchParams.get('category')
-
-    let filtered = [...allLectures] // 복제된 원본배열을 사용하기.
-    // const copyFiltered = [...filtered]
-
+    let filtered = [...allLectures]
     // 1. 검색 필터
     if (search) {
       filtered = filtered.filter((lecture) =>
@@ -49,7 +46,7 @@ export const lectureHandlers = [
 
     // 3. 정렬 (선택이 된 데이터를 원본으로 설정했기 떄문에, 역주행으로 갈 경우에는 , 이미 변동이 된 원본을 보여주는 것 뿐.... )
     if (sort) {
-      filtered = filtered.sort((a, b) => {
+      filtered = [...filtered].sort((a, b) => {
         switch (sort) {
           case 'latest':
             return b.id - a.id
