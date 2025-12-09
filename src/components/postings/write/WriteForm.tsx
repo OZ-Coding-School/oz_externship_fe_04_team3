@@ -28,6 +28,7 @@ export default function WriteForm() {
         </div>
         <div>
           <Select
+            name="대상 스터디 그룹"
             title="대상 스터디 그룹"
             placeHolder="스터디 그룹을 선택해주세요"
             data={groutData}
@@ -43,6 +44,7 @@ export default function WriteForm() {
           </div>
           <div className="w-full">
             <Select
+              name="대상 스터디 그룹"
               title="대상 스터디 그룹"
               placeHolder="스터디 그룹을 선택해주세요"
               data={groutData}
