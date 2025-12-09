@@ -1,19 +1,16 @@
 import React from 'react'
 
-interface InputProps {
-  id?: string
+type InputProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'prefix' | 'suffix'
+> & {
   label?: string
-  value?: string
-  placeholder?: string
-  type?: string
-  disabled?: boolean
   error?: string
   helperText?: string
   prefix?: React.ReactNode
   suffix?: React.ReactNode
-  required?: boolean
-  className: string
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  icon?: React.ReactNode
+  className?: string
 }
 
 export function Input({
@@ -27,9 +24,10 @@ export function Input({
   helperText,
   prefix,
   suffix,
+  icon,
   required = false,
-  className,
-  onChange,
+  className = '',
+  ...props
 }: InputProps) {
   const inputId =
     id ||
@@ -47,10 +45,9 @@ export function Input({
       )}
 
       <div
-        className={`flex w-full items-center gap-2 rounded-md border bg-white px-4 py-2 transition-colors placeholder:text-gray-400 ${disabled ? 'cursor-not-allowed bg-gray-100 opacity-60' : ''} ${error ? 'border-red-500' : 'border-gray-300'} ${!error && !disabled ? 'focus-within:border-gray-400' : ''} ${className}`} //상태 우선순위: disabled -> error -> focus
+        className={`relative flex w-full items-center gap-2 rounded-md border bg-white px-4 py-2 transition-colors placeholder:text-gray-400 ${disabled ? 'cursor-not-allowed bg-gray-100 opacity-60' : ''} ${error ? 'border-red-500' : 'border-gray-300'} ${!error && !disabled ? 'focus-within:border-gray-400' : ''} ${className}`} //상태 우선순위: disabled -> error -> focus
       >
         {prefix && <span className="text-gray-500">{prefix}</span>}
-
         <input
           id={inputId}
           type={type}
@@ -58,7 +55,7 @@ export function Input({
           disabled={disabled}
           placeholder={placeholder}
           required={required}
-          onChange={onChange}
+          {...props}
           className="w-full bg-transparent text-gray-800 outline-none"
         />
 

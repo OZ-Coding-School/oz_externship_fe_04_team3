@@ -1,5 +1,5 @@
 import Layout from '@/components/common/layout/Layout'
-import { Courses, Main, Manage, YeeunTest } from '@/pages'
+import { Courses, Main, Manage, PostingWrite, YeeunTest } from '@/pages'
 import { Route, Routes } from 'react-router'
 function AppRoutes() {
   return (
@@ -10,6 +10,7 @@ function AppRoutes() {
         <Route path="/courses" element={<Courses></Courses>}></Route>
         <Route path="/yeeun" element={<YeeunTest></YeeunTest>}></Route>
         <Route path="/posting/manage" element={<Manage />}></Route>
+        <Route path="/posting/write" element={<PostingWrite />}></Route>
       </Route>
     </Routes>
   )

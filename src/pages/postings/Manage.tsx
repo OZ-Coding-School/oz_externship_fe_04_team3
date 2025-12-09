@@ -55,7 +55,7 @@ const MOCK_RECRUITMENTS: ManageRecruitment[] = [
 
 export default function Manage() {
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6">
+    <div className="mx-auto flex flex-col gap-6 px-4 py-6">
       <ManageHeader />
       <ManageDashboard
         totalCount={MOCK_RECRUITMENTS.length}
