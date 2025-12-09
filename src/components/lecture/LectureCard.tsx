@@ -45,7 +45,6 @@ export default function LectureCard(lectures: Lecture) {
         <CardAction className="absolute z-10 justify-between px-3 py-3">
           <div className="top-2 flex flex-col gap-2">
             <Badge variant={'platform'}>{platform}</Badge>
-            {/* 할인율계산은 추후 헬퍼함수를 통해 구현할 예정 */}
             <Badge variant={'discount'}>
               {getDiscount(discounted_price, original_price)}% 할인
             </Badge>

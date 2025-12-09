@@ -1,3 +1,4 @@
+import { getDiscount } from '@/helpers/getDiscount'
 import { LectureLevel } from '@/mappers/lectures/lecture'
 import type { Lecture } from '@/types/lecture'
 import { FaRegStar, FaStar, FaStarHalfAlt } from 'react-icons/fa'
@@ -45,7 +46,9 @@ export default function LectureReviewCard({
             <CardAction className="absolute z-10 justify-between px-3 py-3">
               <div className="top-2 flex flex-col gap-2">
                 <Badge variant={'platform'}>{platform}</Badge>
-                <Badge variant={'discount'}>32% 할인</Badge>
+                <Badge variant={'discount'}>
+                  {getDiscount(discounted_price, original_price)}% 할인
+                </Badge>
               </div>
             </CardAction>
 
