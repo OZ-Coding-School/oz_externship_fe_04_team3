@@ -16,7 +16,7 @@ import { Button } from '../common/Button'
 import { Badge } from '../ui/badge'
 import LectureReviewCard from './LectureReviewCard'
 
-export default function LectureCard(lecture: Lecture) {
+export default function LectureCard(lectures: Lecture) {
   const {
     title,
     instructor,
@@ -28,7 +28,7 @@ export default function LectureCard(lecture: Lecture) {
     average_rating,
     categories,
     url_link,
-  } = lecture
+  } = lectures
 
   /* 북마크 및 리뷰보기 모달창 상태 */
   const [isBookMarked, setIsBookMarked] = useState(false)
@@ -71,7 +71,7 @@ export default function LectureCard(lecture: Lecture) {
       <CardContent>
         <div className="Card-Content-badge flex gap-1">
           <Badge variant={'success'}>{LectureLevel[difficulty]}</Badge>
-          {categories.map((i) => (
+          {categories?.map((i) => (
             <Badge key={i.id}>{i.name}</Badge>
           ))}
         </div>
@@ -107,8 +107,8 @@ export default function LectureCard(lecture: Lecture) {
           <LectureReviewCard
             open={showReviewModal}
             setOpen={setReviewShowModal}
-            lectures={lecture}
-          ></LectureReviewCard>
+            lecture={lectures}
+          />
         )}
         <Button
           aria-label={`${title} 강의 페이지로 이동`}
