@@ -5,6 +5,7 @@ export default function ManageSearch() {
     <div className="flex-between flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 md:flex-row">
       <div className="w-full md:w-1/2">
         <Select
+          name="state"
           title="상태"
           placeHolder="상태 선택"
           data={[
@@ -16,6 +17,7 @@ export default function ManageSearch() {
       </div>
       <div className="w-full md:w-1/2">
         <Select
+          name="sort"
           title="정렬"
           placeHolder="정렬 선택"
           data={[

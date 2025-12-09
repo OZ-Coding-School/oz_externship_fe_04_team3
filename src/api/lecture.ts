@@ -4,17 +4,18 @@ import { axiosInstance } from './axios'
 export default async function getLecturesApi(
   params: LecturesParams = {}
 ): Promise<LecturePageResponse> {
+  // 객체타입 Record<키값:키밸류>
+  const queryParams: Record<string, string | number> = {}
+
+  if (params.page) queryParams.page = params.page
+  if (params.page_size) queryParams.page_size = params.page_size
+  if (params.search) queryParams.search = params.search
+  if (params.sort) queryParams.sort = params.sort
+  if (params.category) queryParams.category = params.category
+
   const { data } = await axiosInstance.get<LecturePageResponse>(
     '/v1/lectures',
-    {
-      params: {
-        page: params.page ?? 1,
-        page_size: params.page_size ?? 12,
-        search: params.search,
-        sort: params.sort,
-        category: params.category,
-      },
-    }
+    { params: queryParams }
   )
   return data
 }
