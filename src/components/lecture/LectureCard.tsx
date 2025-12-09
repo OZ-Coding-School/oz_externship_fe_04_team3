@@ -97,6 +97,7 @@ export default function LectureCard(lectures: Lecture) {
       <CardFooter>
         <Button
           variant={'ghost'}
+          className="text-primary-500"
           aria-label={`${title} 리뷰 페이지로 이동`}
           onClick={() => setReviewShowModal(!showReviewModal)}
         >
