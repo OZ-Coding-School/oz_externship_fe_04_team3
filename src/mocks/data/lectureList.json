@@ -14,7 +14,7 @@
       "thumbnail_img_url": "https://picsum.photos/seed/1/400/240",
       "average_rating": "4.01",
       "platform": "UDEMY",
-      "url_link": "https://example_url_0.com",
+      "url_link": "https://jsonplaceholder.typicode.com/todos/203",
       "categories": [
         {
           "id": 96,
@@ -32,27 +32,21 @@
       "reviews": [
         {
           "id": 32,
-          "rating": 2,
-          "content": "예시 내용1",
-          "created_at": "2004-12-01T00:00:00+09:00"
+          "rating": 5,
+          "content": "기초부터 차근차근 설명해주셔서 초보자도 따라가기 쉬웠어요. 실습 예제도 유용했습니다!",
+          "created_at": "2024-11-15T00:00:00+09:00"
         },
         {
           "id": 23,
-          "rating": 5,
-          "content": "예시 내용2",
-          "created_at": "2020-01-21T00:00:00+09:00"
+          "rating": 4,
+          "content": "전반적으로 만족스러운 강의입니다. 다만 좀 더 심화 내용이 있었으면 좋겠어요.",
+          "created_at": "2024-10-21T00:00:00+09:00"
         },
         {
           "id": 55,
           "rating": 5,
-          "content": "예시 내용3",
-          "created_at": "2014-02-11T00:00:00+09:00"
-        },
-        {
-          "id": 52,
-          "rating": 1,
-          "content": "예시 내용4",
-          "created_at": "2023-12-23T00:00:00+09:00"
+          "content": "실무에 바로 적용할 수 있는 내용들이라 정말 유익했습니다. 강력 추천!",
+          "created_at": "2024-09-11T00:00:00+09:00"
         }
       ]
     },
@@ -67,7 +61,7 @@
       "thumbnail_img_url": "https://picsum.photos/seed/2/400/240",
       "average_rating": "2.76",
       "platform": "INFLEARN",
-      "url_link": "https://example_url_1.com",
+      "url_link": "https://jsonplaceholder.typicode.com/todos/569",
       "categories": [
         {
           "id": 2,
@@ -86,26 +80,14 @@
         {
           "id": 47,
           "rating": 2,
-          "content": "예시 내용1",
-          "created_at": "2010-10-09T00:00:00+09:00"
+          "content": "난이도가 너무 높아서 중급자라도 따라가기 힘들었습니다. 사전 지식이 많이 필요해요.",
+          "created_at": "2024-08-09T00:00:00+09:00"
         },
         {
           "id": 31,
-          "rating": 5,
-          "content": "예시 내용2",
-          "created_at": "2021-03-20T00:00:00+09:00"
-        },
-        {
-          "id": 92,
-          "rating": 4,
-          "content": "예시 내용3",
-          "created_at": "2015-11-14T00:00:00+09:00"
-        },
-        {
-          "id": 52,
-          "rating": 5,
-          "content": "예시 내용4",
-          "created_at": "2004-09-01T00:00:00+09:00"
+          "rating": 3,
+          "content": "내용은 좋은데 설명이 조금 불친절한 부분이 있어서 아쉬웠어요.",
+          "created_at": "2024-07-20T00:00:00+09:00"
         }
       ]
     },
@@ -120,7 +102,7 @@
       "thumbnail_img_url": "https://picsum.photos/seed/3/400/240",
       "average_rating": "4.20",
       "platform": "INFLEARN",
-      "url_link": "https://example_url_2.com",
+      "url_link": "https://jsonplaceholder.typicode.com/todos/931",
       "categories": [
         {
           "id": 55,
@@ -139,26 +121,26 @@
         {
           "id": 17,
           "rating": 5,
-          "content": "예시 내용1",
-          "created_at": "2003-12-16T00:00:00+09:00"
+          "content": "짧은 시간 안에 핵심만 배울 수 있어서 좋았습니다. 바쁜 직장인에게 추천!",
+          "created_at": "2024-11-16T00:00:00+09:00"
         },
         {
           "id": 24,
-          "rating": 5,
-          "content": "예시 내용2",
-          "created_at": "2001-10-24T00:00:00+09:00"
+          "rating": 4,
+          "content": "실습 위주로 진행되어서 이해하기 쉬웠어요. 가성비 좋은 강의입니다.",
+          "created_at": "2024-10-24T00:00:00+09:00"
         },
         {
           "id": 22,
           "rating": 5,
-          "content": "예시 내용3",
-          "created_at": "2003-05-22T00:00:00+09:00"
+          "content": "강사님 설명이 명쾌하고 예제가 실용적이에요. 완강했습니다!",
+          "created_at": "2024-09-22T00:00:00+09:00"
         },
         {
           "id": 82,
-          "rating": 1,
-          "content": "예시 내용4",
-          "created_at": "2008-12-22T00:00:00+09:00"
+          "rating": 4,
+          "content": "전체적으로 만족스럽지만 일부 섹션은 조금 빠르게 넘어가는 느낌이었어요.",
+          "created_at": "2024-08-12T00:00:00+09:00"
         }
       ]
     },
@@ -173,7 +155,7 @@
       "thumbnail_img_url": "https://picsum.photos/seed/4/400/240",
       "average_rating": "1.76",
       "platform": "UDEMY",
-      "url_link": "https://example_url_3.com",
+      "url_link": "https://jsonplaceholder.typicode.com/todos/485",
       "categories": [
         {
           "id": 40,
@@ -192,26 +174,14 @@
         {
           "id": 68,
           "rating": 1,
-          "content": "예시 내용1",
-          "created_at": "2022-12-20T00:00:00+09:00"
+          "content": "강의 내용이 너무 오래되었고, 최신 트렌드와 맞지 않아요. 업데이트가 필요합니다.",
+          "created_at": "2024-06-20T00:00:00+09:00"
         },
         {
           "id": 82,
-          "rating": 5,
-          "content": "예시 내용2",
-          "created_at": "2020-01-02T00:00:00+09:00"
-        },
-        {
-          "id": 92,
-          "rating": 3,
-          "content": "예시 내용3",
-          "created_at": "2001-01-04T00:00:00+09:00"
-        },
-        {
-          "id": 77,
-          "rating": 4,
-          "content": "예시 내용4",
-          "created_at": "2013-03-07T00:00:00+09:00"
+          "rating": 2,
+          "content": "기대했던 것보다 내용이 부실했어요. 가격 대비 아쉬운 강의입니다.",
+          "created_at": "2024-05-02T00:00:00+09:00"
         }
       ]
     },
@@ -226,7 +196,7 @@
       "thumbnail_img_url": "https://picsum.photos/seed/5/400/240",
       "average_rating": "1.45",
       "platform": "UDEMY",
-      "url_link": "https://example_url_4.com",
+      "url_link": "https://jsonplaceholder.typicode.com/todos/784",
       "categories": [
         {
           "id": 11,
@@ -244,27 +214,9 @@
       "reviews": [
         {
           "id": 5,
-          "rating": 2,
-          "content": "예시 내용1",
-          "created_at": "2002-07-06T00:00:00+09:00"
-        },
-        {
-          "id": 92,
-          "rating": 3,
-          "content": "예시 내용2",
-          "created_at": "2016-12-11T00:00:00+09:00"
-        },
-        {
-          "id": 100,
-          "rating": 3,
-          "content": "예시 내용3",
-          "created_at": "2023-03-06T00:00:00+09:00"
-        },
-        {
-          "id": 35,
-          "rating": 4,
-          "content": "예시 내용4",
-          "created_at": "2000-05-24T00:00:00+09:00"
+          "rating": 1,
+          "content": "강의 시간만 길고 핵심 내용이 부족합니다. 다른 강의 추천해요.",
+          "created_at": "2024-07-06T00:00:00+09:00"
         }
       ]
     },
@@ -279,7 +231,7 @@
       "thumbnail_img_url": "https://picsum.photos/seed/6/400/240",
       "average_rating": "1.04",
       "platform": "INFLEARN",
-      "url_link": "https://example_url_5.com",
+      "url_link": "https://jsonplaceholder.typicode.com/todos/578",
       "categories": [
         {
           "id": 34,
@@ -298,26 +250,14 @@
         {
           "id": 26,
           "rating": 1,
-          "content": "예시 내용1",
-          "created_at": "2000-04-24T00:00:00+09:00"
+          "content": "강의 퀄리티가 기대 이하입니다. 환불 신청했어요.",
+          "created_at": "2024-04-24T00:00:00+09:00"
         },
         {
           "id": 24,
           "rating": 1,
-          "content": "예시 내용2",
-          "created_at": "2019-08-28T00:00:00+09:00"
-        },
-        {
-          "id": 72,
-          "rating": 2,
-          "content": "예시 내용3",
-          "created_at": "2023-05-04T00:00:00+09:00"
-        },
-        {
-          "id": 87,
-          "rating": 1,
-          "content": "예시 내용4",
-          "created_at": "2007-01-18T00:00:00+09:00"
+          "content": "설명이 두서없고 예제도 동작하지 않습니다. 실망스러워요.",
+          "created_at": "2024-03-28T00:00:00+09:00"
         }
       ]
     },
@@ -332,7 +272,7 @@
       "thumbnail_img_url": "https://picsum.photos/seed/7/400/240",
       "average_rating": "2.07",
       "platform": "UDEMY",
-      "url_link": "https://example_url_6.com",
+      "url_link": "https://jsonplaceholder.typicode.com/todos/307",
       "categories": [
         {
           "id": 15,
@@ -351,26 +291,20 @@
         {
           "id": 41,
           "rating": 2,
-          "content": "예시 내용1",
-          "created_at": "2003-10-06T00:00:00+09:00"
+          "content": "기본 개념 설명은 괜찮은데 실습이 부족해요. 조금 아쉽습니다.",
+          "created_at": "2024-10-06T00:00:00+09:00"
         },
         {
           "id": 22,
           "rating": 3,
-          "content": "예시 내용2",
-          "created_at": "2014-03-09T00:00:00+09:00"
+          "content": "보통 수준의 강의예요. 특별히 나쁘진 않지만 특출나지도 않습니다.",
+          "created_at": "2024-09-09T00:00:00+09:00"
         },
         {
           "id": 56,
           "rating": 2,
-          "content": "예시 내용3",
-          "created_at": "2018-04-18T00:00:00+09:00"
-        },
-        {
-          "id": 73,
-          "rating": 2,
-          "content": "예시 내용4",
-          "created_at": "2016-05-11T00:00:00+09:00"
+          "content": "강의 자료가 불친절하고 Q&A 응답이 느려요.",
+          "created_at": "2024-08-18T00:00:00+09:00"
         }
       ]
     },
@@ -385,7 +319,7 @@
       "thumbnail_img_url": "https://picsum.photos/seed/8/400/240",
       "average_rating": "2.76",
       "platform": "INFLEARN",
-      "url_link": "https://example_url_7.com",
+      "url_link": "https://jsonplaceholder.typicode.com/todos/296",
       "categories": [
         {
           "id": 41,
@@ -403,27 +337,27 @@
       "reviews": [
         {
           "id": 66,
-          "rating": 1,
-          "content": "예시 내용1",
-          "created_at": "2022-08-27T00:00:00+09:00"
+          "rating": 3,
+          "content": "입문자에게는 적당한 수준이지만 깊이가 부족해요.",
+          "created_at": "2024-08-27T00:00:00+09:00"
         },
         {
           "id": 2,
-          "rating": 5,
-          "content": "예시 내용2",
-          "created_at": "2005-02-20T00:00:00+09:00"
+          "rating": 4,
+          "content": "가격 대비 괜찮은 강의입니다. 기본기를 다지기 좋아요.",
+          "created_at": "2024-07-20T00:00:00+09:00"
         },
         {
           "id": 50,
           "rating": 2,
-          "content": "예시 내용3",
-          "created_at": "2021-05-24T00:00:00+09:00"
+          "content": "중간중간 설명이 생략된 부분이 많아서 헷갈렸어요.",
+          "created_at": "2024-06-24T00:00:00+09:00"
         },
         {
           "id": 72,
           "rating": 3,
-          "content": "예시 내용4",
-          "created_at": "2007-05-19T00:00:00+09:00"
+          "content": "나쁘지 않지만 다른 강의와 비교하면 특색이 없어요.",
+          "created_at": "2024-05-19T00:00:00+09:00"
         }
       ]
     },
@@ -438,7 +372,7 @@
       "thumbnail_img_url": "https://picsum.photos/seed/9/400/240",
       "average_rating": "4.98",
       "platform": "INFLEARN",
-      "url_link": "https://example_url_8.com",
+      "url_link": "https://jsonplaceholder.typicode.com/todos/183",
       "categories": [
         {
           "id": 80,
@@ -457,26 +391,20 @@
         {
           "id": 5,
           "rating": 5,
-          "content": "예시 내용1",
-          "created_at": "2004-07-21T00:00:00+09:00"
+          "content": "최고의 AI 강의입니다! 이론과 실습의 밸런스가 완벽해요. 강력 추천합니다!",
+          "created_at": "2024-11-21T00:00:00+09:00"
         },
         {
           "id": 19,
-          "rating": 4,
-          "content": "예시 내용2",
-          "created_at": "2025-09-24T00:00:00+09:00"
+          "rating": 5,
+          "content": "어려운 개념을 쉽게 설명해주셔서 이해가 잘 됐어요. 프로젝트에 바로 적용했습니다.",
+          "created_at": "2024-10-24T00:00:00+09:00"
         },
         {
           "id": 73,
-          "rating": 3,
-          "content": "예시 내용3",
-          "created_at": "2015-04-15T00:00:00+09:00"
-        },
-        {
-          "id": 84,
-          "rating": 2,
-          "content": "예시 내용4",
-          "created_at": "2021-01-28T00:00:00+09:00"
+          "rating": 5,
+          "content": "강사님이 현업 경험을 바탕으로 설명해주셔서 실무 감각을 키울 수 있었습니다.",
+          "created_at": "2024-09-15T00:00:00+09:00"
         }
       ]
     },
@@ -491,7 +419,7 @@
       "thumbnail_img_url": "https://picsum.photos/seed/10/400/240",
       "average_rating": "3.18",
       "platform": "INFLEARN",
-      "url_link": "https://example_url_9.com",
+      "url_link": "https://jsonplaceholder.typicode.com/todos/410",
       "categories": [
         {
           "id": 49,
@@ -509,27 +437,21 @@
       "reviews": [
         {
           "id": 66,
-          "rating": 2,
-          "content": "예시 내용1",
-          "created_at": "2001-06-25T00:00:00+09:00"
+          "rating": 4,
+          "content": "디자인과 데이터 사이언스를 함께 다뤄서 신선했어요. 유익한 강의입니다.",
+          "created_at": "2024-11-25T00:00:00+09:00"
         },
         {
           "id": 20,
-          "rating": 1,
-          "content": "예시 내용2",
-          "created_at": "2018-07-09T00:00:00+09:00"
+          "rating": 3,
+          "content": "내용은 괜찮은데 진도가 조금 빠른 편이에요. 복습이 필요합니다.",
+          "created_at": "2024-10-09T00:00:00+09:00"
         },
         {
           "id": 3,
           "rating": 4,
-          "content": "예시 내용3",
-          "created_at": "2022-11-18T00:00:00+09:00"
-        },
-        {
-          "id": 1,
-          "rating": 5,
-          "content": "예시 내용4",
-          "created_at": "2003-12-20T00:00:00+09:00"
+          "content": "실전 프로젝트가 포함되어 있어서 포트폴리오 제작에 도움이 됐어요.",
+          "created_at": "2024-09-18T00:00:00+09:00"
         }
       ]
     }

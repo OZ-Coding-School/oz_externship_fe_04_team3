@@ -20,3 +20,9 @@ export const categoryData: SelectData = [
   { itemValue: 'hardware', itemText: '하드웨어' },
   { itemValue: 'design', itemText: '디자인' },
 ]
+
+export const LectureLevel: Record<string, string> = {
+  EASY: '초급',
+  NORMAL: '중급',
+  HARD: '고급',
+}
