@@ -88,11 +88,29 @@ export const recruitmentHandlers = [
       (sort as RecruitmentSortKey | undefined) ?? 'latest'
     )
 
+    const isClosedParam = url.searchParams.get('is_closed')
+    const filterClosed =
+      isClosedParam === null ? undefined : isClosedParam === 'true'
+
+    // close_at 기준으로 마감 여부 계산
+    const now = Date.now()
+    const withClosedFlag = results.map((item) => ({
+      ...item,
+      is_closed: new Date(item.close_at).getTime() <= now,
+    }))
+
+    let filtered = withClosedFlag
+
+    // is_closed 필터 적용
+    if (typeof filterClosed === 'boolean') {
+      filtered = filtered.filter((item) => item.is_closed === filterClosed)
+    }
+
     // 페이지네이션
-    const totalCount = results.length
+    const totalCount = filtered.length
     const startIdx = (page - 1) * pageSize
     const endIdx = startIdx + pageSize
-    const paginatedResults = results.slice(startIdx, endIdx)
+    const paginatedResults = filtered.slice(startIdx, endIdx)
 
     // next/previous URL 생성
     const baseUrl = new URL(request.url).origin + '/api/v1/recruitments?'

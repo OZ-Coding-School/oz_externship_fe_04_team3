@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw'
 import { lectureHandlers } from './handlers/lectures/lectureHandlers'
 import { notificationHandlers } from './handlers/notification'
 import { userInformationHandler } from './handlers/user'
-import { recruitmentHandlers } from './handlers/recruitments'
+import { recruitmentHandlers } from './handlers/myRecruitments'
 
 type User = { id: number; name: string; email: string }
 
