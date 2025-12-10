@@ -2,67 +2,51 @@ import ManageDashboard from '@/components/postings/manage/ManageDashboard'
 import ManageHeader from '@/components/postings/manage/ManageHeader'
 import ManageList from '@/components/postings/manage/ManageList'
 import ManageSearch from '@/components/postings/manage/ManageSearch'
-
-export type ManageRecruitment = {
-  uuid: string
-  title: string
-  thumbnailImgUrl: string
-  expectedHeadcount: number
-  closeAt: string
-  viewsCount: number
-  bookmarkCount: number
-  lectures: { id: number; title: string; instructor: string }[]
-  tags: { id: number; name: string }[]
-  isClosed: boolean
-}
-
-// API 응답을 매핑했다고 가정한 목업 데이터
-const MOCK_RECRUITMENTS: ManageRecruitment[] = [
-  {
-    uuid: 'b8dbd77f-cf73-4ef4-9914-4394d5ab366e',
-    title: '[급구] 파이썬 주 1회 스터디원 구합니다.',
-    thumbnailImgUrl: 'https://placehold.co/160x120/png?text=Recruitment+1',
-    expectedHeadcount: 10,
-    closeAt: '2025-11-20T00:00:05.875842+09:00',
-    viewsCount: 100,
-    bookmarkCount: 36,
-    lectures: [
-      { id: 1, title: '파이썬 마스터하기', instructor: '김한영' },
-      { id: 2, title: '알고리즘 실전', instructor: '홍길동' },
-    ],
-    tags: [
-      { id: 1, name: 'python' },
-      { id: 2, name: 'backend' },
-    ],
-    isClosed: false,
-  },
-  {
-    uuid: 'c1d2e3f4-cf73-4ef4-9914-4394d5ab366e',
-    title: '프론트엔드(React) 스터디 모집',
-    thumbnailImgUrl: 'https://placehold.co/160x120/png?text=Recruitment+2',
-    expectedHeadcount: 8,
-    closeAt: '2024-05-10T00:00:05.875842+09:00',
-    viewsCount: 240,
-    bookmarkCount: 58,
-    lectures: [{ id: 3, title: 'React 핵심', instructor: '이효리' }],
-    tags: [
-      { id: 3, name: 'frontend' },
-      { id: 4, name: 'react' },
-    ],
-    isClosed: true,
-  },
-]
+import { useRecruitments } from '@/hooks/quries/useMyRecruitments'
+import { useState } from 'react'
+import type { MyRecruitmentParams } from '@/types/myRecruitment'
 
 export default function Manage() {
+  const [status, setStatus] = useState<'all' | 'open' | 'closed'>('all')
+  const [sort, setSort] = useState<MyRecruitmentParams['sort']>('latest')
+
+  const { data, totalCount, openCount, closedCount, isLoading, error } =
+    useRecruitments({
+      page: 1,
+      page_size: 10,
+      sort,
+      is_closed:
+        status === 'all' ? undefined : status === 'closed' ? true : false,
+    })
+
+  const postings = data ?? []
+
   return (
     <div className="mx-auto flex flex-col gap-6 px-4 py-6">
       <ManageHeader />
       <ManageDashboard
-        totalCount={MOCK_RECRUITMENTS.length}
-        closedCount={MOCK_RECRUITMENTS.filter((r) => r.isClosed).length}
+        totalCount={totalCount}
+        openCount={openCount}
+        closedCount={closedCount}
       />
-      <ManageSearch />
-      <ManageList postings={MOCK_RECRUITMENTS} />
+      <ManageSearch
+        status={status}
+        sort={sort}
+        counts={{ total: totalCount, open: openCount, closed: closedCount }}
+        onStatusChange={(value) => setStatus(value)}
+        onSortChange={(value) => setSort(value)}
+      />
+      {isLoading && (
+        <div className="rounded-lg border border-gray-200 bg-white p-6 text-sm text-gray-600">
+          공고를 불러오는 중입니다...
+        </div>
+      )}
+      {error && (
+        <div className="border-danger-500 bg-danger rounded-lg border p-6 text-sm text-gray-800">
+          공고 목록을 불러오지 못했습니다.
+        </div>
+      )}
+      {!isLoading && !error && <ManageList postings={postings} />}
     </div>
   )
 }

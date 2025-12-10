@@ -2,15 +2,15 @@ import { getTypeIcon } from '@/helpers/icons'
 
 type ManageDashboardProps = {
   totalCount: number
+  openCount: number
   closedCount: number
 }
 
 export default function ManageDashboard({
   totalCount,
+  openCount,
   closedCount,
 }: ManageDashboardProps) {
-  const open = totalCount - closedCount
-
   const cards = [
     {
       key: 'total' as const,
@@ -21,7 +21,7 @@ export default function ManageDashboard({
     {
       key: 'open' as const,
       label: '모집중',
-      value: open,
+      value: openCount,
       iconColor: 'accent-green',
     },
     {

@@ -1,5 +1,5 @@
+import type { ManageRecruitment } from '@/types/myRecruitment'
 import ManageCard from './ManageCard'
-import type { ManageRecruitment } from '@/pages/postings/Manage'
 
 type ManageListProps = {
   postings: ManageRecruitment[]
