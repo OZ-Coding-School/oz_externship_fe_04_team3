@@ -1,4 +1,4 @@
-export type RecruitmentApiItem = {
+export type MyRecruitmentApiItem = {
   uuid: string
   title: string
   thumbnail_img_url: string
@@ -10,11 +10,11 @@ export type RecruitmentApiItem = {
   tags: { id: number; name: string }[]
 }
 
-export type RecruitmentPageResponse = {
+export type MyRecruitmentPageResponse = {
   count: number
   next: string | null
   previous: string | null
-  results: RecruitmentApiItem[]
+  results: MyRecruitmentApiItem[]
 }
 
 export type ManageRecruitment = {
@@ -28,4 +28,13 @@ export type ManageRecruitment = {
   lectures: { id: number; title: string; instructor: string }[]
   tags: { id: number; name: string }[]
   isClosed: boolean
+}
+
+export type MyRecruitmentParams = {
+  page?: number
+  page_size?: number
+  search?: string
+  sort?: 'latest' | 'oldest' | 'most_views' | 'most_bookmarks'
+  tags?: string[]
+  is_closed?: boolean
 }
