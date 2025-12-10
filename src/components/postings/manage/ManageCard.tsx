@@ -19,7 +19,7 @@ export default function ManageCard({ posting }: ManageCardProps) {
       {/* 썸네일 */}
       <div className="relative md:row-span-2">
         {!imgLoaded && (
-          <Skeleton className="absolute inset-0 h-24 w-40 rounded-md" />
+          <Skeleton className="absolute inset-0 h-24 w-40 rounded-md md:h-32" />
         )}
         <img
           src={posting.thumbnailImgUrl}
@@ -27,7 +27,7 @@ export default function ManageCard({ posting }: ManageCardProps) {
           loading="lazy"
           onLoad={() => setImgLoaded(true)}
           onError={() => setImgLoaded(true)}
-          className={`mx-auto h-24 w-40 rounded-md object-cover transition-opacity duration-200 md:h-full ${
+          className={`mx-auto h-32 w-full rounded-md object-cover transition-opacity duration-200 md:h-24 md:w-40 ${
             imgLoaded ? 'opacity-100' : 'opacity-0'
           }`}
         />

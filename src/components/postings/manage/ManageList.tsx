@@ -9,7 +9,7 @@ type ManageListProps = {
 
 export default function ManageList({ postings, isLoading }: ManageListProps) {
   if (isLoading) {
-    return <ManageCardSkeleton />
+    return <ManageCardSkeleton count={6} />
   }
 
   if (postings.length === 0) {

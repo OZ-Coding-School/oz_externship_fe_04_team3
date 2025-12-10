@@ -2,24 +2,43 @@ import ManageDashboard from '@/components/postings/manage/ManageDashboard'
 import ManageHeader from '@/components/postings/manage/ManageHeader'
 import ManageList from '@/components/postings/manage/ManageList'
 import ManageSearch from '@/components/postings/manage/ManageSearch'
-import { useRecruitments } from '@/hooks/quries/useMyRecruitments'
-import { useState } from 'react'
+import ManageCardSkeleton from '@/components/postings/manage/ManageCardSkeleton'
+import { useState, useEffect } from 'react'
 import type { MyRecruitmentParams } from '@/types/myRecruitment'
+import { useMyRecruitments } from '@/hooks/quries/useMyRecruitments'
+import { useInView } from 'react-intersection-observer'
 
 export default function Manage() {
   const [status, setStatus] = useState<'all' | 'open' | 'closed'>('all')
   const [sort, setSort] = useState<MyRecruitmentParams['sort']>('latest')
 
-  const { data, totalCount, openCount, closedCount, isLoading, error } =
-    useRecruitments({
-      page: 1,
-      page_size: 10,
-      sort,
-      is_closed:
-        status === 'all' ? undefined : status === 'closed' ? true : false,
-    })
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    totalCount,
+    openCount,
+    closedCount,
+    isLoading,
+    error,
+  } = useMyRecruitments({
+    page_size: 10,
+    sort,
+    is_closed:
+      status === 'all' ? undefined : status === 'closed' ? true : false,
+  })
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: '50px',
+  })
 
-  const postings = data ?? []
+  useEffect(() => {
+    if (!inView || !hasNextPage || isFetchingNextPage) return
+    fetchNextPage()
+    // isFetchingNextPage를 의존성에서 제외해, sentinel이 뷰포트에 머물러도 연속 호출을 막습니다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView, hasNextPage, fetchNextPage])
 
   return (
     <div className="mx-auto flex flex-col gap-6 px-4 py-6">
@@ -42,7 +61,27 @@ export default function Manage() {
           공고 목록을 불러오지 못했습니다.
         </div>
       )}
-      {!isLoading && !error && <ManageList postings={postings} />}
+      {!isLoading && !error && (
+        <>
+          <ManageList postings={data} />
+          {isFetchingNextPage && <ManageCardSkeleton count={6} />}
+          {!hasNextPage ? (
+            <div className="flex-center mt-12 h-12 rounded-md bg-gray-400 text-center text-white">
+              더 이상 공고가 없습니다.
+            </div>
+          ) : (
+            <div
+              className="bg-primary-500 flex-center mt-12 h-12 cursor-pointer rounded-md text-center text-white"
+              ref={!isFetchingNextPage ? ref : undefined}
+              onClick={() => {
+                if (!isFetchingNextPage) fetchNextPage()
+              }}
+            >
+              {isFetchingNextPage ? '불러오는 중...' : '더 많은 공고 보기'}
+            </div>
+          )}
+        </>
+      )}
     </div>
   )
 }

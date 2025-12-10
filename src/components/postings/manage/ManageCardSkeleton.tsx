@@ -15,7 +15,7 @@ export default function ManageCardSkeleton({
           className="relative grid gap-4 rounded-lg border border-gray-200 bg-white p-4 md:grid-cols-[160px_1fr]"
         >
           <div className="md:row-span-2">
-            <Skeleton className="mx-auto h-24 w-40 rounded-md" />
+            <Skeleton className="mx-auto h-32 w-40 rounded-md md:h-24" />
           </div>
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-start justify-between gap-2">

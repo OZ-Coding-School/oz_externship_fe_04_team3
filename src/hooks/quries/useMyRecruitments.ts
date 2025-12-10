@@ -1,15 +1,19 @@
 import getRecruitmentsApi from '@/api/recruitment'
 import { mapRecruitment } from '@/mappers/myRecruitment/mapper'
 import type {
-  ManageRecruitment,
   MyRecruitmentParams,
+  MyRecruitmentPageResponse,
 } from '@/types/myRecruitment'
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useQuery,
+} from '@tanstack/react-query'
 
 const CACHE_STALE_TIME = 1000 * 60 * 5 // 5분 동안 신선한 데이터로 간주
 const CACHE_GC_TIME = 1000 * 60 * 15 // 15분 후 가비지 컬렉션
 
-export const useRecruitments = ({
+export const useMyRecruitments = ({
   page = 1,
   page_size = 10,
   search,
@@ -43,24 +47,25 @@ export const useRecruitments = ({
     gcTime: CACHE_GC_TIME,
   })
 
-  // 3) 리스트용 (is_closed 전달하지 않음: 전체, 혹은 외부에서 넘긴 상태)
-  const listQuery = useQuery<ManageRecruitment[]>({
+  // 3) 리스트용 무한스크롤
+  const listQuery = useInfiniteQuery<MyRecruitmentPageResponse>({
     queryKey: [
       'manageRecruitments',
-      { page, page_size, search, sort, tags, is_closed },
+      { page_size, search, sort, tags, is_closed },
     ],
-    queryFn: async () => {
-      const data = await getRecruitmentsApi({
-        page,
+    queryFn: async ({ pageParam }) => {
+      return getRecruitmentsApi({
+        page: pageParam as number,
         page_size,
         search,
         sort,
         tags,
         is_closed,
       })
-      const postings = (data?.results ?? []).map(mapRecruitment)
-      return postings
     },
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.next ? allPages.length + 1 : undefined,
+    initialPageParam: page,
     staleTime: CACHE_STALE_TIME,
     gcTime: CACHE_GC_TIME,
     placeholderData: keepPreviousData,
@@ -69,7 +74,13 @@ export const useRecruitments = ({
   })
 
   return {
-    data: listQuery.data,
+    data:
+      listQuery.data?.pages.flatMap((p) =>
+        (p.results ?? []).map(mapRecruitment)
+      ) ?? [],
+    hasNextPage: listQuery.hasNextPage,
+    fetchNextPage: listQuery.fetchNextPage,
+    isFetchingNextPage: listQuery.isFetchingNextPage,
     totalCount: (openCountQuery.data ?? 0) + (closedCountQuery.data ?? 0),
     openCount: openCountQuery.data ?? 0,
     closedCount: closedCountQuery.data ?? 0,
