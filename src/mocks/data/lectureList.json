@@ -12,7 +12,7 @@
       "discounted_price": 87000,
       "difficulty": "EASY",
       "thumbnail_img_url": "https://picsum.photos/seed/1/400/240",
-      "average_rating": "4.01",
+      "average_rating": 0,
       "platform": "UDEMY",
       "url_link": "https://jsonplaceholder.typicode.com/todos/203",
       "categories": [
@@ -29,26 +29,7 @@
           "updated_at": "2012-02-22T00:00:00+09:00"
         }
       ],
-      "reviews": [
-        {
-          "id": 32,
-          "rating": 5,
-          "content": "기초부터 차근차근 설명해주셔서 초보자도 따라가기 쉬웠어요. 실습 예제도 유용했습니다!",
-          "created_at": "2024-11-15T00:00:00+09:00"
-        },
-        {
-          "id": 23,
-          "rating": 4,
-          "content": "전반적으로 만족스러운 강의입니다. 다만 좀 더 심화 내용이 있었으면 좋겠어요.",
-          "created_at": "2024-10-21T00:00:00+09:00"
-        },
-        {
-          "id": 55,
-          "rating": 5,
-          "content": "실무에 바로 적용할 수 있는 내용들이라 정말 유익했습니다. 강력 추천!",
-          "created_at": "2024-09-11T00:00:00+09:00"
-        }
-      ]
+      "reviews": []
     },
     {
       "id": 569,
@@ -59,7 +40,7 @@
       "discounted_price": 139000,
       "difficulty": "HARD",
       "thumbnail_img_url": "https://picsum.photos/seed/2/400/240",
-      "average_rating": "2.76",
+      "average_rating": 2.76,
       "platform": "INFLEARN",
       "url_link": "https://jsonplaceholder.typicode.com/todos/569",
       "categories": [
@@ -100,7 +81,7 @@
       "discounted_price": 99000,
       "difficulty": "NORMAL",
       "thumbnail_img_url": "https://picsum.photos/seed/3/400/240",
-      "average_rating": "4.20",
+      "average_rating": 4.2,
       "platform": "INFLEARN",
       "url_link": "https://jsonplaceholder.typicode.com/todos/931",
       "categories": [
@@ -153,7 +134,7 @@
       "discounted_price": 169000,
       "difficulty": "HARD",
       "thumbnail_img_url": "https://picsum.photos/seed/4/400/240",
-      "average_rating": "1.76",
+      "average_rating": 1.76,
       "platform": "UDEMY",
       "url_link": "https://jsonplaceholder.typicode.com/todos/485",
       "categories": [
@@ -194,7 +175,7 @@
       "discounted_price": 69000,
       "difficulty": "EASY",
       "thumbnail_img_url": "https://picsum.photos/seed/5/400/240",
-      "average_rating": "1.45",
+      "average_rating": 1.45,
       "platform": "UDEMY",
       "url_link": "https://jsonplaceholder.typicode.com/todos/784",
       "categories": [
@@ -229,7 +210,7 @@
       "discounted_price": 119000,
       "difficulty": "EASY",
       "thumbnail_img_url": "https://picsum.photos/seed/6/400/240",
-      "average_rating": "1.04",
+      "average_rating": 1.04,
       "platform": "INFLEARN",
       "url_link": "https://jsonplaceholder.typicode.com/todos/578",
       "categories": [
@@ -270,7 +251,7 @@
       "discounted_price": 109000,
       "difficulty": "EASY",
       "thumbnail_img_url": "https://picsum.photos/seed/7/400/240",
-      "average_rating": "2.07",
+      "average_rating": 2.07,
       "platform": "UDEMY",
       "url_link": "https://jsonplaceholder.typicode.com/todos/307",
       "categories": [
@@ -317,7 +298,7 @@
       "discounted_price": 59000,
       "difficulty": "EASY",
       "thumbnail_img_url": "https://picsum.photos/seed/8/400/240",
-      "average_rating": "2.76",
+      "average_rating": 2.76,
       "platform": "INFLEARN",
       "url_link": "https://jsonplaceholder.typicode.com/todos/296",
       "categories": [
@@ -370,7 +351,7 @@
       "discounted_price": 149000,
       "difficulty": "HARD",
       "thumbnail_img_url": "https://picsum.photos/seed/9/400/240",
-      "average_rating": "4.98",
+      "average_rating": 4.98,
       "platform": "INFLEARN",
       "url_link": "https://jsonplaceholder.typicode.com/todos/183",
       "categories": [
@@ -417,7 +398,7 @@
       "discounted_price": 129000,
       "difficulty": "HARD",
       "thumbnail_img_url": "https://picsum.photos/seed/10/400/240",
-      "average_rating": "3.18",
+      "average_rating": 3.18,
       "platform": "INFLEARN",
       "url_link": "https://jsonplaceholder.typicode.com/todos/410",
       "categories": [
