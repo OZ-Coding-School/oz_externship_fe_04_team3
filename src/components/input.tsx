@@ -22,7 +22,6 @@ export function Input({
   helperText,
   prefix,
   suffix,
-  icon: _icon,
   required = false,
   className = '',
   ...props
