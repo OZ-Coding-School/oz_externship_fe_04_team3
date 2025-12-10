@@ -32,17 +32,9 @@ export default function getRatingStarsIcon(average_rating: number) {
         {[...Array(filledStarCount)].map((_, idx) => (
           <FaStar size={20} fill="#FACC15" key={idx}></FaStar>
         ))}
-        {/* 왜 안되는걸까 다시 확ㅇ니해봐야징
-                {hasHalfStar ?? (
+        {/*  hasHalfStar True이면 */}
+        {hasHalfStar && (
           <FaStarHalfAlt size={20} fill="#FACC15"></FaStarHalfAlt>
-        )
-          }
-
-        */}
-        {hasHalfStar ? (
-          <FaStarHalfAlt size={20} fill="#FACC15"></FaStarHalfAlt>
-        ) : (
-          ''
         )}
         {[...Array(emptyStar)].map((_, idx) => (
           <FaRegStar size={20} fill="#FACC15" key={idx} />
