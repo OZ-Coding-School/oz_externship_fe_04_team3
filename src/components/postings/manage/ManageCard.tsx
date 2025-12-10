@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { Bookmark, Calendar, Eye, Pencil, Trash2, Users } from 'lucide-react'
 
 import { getTypeIcon } from '@/helpers/icons'
 import { Button } from '@/components/common'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import type { ManageRecruitment } from '@/types/myRecruitment'
 
 type ManageCardProps = {
@@ -10,14 +12,24 @@ type ManageCardProps = {
 }
 
 export default function ManageCard({ posting }: ManageCardProps) {
+  const [imgLoaded, setImgLoaded] = useState(false)
+
   return (
     <div className="relative grid gap-4 rounded-lg border border-gray-200 bg-white p-4 md:grid-cols-[160px_1fr] md:items-start">
       {/* 썸네일 */}
-      <div className="md:row-span-2">
+      <div className="relative md:row-span-2">
+        {!imgLoaded && (
+          <Skeleton className="absolute inset-0 h-24 w-40 rounded-md" />
+        )}
         <img
           src={posting.thumbnailImgUrl}
           alt={posting.title}
-          className="mx-auto h-[120px] max-w-40 rounded-md object-cover md:h-full"
+          loading="lazy"
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgLoaded(true)}
+          className={`mx-auto h-24 w-40 rounded-md object-cover transition-opacity duration-200 md:h-full ${
+            imgLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
         />
       </div>
 

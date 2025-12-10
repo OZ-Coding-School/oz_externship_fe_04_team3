@@ -1,11 +1,17 @@
-import type { ManageRecruitment } from '@/types/myRecruitment'
 import ManageCard from './ManageCard'
+import ManageCardSkeleton from './ManageCardSkeleton'
+import type { ManageRecruitment } from '@/types/myRecruitment'
 
 type ManageListProps = {
   postings: ManageRecruitment[]
+  isLoading?: boolean
 }
 
-export default function ManageList({ postings }: ManageListProps) {
+export default function ManageList({ postings, isLoading }: ManageListProps) {
+  if (isLoading) {
+    return <ManageCardSkeleton />
+  }
+
   if (postings.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-gray-200 bg-white p-8 text-center text-sm text-gray-500">

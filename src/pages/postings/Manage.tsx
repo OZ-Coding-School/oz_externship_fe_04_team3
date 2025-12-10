@@ -36,11 +36,7 @@ export default function Manage() {
         onStatusChange={(value) => setStatus(value)}
         onSortChange={(value) => setSort(value)}
       />
-      {isLoading && (
-        <div className="rounded-lg border border-gray-200 bg-white p-6 text-sm text-gray-600">
-          공고를 불러오는 중입니다...
-        </div>
-      )}
+      {isLoading && <ManageList postings={[]} isLoading />}
       {error && (
         <div className="border-danger-500 bg-danger rounded-lg border p-6 text-sm text-gray-800">
           공고 목록을 불러오지 못했습니다.

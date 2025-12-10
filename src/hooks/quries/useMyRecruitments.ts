@@ -4,7 +4,7 @@ import type {
   ManageRecruitment,
   MyRecruitmentParams,
 } from '@/types/myRecruitment'
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 
 const CACHE_STALE_TIME = 1000 * 60 * 5 // 5분 동안 신선한 데이터로 간주
 const CACHE_GC_TIME = 1000 * 60 * 15 // 15분 후 가비지 컬렉션
@@ -63,6 +63,7 @@ export const useRecruitments = ({
     },
     staleTime: CACHE_STALE_TIME,
     gcTime: CACHE_GC_TIME,
+    placeholderData: keepPreviousData,
     enabled:
       openCountQuery.status !== 'error' && closedCountQuery.status !== 'error',
   })
