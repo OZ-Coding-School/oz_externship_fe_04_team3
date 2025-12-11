@@ -1,15 +1,16 @@
-import { useState, useMemo } from 'react'
-import {
-  mockRecruitments,
-  filterByCategory,
-  type Recruitment,
-} from '@/mocks/recruitmentData'
+import { useState, useMemo, useEffect } from 'react'
+import { getRecruitments } from '@/api/axios'
+import { mockRecruitments, type Recruitment } from '@/mocks/recruitmentData'
 
 export function useRecruitments() {
   const [searchKeyword, setSearchKeyword] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('전체 카테고리')
   const [selectedSort, setSelectedSort] = useState('최신순')
   const [visibleCount, setVisibleCount] = useState(10)
+  const [recruitments, setRecruitments] = useState<Recruitment[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  // 맞춤(추천) 공고
   const recommendedRecruitments = useMemo(() => {
     const sorted = [...mockRecruitments].sort((a, b) => {
       const scoreA = a.views + a.bookmarks * 10
@@ -19,44 +20,30 @@ export function useRecruitments() {
     return sorted.slice(0, 3)
   }, [])
 
-  const filteredAndSorted = useMemo(() => {
-    let list: Recruitment[] = [...mockRecruitments]
-
-    if (searchKeyword.trim()) {
-      list = list.filter((item) =>
-        item.title.toLowerCase().includes(searchKeyword.toLowerCase())
-      )
-    }
-
-    list = filterByCategory(selectedCategory, list)
-
-    switch (selectedSort) {
-      case '최신순':
-        list.sort((a, b) => {
-          const dateA = new Date(
-            (a.createdAt || '2025.01.01').replace(/\./g, '-')
-          )
-          const dateB = new Date(
-            (b.createdAt || '2025.01.01').replace(/\./g, '-')
-          )
-          return dateB.getTime() - dateA.getTime()
+  useEffect(() => {
+    const fetchRecruitments = async () => {
+      setIsLoading(true)
+      try {
+        const data = await getRecruitments({
+          search: searchKeyword,
+          category: selectedCategory,
+          sort: selectedSort,
         })
-        break
-
-      case '조회 많은 순':
-        list.sort((a, b) => b.views - a.views)
-        break
-
-      case '북마크 많은 순':
-        list.sort((a, b) => b.bookmarks - a.bookmarks)
-        break
+        setRecruitments(data)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to fetch recruitments:', error)
+      } finally {
+        setIsLoading(false)
+      }
     }
 
-    return list
+    fetchRecruitments()
   }, [searchKeyword, selectedCategory, selectedSort])
 
-  const displayedRecruitments = filteredAndSorted.slice(0, visibleCount)
-  const hasMore = visibleCount < filteredAndSorted.length
+  const displayedRecruitments = recruitments.slice(0, visibleCount)
+  const hasMore = visibleCount < recruitments.length
+
   const handleSearchChange = (value: string) => {
     setSearchKeyword(value)
     setVisibleCount(10)
@@ -82,9 +69,10 @@ export function useRecruitments() {
     selectedSort,
     visibleCount,
     displayedRecruitments,
-    filteredAndSorted,
+    filteredAndSorted: recruitments,
     recommendedRecruitments,
     hasMore,
+    isLoading,
     handleSearchChange,
     handleCategoryChange,
     handleSortChange,

@@ -26,6 +26,7 @@ export default function RecruitmentListPage({
     displayedRecruitments,
     filteredAndSorted,
     hasMore,
+    isLoading,
     handleSearchChange,
     handleCategoryChange,
     handleSortChange,
@@ -122,7 +123,9 @@ export default function RecruitmentListPage({
           전체 공고 ({filteredAndSorted.length})
         </h2>
 
-        {filteredAndSorted.length === 0 ? (
+        {isLoading ? (
+          <div className="py-12 text-center">로딩 중...</div>
+        ) : filteredAndSorted.length === 0 ? (
           <div className="py-12 text-center text-gray-500">
             검색 결과가 없습니다.
           </div>
