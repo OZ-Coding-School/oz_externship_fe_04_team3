@@ -1,6 +1,7 @@
+import { getDiscount } from '@/helpers/getDiscount'
+import getRatingStarsIcon from '@/helpers/getRatingStarsIcon'
 import { LectureLevel } from '@/mappers/lectures/lecture'
 import type { Lecture } from '@/types/lecture'
-import { FaRegStar, FaStar, FaStarHalfAlt } from 'react-icons/fa'
 import { Dialog, DialogContent } from '../common/Modal'
 import { Badge } from '../ui/badge'
 import {
@@ -45,7 +46,9 @@ export default function LectureReviewCard({
             <CardAction className="absolute z-10 justify-between px-3 py-3">
               <div className="top-2 flex flex-col gap-2">
                 <Badge variant={'platform'}>{platform}</Badge>
-                <Badge variant={'discount'}>32% 할인</Badge>
+                <Badge variant={'discount'}>
+                  {getDiscount(discounted_price, original_price)}% 할인
+                </Badge>
               </div>
             </CardAction>
 
@@ -65,16 +68,7 @@ export default function LectureReviewCard({
             </div>
             <CardTitle>{title}</CardTitle>
             <CardDescription>{instructor}</CardDescription>
-            <div className="flex items-center gap-2">
-              <div className="star-rating flex">
-                <FaStar size={20} fill="#FACC15"></FaStar>
-                <FaStar size={20} fill="#FACC15"></FaStar>
-                <FaStar size={20} fill="#FACC15"></FaStar>
-                <FaStarHalfAlt size={20} fill="#FACC15"></FaStarHalfAlt>
-                <FaRegStar size={20} fill="#FACC15" />
-              </div>
-              <p className="text-sm font-medium">{average_rating}</p>
-            </div>
+            {getRatingStarsIcon(average_rating)}
             <div className="Card-Content-price flex items-center gap-2">
               <h4>₩{discounted_price.toLocaleString('ko-KR')}</h4>
               <h6 className="text-sm text-gray-400 line-through">
@@ -84,25 +78,23 @@ export default function LectureReviewCard({
           </CardContent>
           <CardFooter className="flex w-full flex-col items-start gap-2">
             <CardTitle className="mb-2 text-left">리뷰보기</CardTitle>
-            {reviews.map((i) => (
-              <Item key={i.id} className="w-full">
+            {reviews.length === 0 ? (
+              <Item className="w-full">
                 <ItemContent>
-                  <ItemTitle>
-                    <div className="flex items-center gap-2">
-                      <div className="star-rating flex">
-                        <FaStar size={20} fill="#FACC15"></FaStar>
-                        <FaStar size={20} fill="#FACC15"></FaStar>
-                        <FaStar size={20} fill="#FACC15"></FaStar>
-                        <FaStarHalfAlt size={20} fill="#FACC15"></FaStarHalfAlt>
-                        <FaRegStar size={20} fill="#FACC15" />
-                      </div>
-                      {i.rating}
-                    </div>
-                  </ItemTitle>
-                  <ItemDescription>{i.content}</ItemDescription>
+                  <ItemTitle>{getRatingStarsIcon(0)}</ItemTitle>
+                  <ItemDescription>리뷰가 없습니다</ItemDescription>
                 </ItemContent>
               </Item>
-            ))}
+            ) : (
+              reviews.map((i) => (
+                <Item key={i.id} className="w-full">
+                  <ItemContent>
+                    <ItemTitle>{getRatingStarsIcon(i.rating)}</ItemTitle>
+                    <ItemDescription>{i.content}</ItemDescription>
+                  </ItemContent>
+                </Item>
+              ))
+            )}
           </CardFooter>
         </Card>
       </DialogContent>
