@@ -2,67 +2,86 @@ import ManageDashboard from '@/components/postings/manage/ManageDashboard'
 import ManageHeader from '@/components/postings/manage/ManageHeader'
 import ManageList from '@/components/postings/manage/ManageList'
 import ManageSearch from '@/components/postings/manage/ManageSearch'
-
-export type ManageRecruitment = {
-  uuid: string
-  title: string
-  thumbnailImgUrl: string
-  expectedHeadcount: number
-  closeAt: string
-  viewsCount: number
-  bookmarkCount: number
-  lectures: { id: number; title: string; instructor: string }[]
-  tags: { id: number; name: string }[]
-  isClosed: boolean
-}
-
-// API 응답을 매핑했다고 가정한 목업 데이터
-const MOCK_RECRUITMENTS: ManageRecruitment[] = [
-  {
-    uuid: 'b8dbd77f-cf73-4ef4-9914-4394d5ab366e',
-    title: '[급구] 파이썬 주 1회 스터디원 구합니다.',
-    thumbnailImgUrl: 'https://placehold.co/160x120/png?text=Recruitment+1',
-    expectedHeadcount: 10,
-    closeAt: '2025-11-20T00:00:05.875842+09:00',
-    viewsCount: 100,
-    bookmarkCount: 36,
-    lectures: [
-      { id: 1, title: '파이썬 마스터하기', instructor: '김한영' },
-      { id: 2, title: '알고리즘 실전', instructor: '홍길동' },
-    ],
-    tags: [
-      { id: 1, name: 'python' },
-      { id: 2, name: 'backend' },
-    ],
-    isClosed: false,
-  },
-  {
-    uuid: 'c1d2e3f4-cf73-4ef4-9914-4394d5ab366e',
-    title: '프론트엔드(React) 스터디 모집',
-    thumbnailImgUrl: 'https://placehold.co/160x120/png?text=Recruitment+2',
-    expectedHeadcount: 8,
-    closeAt: '2024-05-10T00:00:05.875842+09:00',
-    viewsCount: 240,
-    bookmarkCount: 58,
-    lectures: [{ id: 3, title: 'React 핵심', instructor: '이효리' }],
-    tags: [
-      { id: 3, name: 'frontend' },
-      { id: 4, name: 'react' },
-    ],
-    isClosed: true,
-  },
-]
+import ManageCardSkeleton from '@/components/postings/manage/ManageCardSkeleton'
+import { useState, useEffect } from 'react'
+import type { MyRecruitmentParams } from '@/types/myRecruitment'
+import { useMyRecruitments } from '@/hooks/quries/useMyRecruitments'
+import { useInView } from 'react-intersection-observer'
 
 export default function Manage() {
+  const [status, setStatus] = useState<'all' | 'open' | 'closed'>('all')
+  const [sort, setSort] = useState<MyRecruitmentParams['sort']>('latest')
+
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    totalCount,
+    openCount,
+    closedCount,
+    isLoading,
+    error,
+  } = useMyRecruitments({
+    page_size: 10,
+    sort,
+    is_closed:
+      status === 'all' ? undefined : status === 'closed' ? true : false,
+  })
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: '50px',
+  })
+
+  useEffect(() => {
+    if (!inView || !hasNextPage || isFetchingNextPage) return
+    fetchNextPage()
+    // isFetchingNextPage를 의존성에서 제외해, sentinel이 뷰포트에 머물러도 연속 호출을 막습니다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inView, hasNextPage, fetchNextPage])
+
   return (
     <div className="mx-auto flex flex-col gap-6 px-4 py-6">
       <ManageHeader />
       <ManageDashboard
-        totalCount={MOCK_RECRUITMENTS.length}
-        closedCount={MOCK_RECRUITMENTS.filter((r) => r.isClosed).length}
+        totalCount={totalCount}
+        openCount={openCount}
+        closedCount={closedCount}
       />
-      <ManageSearch />
-      <ManageList postings={MOCK_RECRUITMENTS} />
+      <ManageSearch
+        status={status}
+        sort={sort}
+        counts={{ total: totalCount, open: openCount, closed: closedCount }}
+        onStatusChange={(value) => setStatus(value)}
+        onSortChange={(value) => setSort(value)}
+      />
+      {isLoading && <ManageList postings={[]} isLoading />}
+      {error && (
+        <div className="border-danger-500 bg-danger rounded-lg border p-6 text-sm text-gray-800">
+          공고 목록을 불러오지 못했습니다.
+        </div>
+      )}
+      {!isLoading && !error && (
+        <>
+          <ManageList postings={data} />
+          {isFetchingNextPage && <ManageCardSkeleton count={6} />}
+          {!hasNextPage ? (
+            <div className="flex-center mt-12 h-12 rounded-md bg-gray-400 text-center text-white">
+              더 이상 공고가 없습니다.
+            </div>
+          ) : (
+            <div
+              className="bg-primary-500 flex-center mt-12 h-12 cursor-pointer rounded-md text-center text-white"
+              ref={!isFetchingNextPage ? ref : undefined}
+              onClick={() => {
+                if (!isFetchingNextPage) fetchNextPage()
+              }}
+            >
+              {isFetchingNextPage ? '불러오는 중...' : '더 많은 공고 보기'}
+            </div>
+          )}
+        </>
+      )}
     </div>
   )
 }

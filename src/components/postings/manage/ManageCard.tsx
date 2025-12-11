@@ -1,29 +1,41 @@
+import { useState } from 'react'
 import { Bookmark, Calendar, Eye, Pencil, Trash2, Users } from 'lucide-react'
 
-import type { ManageRecruitment } from '@/pages/postings/Manage'
 import { getTypeIcon } from '@/helpers/icons'
 import { Button } from '@/components/common'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
+import type { ManageRecruitment } from '@/types/myRecruitment'
 
 type ManageCardProps = {
   posting: ManageRecruitment
 }
 
 export default function ManageCard({ posting }: ManageCardProps) {
+  const [imgLoaded, setImgLoaded] = useState(false)
+
   return (
     <div className="relative grid gap-4 rounded-lg border border-gray-200 bg-white p-4 md:grid-cols-[160px_1fr] md:items-start">
       {/* 썸네일 */}
-      <div className="md:row-span-2">
+      <div className="relative md:row-span-2">
+        {!imgLoaded && (
+          <Skeleton className="absolute inset-0 h-24 w-40 rounded-md md:h-32" />
+        )}
         <img
           src={posting.thumbnailImgUrl}
           alt={posting.title}
-          className="mx-auto h-[120px] max-w-40 rounded-md object-cover md:h-full"
+          loading="lazy"
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgLoaded(true)}
+          className={`mx-auto h-32 w-full rounded-md object-cover transition-opacity duration-200 md:h-24 md:w-40 ${
+            imgLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
         />
       </div>
 
       {/* 내용 */}
       <div className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-start justify-between gap-2">
+        <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
           <h3 className="text-base font-semibold text-gray-900">
             {posting.title}
           </h3>
@@ -45,17 +57,10 @@ export default function ManageCard({ posting }: ManageCardProps) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 text-sm text-gray-700">
+        <div className="flex flex-col gap-3 text-sm text-gray-700">
           <div className="flex items-center gap-2">
             <Users size={16} />
-            <span>
-              모집 인원 : {posting.expectedHeadcount}명
-              {posting.isClosed && (
-                <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
-                  마감
-                </span>
-              )}
-            </span>
+            <span>모집 인원 : {posting.expectedHeadcount}명</span>
           </div>
           <div className="flex items-center gap-2">
             <Calendar size={16} />
