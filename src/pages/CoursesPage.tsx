@@ -1,10 +1,12 @@
-import getLecturesApi from '@/api/lecture'
+import { getLecturesApi } from '@/api/lecture'
 import { Select } from '@/components/common'
 import GuestRecommendSection from '@/components/GuestRecommendSection'
 import { Input } from '@/components/input'
 import LectureList from '@/components/lecture/LectureList'
+import LectureRecommendSection from '@/components/lecture/LectureRecommendSection'
 import useInfiniteScroll from '@/hooks/quries/useInfiniteScroll'
 import { categoryData, sortData } from '@/mappers/lectures/lecture'
+import LoginStateStore from '@/store/loginStateStore'
 import type { LecturesParams } from '@/types/lecture'
 import { ArrowDownWideNarrow, Folder, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -17,8 +19,6 @@ export default function Courses() {
     LecturesParams['category'] | undefined
   >()
   const [sort, setSort] = useState<LecturesParams['sort'] | undefined>()
-  console.log('카테고리', category)
-  console.log('정렬', sort)
 
   //무한쿼리 불러오기
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -32,7 +32,6 @@ export default function Courses() {
           sort,
         }),
     })
-  console.log(data)
   //무한스크롤
   const { ref, inView } = useInView({
     threshold: 0,
@@ -46,6 +45,9 @@ export default function Courses() {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
+  /* 유저 상태 */
+  const { loginState } = LoginStateStore()
+
   return (
     <div className="page_courses flex flex-col gap-6">
       <section className="courses_header">
@@ -55,11 +57,17 @@ export default function Courses() {
             전문 강사들의 고품질 IT 강의를 만나보세요
           </p>
         </div>
-        {/* 비회원 추천 섹션 */}
-        <GuestRecommendSection
-          title="강의를"
-          description="로그인하시면 관심 분야를 바탕으로 맞춤형 강의"
-        ></GuestRecommendSection>
+        {loginState === 'USER' ? (
+          <LectureRecommendSection
+            lectureList={data?.pages.flatMap((page) => page.results) || []}
+            loginState={loginState}
+          ></LectureRecommendSection>
+        ) : (
+          <GuestRecommendSection
+            title="강의를"
+            description="로그인하시면 관심 분야를 바탕으로 맞춤형 강의"
+          ></GuestRecommendSection>
+        )}
       </section>
       <section className="courses_filter flex gap-2 rounded-md border border-gray-200 bg-white p-6">
         <Input
@@ -98,7 +106,7 @@ export default function Courses() {
         ></Select>
       </section>
       <section className="courses_cardlist">
-        <LectureList data={data}></LectureList>
+        <LectureList data={data} loginState={loginState}></LectureList>
       </section>
       {!hasNextPage ? (
         <div className="flex-center mt-12 h-12 rounded-md bg-gray-400 text-center text-white">

@@ -9,16 +9,25 @@ import {
 } from '@/components/ui/card'
 import { getDiscount } from '@/helpers/getDiscount'
 import getRatingStarsIcon from '@/helpers/getRatingStarsIcon'
+import { useBookmark } from '@/hooks/useBookmark'
 import { LectureLevel } from '@/mappers/lectures/lecture'
+import type { LoginState } from '@/store/loginStateStore'
 import type { Lecture } from '@/types/lecture'
 import { Bookmark, Plus } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Button } from '../common/Button'
+import { showToast } from '../common/toast/Toast'
 import { Badge } from '../ui/badge'
 import LectureReviewCard from './LectureReviewCard'
 
-export default function LectureCard(lectures: Lecture) {
+//강의목록 뿐만아니라, 로그인 상태도 타입으로 받기.
+interface LectureCardProps extends Lecture {
+  loginState: LoginState
+}
+
+export default function LectureCard(props: LectureCardProps) {
   const {
+    id,
     title,
     instructor,
     thumbnail_img_url,
@@ -29,10 +38,10 @@ export default function LectureCard(lectures: Lecture) {
     average_rating,
     categories,
     url_link,
-  } = lectures
+    loginState,
+  } = props
 
-  /* 북마크 및 리뷰보기 모달창 상태 */
-  const [isBookMarked, setIsBookMarked] = useState(false)
+  /* 리뷰보기 모달창 상태 */
   const [showReviewModal, setReviewShowModal] = useState(false)
 
   /* 북마크 커스텀 상태 */
@@ -50,7 +59,7 @@ export default function LectureCard(lectures: Lecture) {
         addBookmarkMutation.mutate(id)
       }
     } else {
-      toast.error('로그인유저만 북마크 기능이 가능합니다.')
+      showToast.warning('북마크 오류', '로그인유저만 북마크 기능이 가능합니다.')
     }
   }
   return (
@@ -68,12 +77,12 @@ export default function LectureCard(lectures: Lecture) {
             size={'icon'}
             className="rounded-full border-none"
             aria-label="강의 북마크하기"
-            onClick={() => setIsBookMarked(!isBookMarked)}
+            onClick={handleBookmarkClick}
           >
             <Bookmark
               className="size-[18px]"
-              fill={isBookMarked ? '#EAB308' : 'none'}
-              stroke={isBookMarked ? 'none' : 'gray'}
+              fill={isBookmarked ? '#EAB308' : 'none'}
+              stroke={isBookmarked ? 'none' : 'gray'}
             />
           </Button>
         </CardAction>
@@ -115,7 +124,7 @@ export default function LectureCard(lectures: Lecture) {
           <LectureReviewCard
             open={showReviewModal}
             setOpen={setReviewShowModal}
-            lecture={lectures}
+            lecture={props}
           />
         )}
         <Button

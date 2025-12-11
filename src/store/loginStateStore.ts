@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-type LoginState = 'GUEST' | 'USER'
+export type LoginState = 'GUEST' | 'USER'
 interface LoginStore {
   loginState: LoginState
   setLoginState: (set: LoginState) => void
