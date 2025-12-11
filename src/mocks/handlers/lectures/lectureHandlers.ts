@@ -30,10 +30,12 @@ export const lectureHandlers = [
     const sort = url.searchParams.get('sort')
     const category = url.searchParams.get('category')
     let filtered = [...allLectures]
-    // 1. 검색 필터
+
+    // 1. 검색 필드
     if (search) {
-      filtered = filtered.filter((lecture) =>
-        lecture.title.toLowerCase().includes(search.toLowerCase())
+      filtered = filtered.filter(
+        (lecture) =>
+          lecture.title.includes(search) || lecture.instructor.includes(search)
       )
     }
 
@@ -57,9 +59,9 @@ export const lectureHandlers = [
           case 'high_price':
             return b.discounted_price - a.discounted_price
           case 'high_rating':
-            return parseFloat(b.average_rating) - parseFloat(a.average_rating)
+            return b.average_rating - a.average_rating
           case 'low_rating':
-            return parseFloat(a.average_rating) - parseFloat(b.average_rating)
+            return a.average_rating - b.average_rating
           default:
             return 0
         }

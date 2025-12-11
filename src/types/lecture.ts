@@ -6,7 +6,7 @@ export type Lecture = {
   discounted_price: number //디폴트가격으로 설정됨
   difficulty: 'EASY' | 'NORMAL' | 'HARD' //난이도,UI설정은 아직 미정
   thumbnail_img_url: string
-  average_rating: string
+  average_rating: number
   platform: 'UDEMY' | 'INFLEARN'
   url_link: string
   categories: Category[]

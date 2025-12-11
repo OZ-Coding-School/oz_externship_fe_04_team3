@@ -1,0 +1,24 @@
+import type {
+  MyRecruitmentPageResponse,
+  MyRecruitmentParams,
+} from '@/types/myRecruitment'
+import { axiosInstance } from './axios'
+
+export default async function getRecruitmentsApi(
+  params: MyRecruitmentParams = {}
+): Promise<MyRecruitmentPageResponse> {
+  const queryParams: Record<string, string | number | string[] | boolean> = {}
+
+  if (params.page) queryParams.page = params.page
+  if (params.page_size) queryParams.page_size = params.page_size
+  if (params.search) queryParams.search = params.search
+  if (params.sort) queryParams.sort = params.sort
+  if (params.tags?.length) queryParams.tags = params.tags
+  if (params.is_closed !== undefined) queryParams.is_closed = params.is_closed
+
+  const { data } = await axiosInstance.get<MyRecruitmentPageResponse>(
+    '/v1/recruitments',
+    { params: queryParams }
+  )
+  return data
+}

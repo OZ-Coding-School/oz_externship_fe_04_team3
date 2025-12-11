@@ -7,11 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { getDiscount } from '@/helpers/getDiscount'
+import getRatingStarsIcon from '@/helpers/getRatingStarsIcon'
 import { LectureLevel } from '@/mappers/lectures/lecture'
 import type { Lecture } from '@/types/lecture'
 import { Bookmark, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { FaRegStar, FaStar, FaStarHalfAlt } from 'react-icons/fa'
 import { Button } from '../common/Button'
 import { Badge } from '../ui/badge'
 import LectureReviewCard from './LectureReviewCard'
@@ -44,8 +45,9 @@ export default function LectureCard(lectures: Lecture) {
         <CardAction className="absolute z-10 justify-between px-3 py-3">
           <div className="top-2 flex flex-col gap-2">
             <Badge variant={'platform'}>{platform}</Badge>
-            {/* 할인율계산은 추후 헬퍼함수를 통해 구현할 예정 */}
-            <Badge variant={'discount'}>32% 할인</Badge>
+            <Badge variant={'discount'}>
+              {getDiscount(discounted_price, original_price)}% 할인
+            </Badge>
           </div>
           <Button
             variant="outline"
@@ -77,16 +79,7 @@ export default function LectureCard(lectures: Lecture) {
         </div>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{instructor}</CardDescription>
-        <div className="flex items-center gap-2">
-          <div className="star-rating flex">
-            <FaStar size={20} fill="#FACC15"></FaStar>
-            <FaStar size={20} fill="#FACC15"></FaStar>
-            <FaStar size={20} fill="#FACC15"></FaStar>
-            <FaStarHalfAlt size={20} fill="#FACC15"></FaStarHalfAlt>
-            <FaRegStar size={20} fill="#FACC15" />
-          </div>
-          <p className="text-sm font-medium">{average_rating}</p>
-        </div>
+        {getRatingStarsIcon(average_rating)}
         <div className="Card-Content-price flex items-center gap-2">
           <h4>₩{discounted_price.toLocaleString('ko-KR')}</h4>
           <h6 className="text-sm text-gray-400 line-through">
