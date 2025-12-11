@@ -1,6 +1,6 @@
 import { addBookmark, deleteBookmark, getBookmark } from '@/api/lecture'
+import { showToast } from '@/components/common/toast/Toast'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
 
 export function useBookmark() {
   //queryClient 호출 invalidateQueries 사용 (캐시를 무효화 → 데이터 다시 fetch )
@@ -16,7 +16,7 @@ export function useBookmark() {
   const addBookmarkMutation = useMutation({
     mutationFn: addBookmark,
     onSuccess: (msg) => {
-      toast.success(msg)
+      showToast.success('북마크 추가', msg)
       queryClient.invalidateQueries({ queryKey: ['lectures'] })
       queryClient.invalidateQueries({ queryKey: ['bookmarkList'] })
     },
@@ -26,7 +26,7 @@ export function useBookmark() {
   const deleteBookmarkMutation = useMutation({
     mutationFn: deleteBookmark,
     onSuccess: (msg) => {
-      toast.success(msg)
+      showToast.error('북마크 삭제', msg)
       queryClient.invalidateQueries({ queryKey: ['lectures'] })
       queryClient.invalidateQueries({ queryKey: ['bookmarkList'] })
     },
