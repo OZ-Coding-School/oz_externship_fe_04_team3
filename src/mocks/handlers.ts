@@ -1,9 +1,10 @@
 import { http, HttpResponse } from 'msw'
+import { bookmarkHandlers } from './handlers/lectures/bookmarkHandlers'
 import { lectureHandlers } from './handlers/lectures/lectureHandlers'
-import { notificationHandlers } from './handlers/notification'
-import { userInformationHandler } from './handlers/user'
-import { recruitmentHandlers } from './handlers/recruitments'
 import { recruitmentHandlers as myRecruitmentHandlers } from './handlers/myRecruitments'
+import { notificationHandlers } from './handlers/notification'
+import { recruitmentHandlers } from './handlers/recruitments'
+import { userInformationHandler } from './handlers/user'
 
 type User = { id: number; name: string; email: string }
 
@@ -23,6 +24,8 @@ export const handlers = [
   ...recruitmentHandlers,
   // 내 공고 목록 핸들러
   ...myRecruitmentHandlers,
+  //북마크 핸들러
+  ...bookmarkHandlers,
 
   http.get('/api/users', () => {
     return HttpResponse.json(users)

@@ -34,11 +34,25 @@ export default function LectureCard(lectures: Lecture) {
   /* 북마크 및 리뷰보기 모달창 상태 */
   const [isBookMarked, setIsBookMarked] = useState(false)
   const [showReviewModal, setReviewShowModal] = useState(false)
-  console.log(`showReviewModal ${showReviewModal}`)
-  useEffect(() => {
-    console.log(isBookMarked)
-  }, [isBookMarked])
 
+  /* 북마크 커스텀 상태 */
+  const { addBookmarkMutation, deleteBookmarkMutation, getBookmarkQuery } =
+    useBookmark()
+  const bookmarks = getBookmarkQuery.data?.results || []
+  const isBookmarked = bookmarks.some((i) => i.id === id)
+
+  const handleBookmarkClick = () => {
+    /* props로 전달받은 유저 상태 분기 처리 */
+    if (loginState === 'USER') {
+      if (isBookmarked) {
+        deleteBookmarkMutation.mutate(id)
+      } else {
+        addBookmarkMutation.mutate(id)
+      }
+    } else {
+      toast.error('로그인유저만 북마크 기능이 가능합니다.')
+    }
+  }
   return (
     <Card className="w-full">
       <CardHeader>

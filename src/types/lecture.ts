@@ -34,6 +34,21 @@ export type LecturePageResponse = {
   results: Lecture[]
 }
 
+export type BookmarkResponse = {
+  next: string | null
+  previous: string | null
+  results: {
+    id: number
+    title: string
+    instructor: string
+    original_price: number
+    discounted_price: number
+    difficulty: 'EASY' | 'NORMAL' | 'HARD'
+    thumbnail_img_url: string
+    platform: 'UDEMY' | 'INFLEARN'
+    url_link: string
+  }[]
+}
 //요청 params
 export interface LecturesParams {
   page?: number
