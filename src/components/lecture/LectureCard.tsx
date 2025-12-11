@@ -43,10 +43,11 @@ export default function LectureCard(props: LectureCardProps) {
 
   /* 리뷰보기 모달창 상태 */
   const [showReviewModal, setReviewShowModal] = useState(false)
-
+  /* 로그인 분기 처리 */
+  const isLoggedIn = loginState === 'USER' ? true : false
   /* 북마크 커스텀 상태 */
   const { addBookmarkMutation, deleteBookmarkMutation, getBookmarkQuery } =
-    useBookmark()
+    useBookmark(isLoggedIn)
   const bookmarks = getBookmarkQuery.data?.results || []
   const isBookmarked = bookmarks.some((i) => i.id === id)
 
