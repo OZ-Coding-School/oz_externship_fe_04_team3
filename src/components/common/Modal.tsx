@@ -1,11 +1,12 @@
-import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { XIcon } from 'lucide-react'
-import * as React from 'react'
-
 import { cn } from '@/lib/utils'
 import type { ModalProps } from '@/types/modal'
+import * as DialogPrimitive from '@radix-ui/react-dialog'
+import { XIcon } from 'lucide-react'
+import { motion } from 'motion/react'
+import * as React from 'react'
 import { Separator } from '../ui/separator'
 import { Button } from './Button'
+
 /**
  * @file Modal.tsx
  * @description 재사용 가능한 공통 Modal 컴포넌트
@@ -45,7 +46,7 @@ import { Button } from './Button'
  * />
  *
  * @author 예은
- * @created 2025-11-28
+ * @updated 2025-12-12 - Framer Motion 통합
  */
 
 export default function Modal({
@@ -131,10 +132,14 @@ function DialogTrigger({
   return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
 }
 
+// ✅ forceMount로 exit 애니메이션 보장
+// https://www.radix-ui.com/primitives/docs/components/dialog#portal
 function DialogPortal({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+  return (
+    <DialogPrimitive.Portal data-slot="dialog-portal" forceMount {...props} />
+  )
 }
 
 function DialogClose({
@@ -143,22 +148,31 @@ function DialogClose({
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
 }
 
+// ✅ 수정: asChild + props를 motion.div에 전달
+// https://motion.dev/docs/radix
 function DialogOverlay({
   className,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
+}: React.ComponentProps<typeof DialogPrimitive.Overlay & typeof motion.div>) {
   return (
-    <DialogPrimitive.Overlay
-      data-slot="dialog-overlay"
-      className={cn(
-        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50',
-        className
-      )}
-      {...props}
-    />
+    <DialogPrimitive.Overlay asChild>
+      <motion.div
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 0.2,
+          ease: 'linear',
+        }}
+        exit={{ opacity: 0, scale: 1 }}
+        data-slot="dialog-overlay"
+        className={cn('fixed inset-0 z-50 bg-black/80', className)}
+        {...props}
+      />
+    </DialogPrimitive.Overlay>
   )
 }
 
+// ✅ 수정: DialogClose를 motion.div 외부로
 function DialogContent({
   className,
   children,
@@ -168,28 +182,43 @@ function DialogContent({
   showCloseButton?: boolean
 }) {
   return (
-    <DialogPortal data-slot="dialog-portal">
-      <DialogOverlay>
-        <DialogPrimitive.Content
+    <DialogPortal>
+      <DialogOverlay />
+      <DialogPrimitive.Content asChild {...props}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          whileHover={{
+            scale: 1.1,
+            transition: { duration: 0.2 },
+          }}
+          transition={{
+            type: 'spring',
+            bounce: 0.6,
+            duration: 0.4,
+          }}
           data-slot="dialog-content"
           className={cn(
-            'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex max-h-[80dvh] w-full max-w-sm translate-x-[-50%] translate-y-[-50%] flex-col overflow-hidden rounded-lg border shadow-lg duration-200 sm:max-w-lg',
+            'bg-background fixed top-[50%] left-[50%] z-50',
+            'flex max-h-[80dvh] w-full max-w-sm sm:max-w-lg',
+            'translate-x-[-50%] translate-y-[-50%]',
+            'flex-col overflow-hidden rounded-lg border shadow-lg',
             className
           )}
-          {...props}
         >
           {children}
           {showCloseButton && (
             <DialogPrimitive.Close
               data-slot="dialog-close"
-              className="data-[state=open]:bg-accent data-[state=open]:text-muted-foreground [&_svg:not cursor-pointer([class*='size-'])]:size-4 absolute top-4 right-4 z-50 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-gray-50 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0"
+              className="absolute top-4 right-4 z-50 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none"
             >
               <XIcon />
               <span className="sr-only">Close</span>
             </DialogPrimitive.Close>
           )}
-        </DialogPrimitive.Content>
-      </DialogOverlay>
+        </motion.div>
+      </DialogPrimitive.Content>
     </DialogPortal>
   )
 }
