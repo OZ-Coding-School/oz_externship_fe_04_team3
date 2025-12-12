@@ -19,12 +19,21 @@ import { Button } from './Button'
  *
  * @example
  *  1. trigger 버튼으로 사용
- * <Modal
- *   trigger={{ text: '열기', variant: 'primary', icon: <Send /> }}
- *   title="제목"
- *   content={<YourComponent />}
- *   footer={{ closeButton: {...}, submitButton: {...} }}
- * />
+ <Modal
+            trigger={{ text: '지원하기', variant: 'primary', icon: <Send /> }}
+            title="스터디 지원"
+            description="지원서 작성"
+            content={<YeeunTest></YeeunTest>}
+            footer={{
+              description: '*필수 항목입니다',
+              closeButton: { text: '취소' },
+              footerButtons: (
+                <Button type="submit">
+                  <Send /> 지원하기
+                </Button>
+              ),
+            }}
+          />
  *
  * @example
  *  2. trigger 버튼 없는 2중 모달창
@@ -73,7 +82,11 @@ export default function Modal({
                 maxWidth: 'none',
               }}
             />
-            {content}
+            {/*
+             * @features
+             - 컨텐츠 내용만 wrapper 하여 스크롤바 구현
+             */}
+            <div className="overflow-y-auto p-4">{content}</div>
             {footer && (
               <>
                 <Separator
@@ -84,7 +97,7 @@ export default function Modal({
                     maxWidth: 'none',
                   }}
                 />
-                <DialogFooter className="sm:justify-between">
+                <DialogFooter>
                   <DialogDescription>{footer.description}</DialogDescription>
                   <div className="flex gap-2">
                     <DialogClose asChild>
@@ -160,7 +173,7 @@ function DialogContent({
         <DialogPrimitive.Content
           data-slot="dialog-content"
           className={cn(
-            'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid max-h-[80vh] w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 overflow-y-auto rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg',
+            'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex max-h-[80dvh] w-full max-w-sm translate-x-[-50%] translate-y-[-50%] flex-col overflow-hidden rounded-lg border shadow-lg duration-200 sm:max-w-lg',
             className
           )}
           {...props}
@@ -171,7 +184,7 @@ function DialogContent({
               data-slot="dialog-close"
               className="data-[state=open]:bg-accent data-[state=open]:text-muted-foreground [&_svg:not cursor-pointer([class*='size-'])]:size-4 absolute top-4 right-4 z-50 rounded-full opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-gray-50 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0"
             >
-              <XIcon className="text-gray-50" />
+              <XIcon />
               <span className="sr-only">Close</span>
             </DialogPrimitive.Close>
           )}
@@ -185,7 +198,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn('flex flex-col gap-2 text-center sm:text-left', className)}
+      className={cn('flex flex-col gap-2 p-4 sm:text-left md:p-6', className)}
       {...props}
     />
   )
@@ -196,7 +209,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="dialog-footer"
       className={cn(
-        'flex flex-col-reverse gap-2 sm:flex-row sm:justify-end',
+        'flex flex-row justify-between gap-2 p-4 md:p-6',
         className
       )}
       {...props}
