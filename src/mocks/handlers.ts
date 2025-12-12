@@ -2,7 +2,8 @@ import { http, HttpResponse } from 'msw'
 import { lectureHandlers } from './handlers/lectures/lectureHandlers'
 import { notificationHandlers } from './handlers/notification'
 import { userInformationHandler } from './handlers/user'
-import { recruitmentHandlers } from './handlers/myRecruitments'
+import { recruitmentHandlers } from './handlers/recruitments'
+import { recruitmentHandlers as myRecruitmentHandlers } from './handlers/myRecruitments'
 
 type User = { id: number; name: string; email: string }
 
@@ -18,8 +19,10 @@ export const handlers = [
   ...notificationHandlers,
   // 강의목록 핸들러
   ...lectureHandlers,
-  // 내 공고 목록 핸들러
+  // 공고 목록 핸들러
   ...recruitmentHandlers,
+  // 내 공고 목록 핸들러
+  ...myRecruitmentHandlers,
 
   http.get('/api/users', () => {
     return HttpResponse.json(users)
