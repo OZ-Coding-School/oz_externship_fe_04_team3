@@ -16,3 +16,20 @@ axiosInstance.interceptors.request.use((config) => {
   }
   return config
 })
+
+// 스터디 공고 목록 조회
+export const getRecruitments = async (params: {
+  search?: string
+  category?: string
+  sort?: string
+}) => {
+  const queryParams = new URLSearchParams()
+  if (params.search) queryParams.append('search', params.search)
+  if (params.category) queryParams.append('category', params.category)
+  if (params.sort) queryParams.append('sort', params.sort)
+
+  const response = await axiosInstance.get(
+    `/api/recruitments?${queryParams.toString()}`
+  )
+  return response.data
+}

@@ -1,4 +1,4 @@
-import getRecruitmentsApi from '@/api/recruitment'
+import getMyRecruitmentListApi from '@/api/myRecruitment'
 import { mapRecruitment } from '@/mappers/myRecruitment/mapper'
 import type {
   MyRecruitmentParams,
@@ -23,9 +23,9 @@ export const useMyRecruitments = ({
 }: MyRecruitmentParams = {}) => {
   // 1) 모집중 카운트용 (is_closed=false)
   const openCountQuery = useQuery<number>({
-    queryKey: ['manageRecruitments-open-count'],
+    queryKey: ['manageRecruitmentList-open-count'],
     queryFn: async () => {
-      const data = await getRecruitmentsApi({
+      const data = await getMyRecruitmentListApi({
         is_closed: false,
       })
       return data?.count ?? 0
@@ -36,9 +36,9 @@ export const useMyRecruitments = ({
 
   // 2) 마감 카운트용 (is_closed=true)
   const closedCountQuery = useQuery<number>({
-    queryKey: ['manageRecruitments-closed-count'],
+    queryKey: ['manageRecruitmentList-closed-count'],
     queryFn: async () => {
-      const data = await getRecruitmentsApi({
+      const data = await getMyRecruitmentListApi({
         is_closed: true,
       })
       return data?.count ?? 0
@@ -50,11 +50,11 @@ export const useMyRecruitments = ({
   // 3) 리스트용 무한스크롤
   const listQuery = useInfiniteQuery<MyRecruitmentPageResponse>({
     queryKey: [
-      'manageRecruitments',
+      'manageRecruitmentList',
       { page_size, search, sort, tags, is_closed },
     ],
     queryFn: async ({ pageParam }) => {
-      return getRecruitmentsApi({
+      return getMyRecruitmentListApi({
         page: pageParam as number,
         page_size,
         search,

@@ -28,7 +28,7 @@ interface RecruitmentResponse {
 }
 
 export const recruitmentHandlers = [
-  http.get('/api/v1/recruitments', ({ request }) => {
+  http.get('/api/v1/recruitments/mine', ({ request }) => {
     const url = new URL(request.url)
     const page = parseInt(url.searchParams.get('page') || '1')
     const pageSize = parseInt(url.searchParams.get('page_size') || '10')
@@ -113,7 +113,7 @@ export const recruitmentHandlers = [
     const paginatedResults = filtered.slice(startIdx, endIdx)
 
     // next/previous URL 생성
-    const baseUrl = new URL(request.url).origin + '/api/v1/recruitments?'
+    const baseUrl = new URL(request.url).origin + '/api/v1/recruitments/mine?'
     const searchParams = new URLSearchParams({
       page_size: pageSize.toString(),
       ...(search && { search }),
