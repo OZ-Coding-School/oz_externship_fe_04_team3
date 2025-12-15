@@ -1,6 +1,6 @@
 import getLecturesApi from '@/api/lecture'
 import { Select } from '@/components/common'
-import GuestRecommendSection from '@/components/GuestRecommendSection'
+import GuestRecommendSection from '@/components/common/GuestRecommendSection'
 import { Input } from '@/components/input'
 import LectureList from '@/components/lecture/LectureList'
 import useInfiniteScroll from '@/hooks/quries/useInfiniteScroll'
@@ -61,7 +61,7 @@ export default function Courses() {
           description="로그인하시면 관심 분야를 바탕으로 맞춤형 강의"
         ></GuestRecommendSection>
       </section>
-      <section className="courses_filter flex gap-2 rounded-md border border-gray-200 bg-white p-6">
+      <section className="courses_filter flex flex-col gap-2 rounded-md border border-gray-200 bg-white p-6 sm:flex-row">
         <Input
           prefix={<Search />}
           className="h-[38px]"

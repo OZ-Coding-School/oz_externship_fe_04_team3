@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import { Bookmark, Calendar, Eye, Pencil, Trash2, Users } from 'lucide-react'
+import { useState } from 'react'
 
-import { getTypeIcon } from '@/helpers/icons'
 import { Button } from '@/components/common'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Badge } from '@/components/common/badge'
+import { Skeleton } from '@/components/common/skeleton'
+import { getTypeIcon } from '@/helpers/icons'
 import type { ManageRecruitment } from '@/types/myRecruitment'
 
 type ManageCardProps = {
