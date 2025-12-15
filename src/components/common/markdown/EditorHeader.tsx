@@ -13,7 +13,7 @@ export function EditorHeader({
   insertMarkdown,
 }: EditorHeaderProps) {
   return (
-    <header className="bg-custom-gray-50 border-custom-gray-200 flex h-22 flex-col justify-evenly border-b px-4 sm:h-12 sm:flex-row sm:items-center sm:justify-between">
+    <header className="bg-custom-gray-50 border-custom-gray-200 flex h-22 flex-col justify-evenly rounded-t-lg border-b px-4 sm:h-12 sm:flex-row sm:items-center sm:justify-between">
       <EditorTab mode={mode} setMode={setMode} />
       {mode === 'write' && <Toolbar insertMarkdown={insertMarkdown} />}
     </header>

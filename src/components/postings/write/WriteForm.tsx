@@ -8,6 +8,7 @@ import { useState } from 'react'
 
 export default function WriteForm() {
   const [deadline, setDeadline] = useState<Date | undefined>()
+  const [content, setContent] = useState('')
 
   const groutData = [
     { itemValue: 'study1', itemText: 'React 스터디' },
@@ -62,7 +63,7 @@ export default function WriteForm() {
             <span>마크다운 문법을 사용할 수 있습니다</span>
             <span>이미지 0/5개</span>
           </p>
-          <MarkdownEditor />
+          <MarkdownEditor value={content} onChange={setContent} />
         </div>
       </section>
       <section className="flex flex-col gap-6 rounded-xl border border-gray-200 bg-white p-8">

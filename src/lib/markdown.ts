@@ -1,28 +1,37 @@
-export function markdownToHtml(markdown: string): string {
-  let html: string = markdown
+function parseBold(text: string): string {
+  return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+}
 
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+function parseItalic(text: string): string {
+  return text.replace(/\*(.+?)\*/g, '<em>$1</em>')
+}
 
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>')
+function parseInlineCode(text: string): string {
+  return text.replace(/`(.+?)`/g, '<code>$1</code>')
+}
 
-  html = html.replace(/`(.+?)`/g, '<code>$1</code>')
-
-  html = html.replace(
+function parseImages(text: string): string {
+  return text.replace(
     /!\[(.*?)\]\(([^)]*?)\)/g,
-    (_match: string, alt: string, url: string): string => {
-      return `<img src="${url}" alt="${alt || ''}" />`
-    }
+    (_, alt: string, url: string) => `<img src="${url}" alt="${alt || ''}" />`
   )
+}
 
-  html = html.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
+function parseLinks(text: string): string {
+  return text.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
+}
 
-  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>')
-  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>')
-  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>')
+function parseHeadings(text: string): string {
+  return text
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+}
 
-  html = html.replace(
+function parseUnorderedList(text: string): string {
+  return text.replace(
     /(^|\r?\n)((?:\s*- .+(?:\r?\n|$))+)/g,
-    (_m, prefix, block) => {
+    (_, prefix, block) => {
       const items = block
         .trim()
         .split(/\r?\n/)
@@ -33,10 +42,12 @@ export function markdownToHtml(markdown: string): string {
       return `${prefix}<ul>${items}</ul>`
     }
   )
+}
 
-  html = html.replace(
+function parseOrderedList(text: string): string {
+  return text.replace(
     /(^|\r?\n)((?:\d+\. .+(?:\r?\n|$))+)/g,
-    (_m, prefix, block) => {
+    (_, prefix, block) => {
       const items = block
         .trim()
         .split(/\r?\n/)
@@ -47,11 +58,27 @@ export function markdownToHtml(markdown: string): string {
       return `${prefix}<ol>${items}</ol>`
     }
   )
+}
 
-  html = html.replace(
+function parseLineBreaks(text: string): string {
+  return text.replace(
     /(?<!<\/ul>|<\/ol>|<\/li>|<\/h1>|<\/h2>|<\/h3>)\n/g,
     '<br/>'
   )
+}
+
+export function markdownToHtml(markdown: string): string {
+  let html = markdown
+
+  html = parseBold(html)
+  html = parseItalic(html)
+  html = parseInlineCode(html)
+  html = parseImages(html)
+  html = parseLinks(html)
+  html = parseHeadings(html)
+  html = parseUnorderedList(html)
+  html = parseOrderedList(html)
+  html = parseLineBreaks(html)
 
   return html
 }
