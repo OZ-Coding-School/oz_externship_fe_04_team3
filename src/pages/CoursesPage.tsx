@@ -60,7 +60,6 @@ export default function Courses() {
         {loginState === 'USER' ? (
           <LectureRecommendSection
             lectureList={data?.pages.flatMap((page) => page.results) || []}
-            loginState={loginState}
           ></LectureRecommendSection>
         ) : (
           <GuestRecommendSection
@@ -106,7 +105,7 @@ export default function Courses() {
         ></Select>
       </section>
       <section className="courses_cardlist">
-        <LectureList data={data} loginState={loginState}></LectureList>
+        <LectureList data={data}></LectureList>
       </section>
       {!hasNextPage ? (
         <div className="flex-center mt-12 h-12 rounded-md bg-gray-400 text-center text-white">

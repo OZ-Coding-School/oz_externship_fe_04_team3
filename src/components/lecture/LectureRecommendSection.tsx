@@ -1,17 +1,19 @@
-import type { LoginState } from '@/store/loginStateStore'
+import LoginStateStore from '@/store/loginStateStore'
 import type { Lecture } from '@/types/lecture'
 import { Badge } from '../ui/badge'
 import LectureCard from './LectureCard'
 
 interface LectureRecommendSectionProps {
   lectureList: Lecture[]
-  loginState: LoginState
 }
 
 export default function LectureRecommendSection(
   props: LectureRecommendSectionProps
 ) {
-  const { loginState, lectureList } = props
+  const { lectureList } = props
+
+  /* 유저 상태 */
+  const { loginState } = LoginStateStore()
   return (
     <div className="border-primary-200 rounded-xl border bg-linear-to-r from-[#FFF7ED] to-[#FEFCE8] px-4 py-8 md:p-8">
       <div>
@@ -24,11 +26,7 @@ export default function LectureRecommendSection(
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {lectureList.slice(0, 3).map((i) => (
-            <LectureCard
-              key={i.id}
-              {...i}
-              loginState={loginState}
-            ></LectureCard>
+            <LectureCard key={i.id} {...i}></LectureCard>
           ))}
         </div>
       </div>

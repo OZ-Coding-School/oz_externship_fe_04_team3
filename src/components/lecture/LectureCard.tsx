@@ -11,7 +11,7 @@ import { getDiscount } from '@/helpers/getDiscount'
 import getRatingStarsIcon from '@/helpers/getRatingStarsIcon'
 import { useBookmark } from '@/hooks/useBookmark'
 import { LectureLevel } from '@/mappers/lectures/lecture'
-import type { LoginState } from '@/store/loginStateStore'
+import LoginStateStore from '@/store/loginStateStore'
 import type { Lecture } from '@/types/lecture'
 import { Bookmark, Plus } from 'lucide-react'
 import { useState } from 'react'
@@ -20,12 +20,7 @@ import { showToast } from '../common/toast/Toast'
 import { Badge } from '../ui/badge'
 import LectureReviewCard from './LectureReviewCard'
 
-//강의목록 뿐만아니라, 로그인 상태도 타입으로 받기.
-interface LectureCardProps extends Lecture {
-  loginState: LoginState
-}
-
-export default function LectureCard(props: LectureCardProps) {
+export default function LectureCard(lecture: Lecture) {
   const {
     id,
     title,
@@ -38,12 +33,12 @@ export default function LectureCard(props: LectureCardProps) {
     average_rating,
     categories,
     url_link,
-    loginState,
-  } = props
+  } = lecture
 
   /* 리뷰보기 모달창 상태 */
   const [showReviewModal, setReviewShowModal] = useState(false)
   /* 로그인 분기 처리 */
+  const { loginState } = LoginStateStore()
   const isLoggedIn = loginState === 'USER' ? true : false
   /* 북마크 커스텀 상태 */
   const { addBookmarkMutation, deleteBookmarkMutation, getBookmarkQuery } =
@@ -125,7 +120,7 @@ export default function LectureCard(props: LectureCardProps) {
           <LectureReviewCard
             open={showReviewModal}
             setOpen={setReviewShowModal}
-            lecture={props}
+            lecture={lecture}
           />
         )}
         <Button
