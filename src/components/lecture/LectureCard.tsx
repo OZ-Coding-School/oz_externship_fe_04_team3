@@ -14,6 +14,7 @@ import { useBookmark } from '@/hooks/useBookmark'
 import { LectureLevel } from '@/mappers/lectures/lecture'
 import LoginStateStore from '@/store/loginStateStore'
 import type { Lecture } from '@/types/lecture'
+import { AnimatePresence } from 'framer-motion'
 import { Bookmark, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
@@ -25,6 +26,7 @@ import {
 import { Badge } from '../common/badge'
 import { Button } from '../common/Button'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '../common/item'
+import { Skeleton } from '../common/skeleton'
 import { showToast } from '../common/toast/Toast'
 import LectureReviewCard from './LectureReviewCard'
 
@@ -99,12 +101,16 @@ export default function LectureCard(lecture: Lecture) {
             />
           </Button>
         </CardAction>
-        <img
-          src={thumbnail_img_url}
-          alt={title}
-          className="h-auto w-full object-cover"
-          loading="lazy"
-        />
+        {thumbnail_img_url ? (
+          <img
+            src={thumbnail_img_url}
+            alt={title}
+            className="h-auto w-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <Skeleton></Skeleton>
+        )}
       </CardHeader>
       <CardContent>
         <div className="Card-Content-badge flex gap-1">
@@ -124,7 +130,6 @@ export default function LectureCard(lecture: Lecture) {
         </div>
       </CardContent>
       <CardFooter className="relative">
-        {/* 데스크탑버전 */}
         {isDesktop && (
           <>
             <Button
@@ -136,13 +141,15 @@ export default function LectureCard(lecture: Lecture) {
               <Plus size={14} />
               리뷰 보러 가기
             </Button>
-            {showReviewModal && (
-              <LectureReviewCard
-                open={showReviewModal}
-                setOpen={setReviewShowModal}
-                lecture={lecture}
-              />
-            )}
+            <AnimatePresence initial={false}>
+              {showReviewModal ? (
+                <LectureReviewCard
+                  open={showReviewModal}
+                  setOpen={setReviewShowModal}
+                  lecture={lecture}
+                />
+              ) : null}
+            </AnimatePresence>
           </>
         )}
         {/* 모바일 버전 */}
@@ -152,11 +159,6 @@ export default function LectureCard(lecture: Lecture) {
               <AccordionTrigger
                 className="text-primary-500"
                 aria-label={`${title} 리뷰 페이지로 이동`}
-                onClick={() => {
-                  if (isDesktop) {
-                    setReviewShowModal(!showReviewModal)
-                  }
-                }}
               >
                 리뷰 보러 가기
               </AccordionTrigger>
