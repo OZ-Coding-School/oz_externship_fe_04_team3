@@ -4,8 +4,8 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { XIcon } from 'lucide-react'
 import { motion } from 'motion/react'
 import * as React from 'react'
-import { Separator } from '../ui/separator'
 import { Button } from './Button'
+import { Separator } from './separator'
 
 /**
  * @file Modal.tsx
@@ -132,13 +132,13 @@ function DialogTrigger({
   return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
 }
 
-// ✅ forceMount로 exit 애니메이션 보장
+//  forceMount로 exit 애니메이션 보장
 // https://www.radix-ui.com/primitives/docs/components/dialog#portal
 function DialogPortal({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
   return (
-    <DialogPrimitive.Portal data-slot="dialog-portal" forceMount {...props} />
+    <DialogPrimitive.Portal data-slot="dialog-portal" {...props} forceMount />
   )
 }
 
@@ -148,7 +148,7 @@ function DialogClose({
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
 }
 
-// ✅ 수정: asChild + props를 motion.div에 전달
+//  asChild + props를 motion.div에 전달
 // https://motion.dev/docs/radix
 function DialogOverlay({
   className,
@@ -160,19 +160,19 @@ function DialogOverlay({
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{
-          duration: 0.2,
-          ease: 'linear',
+          duration: 0.1,
+          ease: 'easeIn',
         }}
         exit={{ opacity: 0, scale: 1 }}
         data-slot="dialog-overlay"
-        className={cn('fixed inset-0 z-50 bg-black/80', className)}
+        className={cn('fixed inset-0 z-50 bg-black/60', className)}
         {...props}
       />
     </DialogPrimitive.Overlay>
   )
 }
 
-// ✅ 수정: DialogClose를 motion.div 외부로
+// DialogClose를 motion.div 외부로
 function DialogContent({
   className,
   children,
@@ -195,8 +195,8 @@ function DialogContent({
           }}
           transition={{
             type: 'spring',
-            bounce: 0.6,
-            duration: 0.4,
+            bounce: 0.3,
+            duration: 0.2,
           }}
           data-slot="dialog-content"
           className={cn(
