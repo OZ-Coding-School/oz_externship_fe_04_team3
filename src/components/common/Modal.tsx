@@ -153,12 +153,11 @@ function DialogOverlay({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Overlay & typeof motion.div>) {
   return (
-    <DialogPrimitive.Overlay asChild>
+    <DialogPrimitive.Overlay asChild data-slot="dialog-overlay">
       <motion.div
-        initial={{ opacity: 0, scale: 0 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0 }}
-        data-slot="dialog-overlay"
+        // initial={{ opacity: 0, scale: 0 }}
+        // animate={{ opacity: 1, scale: 1 }}
+        // exit={{ opacity: 0, scale: 0 }}
         className={cn('fixed inset-0 z-50 bg-black/60', className)}
         {...props}
       />
@@ -176,22 +175,18 @@ function DialogContent({
   showCloseButton?: boolean
 }) {
   return (
-    <DialogPortal forceMount>
+    <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content asChild {...props}>
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          whileHover={{
-            scale: 1.1,
-            transition: { duration: 0.2 },
-          }}
-          transition={{
-            type: 'spring',
-            bounce: 0.3,
-            duration: 0.2,
-          }}
+          // initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          // animate={{ opacity: 1, scale: 1, y: 0 }}
+          // exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          // transition={{
+          //   type: 'spring',
+          //   bounce: 0.3,
+          //   duration: 0.2,
+          // }}
           data-slot="dialog-content"
           className={cn(
             'bg-background fixed top-[50%] left-[50%] z-50',

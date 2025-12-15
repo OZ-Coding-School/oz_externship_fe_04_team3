@@ -40,10 +40,7 @@ function User() {
             스터디 그룹
           </a>
           {/* 클릭하면 스터디그룹 페이지로 렌더링 */}
-          <a
-            href="/posting/manage"
-            className="hover:text-primary-600 cursor-pointer"
-          >
+          <a href="/manage" className="hover:text-primary-600 cursor-pointer">
             구인 공고
           </a>
           {/* 클릭하면 구인공고 페이지 렌더링 */}
