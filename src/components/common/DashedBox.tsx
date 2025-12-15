@@ -1,6 +1,6 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties, ReactNode, HTMLAttributes } from 'react'
 
-interface DashedBoxProps {
+interface DashedBoxProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode
   className?: string
   dashLength?: number
@@ -22,6 +22,7 @@ export function DashedBox({
   color = '#D1D5DB',
   lineCap = 'round',
   style,
+  ...rest
 }: DashedBoxProps) {
   return (
     <div
@@ -30,6 +31,7 @@ export function DashedBox({
         borderRadius: `${borderRadius}px`,
         ...style,
       }}
+      {...rest}
     >
       <svg
         className="dashed-box-svg"

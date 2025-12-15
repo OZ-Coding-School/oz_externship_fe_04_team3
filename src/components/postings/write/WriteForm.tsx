@@ -3,13 +3,18 @@ import { DashedBox } from '@/components/common/DashedBox'
 import { DatePickerInput } from '@/components/common/date-picker/DatePickerInput'
 import { MarkdownEditor } from '@/components/common/markdown'
 import { Input } from '@/components/input'
-import { ImageUp, Plus, TagIcon } from 'lucide-react'
+import { Plus, TagIcon } from 'lucide-react'
 import { useState } from 'react'
+import {
+  ImageUploader,
+  type UploadedImage,
+} from '@/components/common/uploader/ImageUploader'
 
 export default function WriteForm() {
   const [deadline, setDeadline] = useState<Date | undefined>()
   const [content, setContent] = useState('')
   const [imageCount, setImageCount] = useState(0)
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
 
   const groutData = [
     { itemValue: 'study1', itemText: 'React 스터디' },
@@ -108,18 +113,15 @@ export default function WriteForm() {
         </div>
 
         <div>
-          <p className="mb-2 text-sm text-gray-700">사용자 정의 태그</p>
-          <DashedBox
-            className="min-h-[168px] p-6"
-            color="#D1D5DB"
-            borderRadius={8}
-          >
-            <p className="flex-center absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 flex-col text-sm text-[#6B7280]">
-              <ImageUp />
-              <span>파일을 드래그하거나 클릭하여 업로드</span>
-              <span>최대 3개 파일, 각 5MB 이하</span>
-            </p>
-          </DashedBox>
+          <p className="mb-2 text-sm text-gray-700">
+            참고 파일 업로드 (선택사항)
+          </p>
+          <ImageUploader
+            images={uploadedImages}
+            onChange={setUploadedImages}
+            maxCount={3}
+            maxSize={5 * 1024 * 1024}
+          />
         </div>
       </section>
       <section className="my-8 flex justify-end gap-4 border-t border-gray-200 pt-[25px]">
