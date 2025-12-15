@@ -2,7 +2,7 @@ import { ToastAlert } from '@/components/common'
 import { toast, type ToastOptions, Slide } from 'react-toastify'
 
 const defaultOptions: ToastOptions = {
-  position: 'top-left',
+  position: 'top-right',
   autoClose: 5000,
   hideProgressBar: false,
   closeOnClick: false,

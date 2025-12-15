@@ -1,12 +1,12 @@
-import { Route, Routes, Navigate } from 'react-router-dom'
 import Layout from '@/components/common/layout/Layout'
-import RecruitmentListPage from '@/pages/postings/RecruitmentListPage'
-import ManagePage from '@/pages/postings/Manage'
-import WritePage from '@/pages/postings/Write'
-import Main from '@/pages/main'
 import CoursesPage from '@/pages/CoursesPage'
+import Main from '@/pages/main'
+import ManagePage from '@/pages/postings/Manage'
+import RecruitmentListPage from '@/pages/postings/RecruitmentListPage'
+import WritePage from '@/pages/postings/Write'
 import YeeunTest from '@/pages/YeeunTest'
 import loginStateStore from '@/store/loginStateStore'
+import { Navigate, Route, Routes } from 'react-router-dom'
 
 function AppRoutes() {
   const loginState = loginStateStore((state) => state.loginState)

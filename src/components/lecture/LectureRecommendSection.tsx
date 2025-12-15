@@ -1,18 +1,25 @@
-import mockData from '@/mocks/data/lectureList.json'
-
+import LoginStateStore from '@/store/loginStateStore'
 import type { Lecture } from '@/types/lecture'
-import { Badge } from '../ui/badge'
+import { Badge } from '../common/badge'
 import LectureCard from './LectureCard'
 
-export default function LectureRecommendSection() {
-  const lectureList = mockData.results as Lecture[]
+interface LectureRecommendSectionProps {
+  lectureList: Lecture[]
+}
 
+export default function LectureRecommendSection(
+  props: LectureRecommendSectionProps
+) {
+  const { lectureList } = props
+
+  /* 유저 상태 */
+  const { loginState } = LoginStateStore()
   return (
-    <div className="border-primary-200 w-5/6 rounded-xl border bg-linear-to-r from-[#FFF7ED] to-[#FEFCE8] px-4 py-8 md:p-8">
+    <div className="border-primary-200 rounded-xl border bg-linear-to-r from-[#FFF7ED] to-[#FEFCE8] px-4 py-8 md:p-8">
       <div>
         <div className="section-header flex items-baseline gap-2">
           <h3 className="pb-6 text-left text-balance text-gray-900">
-            김스터디 님을 위한 추천 강의
+            {loginState} 님을 위한 추천 강의
           </h3>
           <Badge variant={'danger'}>개인맞춤</Badge>
         </div>
