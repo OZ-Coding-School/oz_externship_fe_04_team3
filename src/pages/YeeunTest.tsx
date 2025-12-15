@@ -1,8 +1,26 @@
+import { Button } from '@/components/common'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useState } from 'react'
+
 export default function YeeunTest() {
+  const [isVisible, setIsVisible] = useState(true)
   return (
     <div className="flex flex-col gap-4">
+      <AnimatePresence initial={false}>
+        {isVisible ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+          >
+            dsdsd
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+      <Button onClick={() => setIsVisible(!isVisible)}>
+        {isVisible ? 'Hide' : 'Show'}
+      </Button>
       <h1 className="text-2xl font-bold">테스트 콘텐츠 - 스크롤 확인용</h1>
-
       <div className="grid grid-cols-2 gap-4">
         {Array.from({ length: 20 }).map((_, i) => (
           <div
@@ -17,7 +35,6 @@ export default function YeeunTest() {
           </div>
         ))}
       </div>
-
       <div className="mt-4 rounded-lg bg-blue-100 p-4">
         <h2 className="mb-2 text-xl font-bold">추가 정보</h2>
         <p>모달 너비가 sm:max-w-2xl로 제한되어 있습니다.</p>

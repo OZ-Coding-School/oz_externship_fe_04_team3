@@ -137,9 +137,7 @@ function DialogTrigger({
 function DialogPortal({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
-  return (
-    <DialogPrimitive.Portal data-slot="dialog-portal" {...props} forceMount />
-  )
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
 }
 
 function DialogClose({
@@ -159,11 +157,7 @@ function DialogOverlay({
       <motion.div
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{
-          duration: 0.1,
-          ease: 'easeIn',
-        }}
-        exit={{ opacity: 0, scale: 1 }}
+        exit={{ opacity: 0, scale: 0 }}
         data-slot="dialog-overlay"
         className={cn('fixed inset-0 z-50 bg-black/60', className)}
         {...props}
@@ -182,7 +176,7 @@ function DialogContent({
   showCloseButton?: boolean
 }) {
   return (
-    <DialogPortal>
+    <DialogPortal forceMount>
       <DialogOverlay />
       <DialogPrimitive.Content asChild {...props}>
         <motion.div

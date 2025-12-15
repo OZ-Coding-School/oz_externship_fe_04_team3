@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from '../common/card'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '../common/item'
+import { Skeleton } from '../common/skeleton'
 
 type LectureReviewCardProps = {
   open: boolean
@@ -51,13 +52,16 @@ export default function LectureReviewCard({
                 </Badge>
               </div>
             </CardAction>
-
-            <img
-              src={thumbnail_img_url}
-              alt={title}
-              className="h-auto w-full object-cover"
-              loading="lazy"
-            />
+            {thumbnail_img_url ? (
+              <img
+                src={thumbnail_img_url}
+                alt={title}
+                className="h-auto w-full object-cover"
+                loading="lazy"
+              />
+            ) : (
+              <Skeleton></Skeleton>
+            )}
           </CardHeader>
           <div className="review-content-section overflow-y-auto">
             <CardContent>
