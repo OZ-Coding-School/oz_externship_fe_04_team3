@@ -1,8 +1,9 @@
 import { useCallback, useRef } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 
 interface UseMarkdownEditorProps {
   value: string
-  setValue: (v: string) => void
+  setValue: Dispatch<SetStateAction<string>>
 }
 
 export function useMarkdownEditor({ value, setValue }: UseMarkdownEditorProps) {

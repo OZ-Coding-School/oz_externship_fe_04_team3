@@ -9,6 +9,7 @@ import { useState } from 'react'
 export default function WriteForm() {
   const [deadline, setDeadline] = useState<Date | undefined>()
   const [content, setContent] = useState('')
+  const [imageCount, setImageCount] = useState(0)
 
   const groutData = [
     { itemValue: 'study1', itemText: 'React 스터디' },
@@ -61,9 +62,14 @@ export default function WriteForm() {
           </p>
           <p className="flex-between mb-2 gap-4 text-sm text-gray-500">
             <span>마크다운 문법을 사용할 수 있습니다</span>
-            <span>이미지 0/5개</span>
+            <span>이미지 {imageCount}/5개</span>
           </p>
-          <MarkdownEditor value={content} onChange={setContent} />
+          <MarkdownEditor
+            value={content}
+            onChange={setContent}
+            onImageCountChange={setImageCount}
+            allowImageDrop
+          />
         </div>
       </section>
       <section className="flex flex-col gap-6 rounded-xl border border-gray-200 bg-white p-8">

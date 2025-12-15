@@ -2,18 +2,25 @@ import { forwardRef } from 'react'
 
 interface EditorTextareaProps {
   value: string
-  setValue: (value: string) => void
+  setValue: React.Dispatch<React.SetStateAction<string>>
+  onDrop?: (e: React.DragEvent<HTMLTextAreaElement>) => void
+  allowDrop?: boolean
 }
 
 export const EditorTextarea = forwardRef<
   HTMLTextAreaElement,
   EditorTextareaProps
->(({ value, setValue }, ref) => {
+>(({ value, setValue, onDrop, allowDrop = false }, ref) => {
   return (
     <textarea
       ref={ref}
       value={value}
       onChange={(e) => setValue(e.target.value)}
+      onDragOver={(e) => {
+        if (!allowDrop) return
+        e.preventDefault()
+      }}
+      onDrop={onDrop}
       placeholder="# 스터디 소개
 React 실무 프로젝트를 함께 진행할 팀원을 모집합니다!
 
