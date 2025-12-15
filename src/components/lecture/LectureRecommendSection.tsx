@@ -1,7 +1,7 @@
 import mockData from '@/mocks/data/lectureList.json'
 
 import type { Lecture } from '@/types/lecture'
-import { Badge } from '../ui/badge'
+import { Badge } from '../common/badge'
 import LectureCard from './LectureCard'
 
 export default function LectureRecommendSection() {

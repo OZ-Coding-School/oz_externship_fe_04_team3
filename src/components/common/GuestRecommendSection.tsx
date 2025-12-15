@@ -1,7 +1,7 @@
 import { LogIn, UserPlus } from 'lucide-react'
 import { useNavigate } from 'react-router'
-import { Button } from './common/Button'
-import CardSkeleton from './common/CardSkeleton'
+import { Button } from './Button'
+import CardSkeleton from './CardSkeleton'
 type DataProps = {
   title: string
   description: string
@@ -20,7 +20,7 @@ export default function GuestRecommendSection({
         <p className="md:text-md mt-3 text-sm text-gray-500">
           {description}를 추천해드립니다.
         </p>
-        <div className="mt-6 flex items-center justify-center gap-x-4">
+        <div className="mt-6 flex items-center justify-center gap-2">
           <Button variant={'primary'} onClick={() => navigate('/login')}>
             <LogIn />
             로그인하기
