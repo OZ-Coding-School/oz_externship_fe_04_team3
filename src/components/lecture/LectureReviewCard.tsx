@@ -3,7 +3,7 @@ import getRatingStarsIcon from '@/helpers/getRatingStarsIcon'
 import { LectureLevel } from '@/mappers/lectures/lecture'
 import type { Lecture } from '@/types/lecture'
 import { Dialog, DialogContent } from '../common/Modal'
-import { Badge } from '../ui/badge'
+import { Badge } from '../common/badge'
 import {
   Card,
   CardAction,
@@ -12,8 +12,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '../ui/card'
-import { Item, ItemContent, ItemDescription, ItemTitle } from '../ui/item'
+} from '../common/card'
+import { Item, ItemContent, ItemDescription, ItemTitle } from '../common/item'
 
 type LectureReviewCardProps = {
   open: boolean

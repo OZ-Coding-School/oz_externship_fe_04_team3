@@ -1,6 +1,6 @@
 import LoginStateStore from '@/store/loginStateStore'
 import type { Lecture } from '@/types/lecture'
-import { Badge } from '../ui/badge'
+import { Badge } from '../common/badge'
 import LectureCard from './LectureCard'
 
 interface LectureRecommendSectionProps {
