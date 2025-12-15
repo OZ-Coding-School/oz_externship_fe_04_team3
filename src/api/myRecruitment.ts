@@ -4,7 +4,7 @@ import type {
 } from '@/types/myRecruitment'
 import { axiosInstance } from './axios'
 
-export default async function getRecruitmentsApi(
+export default async function getMyRecruitmentListApi(
   params: MyRecruitmentParams = {}
 ): Promise<MyRecruitmentPageResponse> {
   const queryParams: Record<string, string | number | string[] | boolean> = {}
@@ -17,7 +17,7 @@ export default async function getRecruitmentsApi(
   if (params.is_closed !== undefined) queryParams.is_closed = params.is_closed
 
   const { data } = await axiosInstance.get<MyRecruitmentPageResponse>(
-    '/v1/recruitments',
+    '/v1/recruitments/mine',
     { params: queryParams }
   )
   return data
