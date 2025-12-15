@@ -10,7 +10,7 @@ type dataProps = {
 }
 export default function LectureList({ data, loginState }: dataProps) {
   return (
-    <div className="grid w-full gap-3 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {data?.pages.map((page, pageIndex) => (
         <React.Fragment key={pageIndex}>
           {page.results.map((lecture) => (

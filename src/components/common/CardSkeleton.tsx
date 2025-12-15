@@ -1,5 +1,5 @@
 import { Star } from 'lucide-react'
-import { Skeleton } from '../ui/skeleton'
+import { Skeleton } from './skeleton'
 
 export default function CardSkeleton() {
   return (
@@ -7,13 +7,13 @@ export default function CardSkeleton() {
       <div className="flex space-x-4">
         <Skeleton className="h-8 w-12" />
         <div className="space-y-2">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-3 w-[200px]" />
+          <Skeleton className="h-4 max-w-[250px] min-w-32" />
+          <Skeleton className="h-3 max-w-[200px] min-w-32" />
         </div>
       </div>
       <div className="space-y-2">
-        <Skeleton className="h-3 w-[250px]" />
-        <Skeleton className="h-3 w-[200px]" />
+        <Skeleton className="h-3 max-w-[250px]" />
+        <Skeleton className="h-3 max-w-[200px]" />
       </div>
       <div className="space-y-2. flex gap-2">
         <Skeleton className="bg-primary-100 h-5 w-12" />

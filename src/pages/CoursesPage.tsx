@@ -1,6 +1,6 @@
 import { getLecturesApi } from '@/api/lecture'
 import { Select } from '@/components/common'
-import GuestRecommendSection from '@/components/GuestRecommendSection'
+import GuestRecommendSection from '@/components/common/GuestRecommendSection'
 import { Input } from '@/components/input'
 import LectureList from '@/components/lecture/LectureList'
 import LectureRecommendSection from '@/components/lecture/LectureRecommendSection'
@@ -68,7 +68,7 @@ export default function Courses() {
           ></GuestRecommendSection>
         )}
       </section>
-      <section className="courses_filter flex gap-2 rounded-md border border-gray-200 bg-white p-6">
+      <section className="courses_filter flex flex-col gap-2 rounded-md border border-gray-200 bg-white p-6 sm:flex-row">
         <Input
           prefix={<Search />}
           className="h-[38px]"
