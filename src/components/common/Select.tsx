@@ -38,12 +38,14 @@ export default function Select({
     <div className="flex w-full flex-col">
       <Label htmlFor={name}>
         {required ? (
-          <div className="flex">
+          <div className="mb-2 flex gap-1 text-sm font-medium text-gray-700">
             <p> {title}</p>
             <p className="text-red-500">*</p>
           </div>
         ) : (
-          title
+          <div className="mb-2 flex gap-1 text-sm font-medium text-gray-700">
+            <p> {title}</p>
+          </div>
         )}
       </Label>
       <SelectField

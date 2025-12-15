@@ -38,6 +38,7 @@ export default function WriteForm() {
             name="대상 스터디 그룹"
             title="대상 스터디 그룹"
             placeHolder="스터디 그룹을 선택해주세요"
+            required
             data={groutData}
           />
         </div>
@@ -47,6 +48,7 @@ export default function WriteForm() {
               label="공고 마감 기한"
               value={deadline}
               onChange={setDeadline}
+              required
             />
           </div>
           <div className="w-full">
@@ -54,6 +56,7 @@ export default function WriteForm() {
               name="대상 스터디 그룹"
               title="대상 스터디 그룹"
               placeHolder="스터디 그룹을 선택해주세요"
+              required
               data={groutData}
             />
           </div>
