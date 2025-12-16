@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '@/constant/api'
+import { useAuthStore } from '@/store/userStore'
 import axios from 'axios'
 
 export const axiosInstance = axios.create({
@@ -6,13 +7,14 @@ export const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 })
 
 // 모든 요청에 공통 헤더(토큰 등) 주입
 axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken')
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  const accessToken = useAuthStore.getState().accessToken
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`
   }
   return config
 })
@@ -31,5 +33,8 @@ export const getRecruitments = async (params: {
   const response = await axiosInstance.get(
     `/api/recruitments?${queryParams.toString()}`
   )
-  return response.data
+  // 서버 응답이 배열인지 확인하고, 배열이 아니면 빈 배열 반환
+  return Array.isArray(response.data)
+    ? response.data
+    : response.data?.data || []
 }
