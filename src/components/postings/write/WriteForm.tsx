@@ -115,10 +115,12 @@ function ContentSection({
   )
 }
 
-function ExtraInfoSection({ state, actions, options }: SectionProps) {
+function ExtraInfoSection({
+  state,
+  actions,
+}: Pick<SectionProps, 'state' | 'actions'>) {
   const { estimatedFee, uploadedFiles } = state
   const { setEstimatedFee, setUploadedFiles, onUploadFile } = actions
-  const { remainingHeadcount } = options
 
   return (
     <section className="flex flex-col gap-6 rounded-xl border border-gray-200 bg-white p-8">
@@ -182,7 +184,7 @@ export default function WriteForm() {
     <form className="flex flex-col gap-8" onSubmit={actions.handleSubmit}>
       <BasicInfoSection state={state} actions={actions} options={options} />
       <ContentSection state={state} actions={actions} />
-      <ExtraInfoSection state={state} actions={actions} options={options} />
+      <ExtraInfoSection state={state} actions={actions} />
       <section className="my-8 flex justify-end gap-4 border-t border-gray-200 pt-[25px]">
         <Button variant="outline" type="button" className="px-6 py-3">
           취소
