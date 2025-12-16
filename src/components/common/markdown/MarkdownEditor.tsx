@@ -1,29 +1,96 @@
-import { useRef, useState } from 'react'
+import { showToast } from '@/components/common/toast/Toast'
+import type { Dispatch, SetStateAction } from 'react'
+import { useEffect, useState } from 'react'
 import { EditorHeader } from './EditorHeader'
 import { EditorTextarea } from './EditorTextarea'
 import { Preview } from './Preview'
 import { MarkdownExample } from './MarkdownExample'
+import { useMarkdownEditor } from '@/hooks/useMarkdownEditor'
 
-export function MarkdownEditor() {
+interface MarkdownEditorProps {
+  value: string
+  onChange: Dispatch<SetStateAction<string>>
+  onImageCountChange?: (count: number) => void
+  allowImageDrop?: boolean
+  onUploadImage?: (file: File) => Promise<string>
+}
+
+export function MarkdownEditor({
+  value,
+  onChange: setValue,
+  onImageCountChange,
+  allowImageDrop = false,
+  onUploadImage,
+}: MarkdownEditorProps) {
+  const { textareaRef, insertMarkdown } = useMarkdownEditor({ value, setValue })
   const [mode, setMode] = useState<'write' | 'preview'>('write')
-  const [value, setValue] = useState('')
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const [imageCount, setImageCount] = useState(0)
 
-  function insertMarkdown(before: string, after: string = '') {
-    const textarea = textareaRef.current
-    if (!textarea) return
+  // 마크다운 내 이미지 개수를 계산해 표기/연동
+  useEffect(() => {
+    const matches = value.match(/!\[[^\]]*]\((.*?)\)/g) ?? []
+    setImageCount(matches.length)
+    onImageCountChange?.(matches.length)
+  }, [value, onImageCountChange])
 
-    const start = textarea.selectionStart
-    const end = textarea.selectionEnd
+  // 드래그앤드롭으로 이미지 추가
+  const handleDrop = async (e: React.DragEvent<HTMLTextAreaElement>) => {
+    e.preventDefault()
+    const files = Array.from(e.dataTransfer.files).filter((file) =>
+      file.type.startsWith('image/')
+    )
+    if (!files.length) return
 
-    const selected = value.slice(start, end)
-    const replaced = before + (selected || '') + after
+    const MAX = 5
+    const remaining = Math.max(0, MAX - imageCount)
+    if (remaining <= 0) {
+      showToast.warning(
+        '이미지 제한',
+        '이미지는 최대 5개까지 첨부할 수 있습니다.'
+      )
+      return
+    }
 
-    setValue(value.slice(0, start) + replaced + value.slice(end))
+    const toInsert = files.slice(0, remaining)
+    const insertPosition = textareaRef.current?.selectionStart ?? value.length
+    const uploadedUrls: string[] = []
 
+    for (const file of toInsert) {
+      if (onUploadImage) {
+        try {
+          const url = await onUploadImage(file)
+          uploadedUrls.push(url)
+        } catch (err) {
+          showToast.error('이미지 업로드 실패', (err as Error)?.message ?? '')
+        }
+      } else {
+        uploadedUrls.push(URL.createObjectURL(file))
+      }
+    }
+
+    if (!uploadedUrls.length) return
+
+    const blocks = uploadedUrls
+      .map((url) => `![업로드된 이미지](${url})`)
+      .join('\n')
+
+    let nextCursor = insertPosition
+    setValue((prev) => {
+      const prefix = prev.slice(0, insertPosition)
+      const suffix = prev.slice(insertPosition)
+      const padBefore = prefix && !prefix.endsWith('\n') ? '\n\n' : ''
+      const padAfter = suffix && !suffix.startsWith('\n') ? '\n' : ''
+      const insertText = `${padBefore}${blocks}${padAfter}`
+      nextCursor = insertPosition + insertText.length
+      return prefix + insertText + suffix
+    })
+
+    // 커서를 삽입한 위치 뒤로 이동
     requestAnimationFrame(() => {
-      textarea.focus()
-      textarea.selectionStart = textarea.selectionEnd = start + replaced.length
+      if (!textareaRef.current) return
+      textareaRef.current.focus()
+      textareaRef.current.selectionStart = nextCursor
+      textareaRef.current.selectionEnd = nextCursor
     })
   }
 
@@ -35,7 +102,13 @@ export function MarkdownEditor() {
         insertMarkdown={insertMarkdown}
       />
       {mode === 'write' ? (
-        <EditorTextarea ref={textareaRef} value={value} setValue={setValue} />
+        <EditorTextarea
+          ref={textareaRef}
+          value={value}
+          setValue={setValue}
+          onDrop={allowImageDrop ? handleDrop : undefined}
+          allowDrop={allowImageDrop}
+        />
       ) : (
         <Preview value={value} />
       )}

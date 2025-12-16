@@ -35,7 +35,10 @@ export function Input({
   return (
     <div className="flex w-full flex-col gap-1">
       {label && (
-        <label htmlFor={inputId} className="text-sm font-medium text-gray-700">
+        <label
+          htmlFor={inputId}
+          className="mb-2 text-sm font-medium text-gray-700"
+        >
           {label}
           {required && <span className="ml-1 text-red-500">*</span>}
         </label>

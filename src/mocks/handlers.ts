@@ -4,7 +4,10 @@ import { lectureHandlers } from './handlers/lectures/lectureHandlers'
 import { recruitmentHandlers as myRecruitmentHandlers } from './handlers/myRecruitments'
 import { notificationHandlers } from './handlers/notification'
 import { recruitmentHandlers } from './handlers/recruitments'
+import { recruitmentCreateHandler } from './handlers/recruitments/createRecruitment'
+import { studyGroupHandlers } from './handlers/studyGroups'
 import { userInformationHandler } from './handlers/user'
+import { uploadsHandlers } from './handlers/uploads'
 
 type User = { id: number; name: string; email: string }
 
@@ -22,10 +25,16 @@ export const handlers = [
   ...lectureHandlers,
   // 공고 목록 핸들러
   ...recruitmentHandlers,
+  // 공고 생성 핸들러
+  ...recruitmentCreateHandler,
+  // 스터디 그룹 조회 핸들러
+  ...studyGroupHandlers,
   // 내 공고 목록 핸들러
   ...myRecruitmentHandlers,
   //북마크 핸들러
   ...bookmarkHandlers,
+  // 업로드 presigned URL 핸들러
+  ...uploadsHandlers,
 
   http.get('/api/users', () => {
     return HttpResponse.json(users)

@@ -14,9 +14,10 @@ export function Toolbar({ insertMarkdown }: ToolbarProps) {
           key={key}
           variant="ghost"
           size="icon"
+          type="button"
           onClick={() => insertMarkdown(before, after)}
         >
-          <Icon size={20} />
+          <Icon size={18} />
         </Button>
       ))}
       <ToolbarDropdownHeading insertMarkdown={insertMarkdown} />
