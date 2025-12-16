@@ -5,6 +5,7 @@ import { recruitmentHandlers as myRecruitmentHandlers } from './handlers/myRecru
 import { notificationHandlers } from './handlers/notification'
 import { recruitmentHandlers } from './handlers/recruitments'
 import { recruitmentCreateHandler } from './handlers/recruitments/createRecruitment'
+import { studyGroupHandlers } from './handlers/studyGroups'
 import { userInformationHandler } from './handlers/user'
 import { uploadsHandlers } from './handlers/uploads'
 
@@ -26,6 +27,8 @@ export const handlers = [
   ...recruitmentHandlers,
   // 공고 생성 핸들러
   ...recruitmentCreateHandler,
+  // 스터디 그룹 조회 핸들러
+  ...studyGroupHandlers,
   // 내 공고 목록 핸들러
   ...myRecruitmentHandlers,
   //북마크 핸들러
