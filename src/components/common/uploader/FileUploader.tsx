@@ -38,8 +38,7 @@ export function FileUploader({
   const handleDrop = async (accepted: File[], rejected: FileRejection[]) => {
     rejected.forEach((rej) => {
       const reason =
-        rej.errors?.[0]?.message ??
-        (rej.file.size > maxSize ? '파일 용량 초과' : '지원하지 않는 파일 형식')
+        rej.file.size > maxSize ? '파일 용량 초과' : '지원하지 않는 파일 형식'
       showToast.error(reason, rej.file.name)
     })
 
