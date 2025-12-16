@@ -1,47 +1,45 @@
-import LoginStateStore from '@/store/loginStateStore'
-import logo from '@/assets/images/logo.svg'
-import close from '@/assets/icons/close.svg'
-import study from '@/assets/icons/study.svg'
-import classIcon from '@/assets/icons/class.svg'
 import announcement from '@/assets/icons/announcement.svg'
-import defaultProfileImg from '@/assets/images/defaultProfileImg.svg'
+import classIcon from '@/assets/icons/class.svg'
+import close from '@/assets/icons/close.svg'
 import logoutIcon from '@/assets/icons/logout.svg'
 import profileImage from '@/assets/icons/profileImg.svg'
-import useUserData from '@/hooks/quries/useUserData'
+import study from '@/assets/icons/study.svg'
+import defaultProfileImg from '@/assets/images/defaultProfileImg.svg'
+import logo from '@/assets/images/logo.svg'
+import { useAuthStore } from '@/store/userStore'
 interface MobileModalProps {
   setIsModalOpen: (value: boolean) => void
 }
 function MobileModal({ setIsModalOpen }: MobileModalProps) {
-  const loginState = LoginStateStore((state) => state.loginState)
-  const { data } = useUserData()
+  const { user, loginState } = useAuthStore()
   return (
-    <div className="bg-basic-white fixed top-[0] left-[0] z-10 h-screen w-[263px] pt-4 md:hidden">
+    <div className="bg-basic-white fixed top-0 left-0 z-10 h-screen w-[263px] pt-4 md:hidden">
       <div className="border-b border-solid border-gray-200">
         <div className="ml-4 flex items-center gap-43 pb-[15px]">
-          <img src={logo} alt="logo" className="h-[32px] w-[32px]" />
+          <img src={logo} alt="logo" className="h-8 w-8" />
           <img
             src={close}
             alt="close"
-            className="h-[28px] w-[28px]"
+            className="h-7 w-7"
             onClick={() => setIsModalOpen(false)}
           />
         </div>
       </div>
       <div className="ml-7 flex flex-col gap-2 py-4">
-        <span className="flex h-[36px] items-center text-base font-semibold text-gray-400">
+        <span className="flex h-9 items-center text-base font-semibold text-gray-400">
           메뉴
         </span>
-        <div className="flex h-[48px] items-center gap-3">
+        <div className="flex h-12 items-center gap-3">
           <img src={classIcon} alt="classIcon" />
           <a href="">강의 목록</a>
           {/* 강의목록 페이지로 렌더링 */}
         </div>
-        <div className="flex h-[48px] items-center gap-3">
+        <div className="flex h-12 items-center gap-3">
           <img src={study} alt="studyIcon" />
           <a href="">스터디 그룹</a>
           {/* 로그인 화면으로 렌더링 */}
         </div>
-        <div className="flex h-[48px] items-center gap-3">
+        <div className="flex h-12 items-center gap-3">
           <img src={announcement} alt="announcementIcon" />
           <a href="">구인 광고</a>
           {/* 구인광고 페이지로 렌더링 */}
@@ -59,10 +57,10 @@ function MobileModal({ setIsModalOpen }: MobileModalProps) {
             {/* 추후 api 연동으로 이미지 불러오게 */}
             <div className="flex flex-col">
               <span className="font-semiblod text-base text-gray-900">
-                {data[0]?.name}
+                {user?.name}
               </span>
               <span className="text-base font-normal text-gray-600">
-                {data[0]?.email}
+                {user?.email}
               </span>
               {/* 추후 api 연동으로 이름 및 이메일 불러오게 */}
             </div>

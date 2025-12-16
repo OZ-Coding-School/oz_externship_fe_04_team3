@@ -5,13 +5,11 @@ import ManagePage from '@/pages/postings/Manage'
 import RecruitmentListPage from '@/pages/postings/RecruitmentListPage'
 import WritePage from '@/pages/postings/Write'
 import YeeunTest from '@/pages/YeeunTest'
-import loginStateStore from '@/store/loginStateStore'
+import { useAuthStore } from '@/store/userStore'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 function AppRoutes() {
-  const loginState = loginStateStore((state) => state.loginState)
-  const isLoggedIn = loginState === 'USER'
-  const userName = isLoggedIn ? '엄준식' : '사용자'
+  const { user, loginState } = useAuthStore()
 
   return (
     <Routes>
@@ -19,7 +17,7 @@ function AppRoutes() {
         <Route
           index
           element={
-            isLoggedIn ? (
+            loginState === 'USER' ? (
               <Navigate to="/recruitments/test" replace />
             ) : (
               <Navigate to="/recruitments" replace />
@@ -41,7 +39,10 @@ function AppRoutes() {
         <Route
           path="/recruitments/test"
           element={
-            <RecruitmentListPage isLoggedIn={isLoggedIn} userName={userName} />
+            <RecruitmentListPage
+              isLoggedIn={loginState === 'USER'}
+              userName={user?.name}
+            />
           }
         />
       </Route>

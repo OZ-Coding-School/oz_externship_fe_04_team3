@@ -1,12 +1,11 @@
 import notificationIcon from '@/assets/icons/notification.svg'
-import profileIcon from '@/assets/icons/profileImg.svg'
 import topArrow from '@/assets/icons/topArrow.svg'
-import useUserData from '@/hooks/quries/useUserData'
 import useIsDesktop from '@/hooks/useIsDesktop'
 
 import { AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 
+import { useAuthStore } from '@/store/userStore'
 import NotificationModal from '../notification/NotificationModal'
 import UserModal from './UserModal'
 function User() {
@@ -27,7 +26,8 @@ function User() {
       setIsUserModalOpen(false)
     }
   }
-  const { data } = useUserData()
+
+  const { user } = useAuthStore()
   return (
     <div className="ml-auto flex">
       <div className="flex items-center gap-8 text-base text-gray-700">
@@ -85,14 +85,14 @@ function User() {
         className="relative ml-4 flex cursor-pointer items-center gap-2"
         onClick={handleUserModal}
       >
-        <div className="flex h-[32px] w-[32px] items-center justify-center rounded-full bg-[#FEF9C3]">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FEF9C3]">
           <img
-            src={profileIcon}
+            src={user?.profile_img_url}
             alt="profileIcon"
             className="h-[25px] w-[25px]"
           />
         </div>
-        <div className="text-primary-600 text-base">{data[0]?.name}</div>
+        <div className="text-primary-600 text-base">{user?.name}</div>
         {isUserModalOpen ? (
           <img
             src={topArrow}
