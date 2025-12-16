@@ -4,6 +4,7 @@ import { lectureHandlers } from './handlers/lectures/lectureHandlers'
 import { recruitmentHandlers as myRecruitmentHandlers } from './handlers/myRecruitments'
 import { notificationHandlers } from './handlers/notification'
 import { recruitmentHandlers } from './handlers/recruitments'
+import { recruitmentCreateHandler } from './handlers/recruitments/createRecruitment'
 import { userInformationHandler } from './handlers/user'
 
 type User = { id: number; name: string; email: string }
@@ -22,6 +23,8 @@ export const handlers = [
   ...lectureHandlers,
   // 공고 목록 핸들러
   ...recruitmentHandlers,
+  // 공고 생성 핸들러
+  ...recruitmentCreateHandler,
   // 내 공고 목록 핸들러
   ...myRecruitmentHandlers,
   //북마크 핸들러
