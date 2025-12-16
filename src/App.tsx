@@ -1,6 +1,6 @@
 import AppRoutes from '@/routes/AppRoutes'
 import { ToastContainer } from 'react-toastify'
-import { useAuth } from './hooks/quries/useUserData'
+import { useAuth } from './hooks/useAuth'
 
 function App() {
   return (
