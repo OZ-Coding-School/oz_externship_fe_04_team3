@@ -34,15 +34,20 @@ export function BaseUploader({
     onDrop: handleDrop,
   })
 
+  const borderColor = isDragActive ? '#3b82f6' : '#D1D5DB'
+  const bgClass = isDragActive
+    ? 'bg-primary-50'
+    : 'bg-white hover:bg-custom-gray-50'
+
   return (
     <DashedBox
       {...getRootProps()}
       borderRadius={8}
       borderWidth={2}
-      color={isDragActive ? '#3b82f6' : '#D1D5DB'}
+      color={borderColor}
       className={cn(
-        'centralize hover:bg-custom-gray-50 relative w-full cursor-pointer flex-col bg-white p-6 transition',
-        isDragActive && 'bg-primary-50',
+        'flex-center relative w-full cursor-pointer flex-col p-6 transition',
+        bgClass,
         className
       )}
     >

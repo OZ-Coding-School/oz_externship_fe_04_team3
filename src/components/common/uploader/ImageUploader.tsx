@@ -1,7 +1,6 @@
 import { Button } from '@/components/common'
 import { showToast } from '@/components/common/toast/Toast'
 import { ImagePlus, X } from 'lucide-react'
-import { useMemo } from 'react'
 import { BaseUploader } from './BaseUploader'
 import type { FileRejection } from 'react-dropzone'
 
@@ -25,22 +24,15 @@ export function ImageUploader({
   maxCount = 3,
   maxSize = 5 * 1024 * 1024,
 }: ImageUploaderProps) {
-  const remain = useMemo(
-    () => Math.max(0, maxCount - images.length),
-    [images.length, maxCount]
-  )
+  const remain = Math.max(0, maxCount - images.length)
 
   const handleDrop = (accepted: File[], rejected: FileRejection[]) => {
-    if (rejected.length) {
-      rejected.forEach((rej) => {
-        const reason =
-          rej.errors?.[0]?.message ??
-          (rej.file.size > maxSize
-            ? '파일 용량 초과'
-            : '지원하지 않는 파일 형식')
-        showToast.error(reason, rej.file.name)
-      })
-    }
+    rejected.forEach((rej) => {
+      const reason =
+        rej.errors?.[0]?.message ??
+        (rej.file.size > maxSize ? '파일 용량 초과' : '지원하지 않는 파일 형식')
+      showToast.error(reason, rej.file.name)
+    })
 
     if (remain <= 0) {
       showToast.warning(
@@ -50,15 +42,19 @@ export function ImageUploader({
       return
     }
 
-    const available = accepted.slice(0, remain)
-    if (!available.length) return
+    const count = Math.min(accepted.length, remain)
+    if (count === 0) return
 
-    const nextImages = available.map((file) => ({
-      id: `${file.name}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
-      url: URL.createObjectURL(file),
-      name: file.name,
-      size: file.size,
-    }))
+    const nextImages: UploadedImage[] = []
+    for (let i = 0; i < count; i += 1) {
+      const file = accepted[i]
+      nextImages.push({
+        id: `${file.name}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
+        url: URL.createObjectURL(file),
+        name: file.name,
+        size: file.size,
+      })
+    }
 
     onChange([...images, ...nextImages])
   }
@@ -81,7 +77,7 @@ export function ImageUploader({
       onDrop={handleDrop}
     >
       {images.length === 0 ? (
-        <div className="centralize flex-center flex-col gap-2 py-[15px] text-center text-[#9CA3AF]">
+        <div className="flex-center flex-col gap-2 py-[15px] text-center text-[#9CA3AF]">
           <ImagePlus size={36} className="text-sm" />
           <p className="text-[#6B7280]">
             파일을 드래그하거나 클릭하여 업로드 <br /> 최대 {maxCount}개, 각{' '}

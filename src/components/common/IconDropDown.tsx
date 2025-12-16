@@ -45,7 +45,7 @@ export function IconDropdown({
         onClick={toggle}
         disabled={disabled}
         className={cn(
-          'remove-focus-outline hover:bg-custom-gray-100 centralize h-7 w-7 rounded transition',
+          'remove-focus-outline flex-center h-7 w-7 rounded transition hover:bg-gray-100',
           disabled && 'cursor-not-allowed opacity-50'
         )}
       >
@@ -53,7 +53,7 @@ export function IconDropdown({
       </button>
 
       {isOpen && (
-        <ul className="border-custom-gray-200 absolute left-0 z-50 mt-1 max-h-60 min-w-10 overflow-auto rounded-md border bg-white py-1 shadow-lg">
+        <ul className="absolute left-0 z-50 mt-1 max-h-60 min-w-10 overflow-auto rounded-md border border-gray-200 bg-white py-1 shadow-lg">
           {options.map((option) => (
             <li
               key={option.value}
@@ -66,7 +66,7 @@ export function IconDropdown({
               }}
             >
               {option.Icon && (
-                <span className="text-custom-gray-400">
+                <span className="text-gray-400">
                   <option.Icon />
                 </span>
               )}

@@ -6,15 +6,15 @@ import { Input } from '@/components/input'
 import { Plus, TagIcon } from 'lucide-react'
 import { useState } from 'react'
 import {
-  ImageUploader,
-  type UploadedImage,
-} from '@/components/common/uploader/ImageUploader'
+  FileUploader,
+  type UploadedFile,
+} from '@/components/common/uploader/FileUploader'
 
 export default function WriteForm() {
   const [deadline, setDeadline] = useState<Date | undefined>()
   const [content, setContent] = useState('')
   const [imageCount, setImageCount] = useState(0)
-  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
 
   const groutData = [
     { itemValue: 'study1', itemText: 'React 스터디' },
@@ -119,12 +119,15 @@ export default function WriteForm() {
           <p className="mb-2 text-sm text-gray-700">
             참고 파일 업로드 (선택사항)
           </p>
-          <ImageUploader
-            images={uploadedImages}
-            onChange={setUploadedImages}
+          <FileUploader
+            files={uploadedFiles}
+            onChange={setUploadedFiles}
             maxCount={3}
-            maxSize={5 * 1024 * 1024}
+            maxSize={10 * 1024 * 1024}
           />
+          <div className="mt-2 text-sm text-gray-700">
+            파일 {uploadedFiles.length}/3개 (최대 10MB)
+          </div>
         </div>
       </section>
       <section className="my-8 flex justify-end gap-4 border-t border-gray-200 pt-[25px]">
