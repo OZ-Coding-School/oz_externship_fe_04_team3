@@ -5,6 +5,7 @@ import { MarkdownEditor } from '@/components/common/markdown'
 import { Input } from '@/components/input'
 import { Plus, TagIcon } from 'lucide-react'
 import { useState } from 'react'
+import { getPresignedUrl, uploadToPresigned } from '@/api/uploads'
 import {
   FileUploader,
   type UploadedFile,
@@ -14,6 +15,7 @@ export default function WriteForm() {
   const [deadline, setDeadline] = useState<Date | undefined>()
   const [content, setContent] = useState('')
   const [imageCount, setImageCount] = useState(0)
+  const [imageUrls, setImageUrls] = useState<string[]>([])
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
 
   const groutData = [
@@ -77,6 +79,18 @@ export default function WriteForm() {
             onChange={setContent}
             onImageCountChange={setImageCount}
             allowImageDrop
+            onUploadImage={async (file) => {
+              const ext = file.name.split('.').pop() ?? 'png'
+              const presigned = await getPresignedUrl({
+                type: 'RECRUITMENT_IMAGE',
+                content_type: file.type,
+                file_name: file.name.replace(`.${ext}`, ''),
+                file_ext: ext,
+              })
+              // TODO: 백엔드 연동 시 presigned upload_url로 PUT 업로드 재활성화
+              // await uploadToPresigned(presigned.upload_url, file, presigned.headers)
+              return presigned.file_url
+            }}
           />
         </div>
       </section>
@@ -124,6 +138,18 @@ export default function WriteForm() {
             onChange={setUploadedFiles}
             maxCount={3}
             maxSize={10 * 1024 * 1024}
+            onUploadFile={async (file) => {
+              const ext = file.name.split('.').pop() ?? 'dat'
+              const presigned = await getPresignedUrl({
+                type: 'RECRUITMENT_ATTACHMENT',
+                content_type: file.type || 'application/octet-stream',
+                file_name: file.name.replace(`.${ext}`, ''),
+                file_ext: ext,
+              })
+              // TODO: 백엔드 연동 시 presigned upload_url로 PUT 업로드 재활성화
+              // await uploadToPresigned(presigned.upload_url, file, presigned.headers)
+              return presigned.file_url
+            }}
           />
           <div className="mt-2 text-sm text-gray-700">
             파일 {uploadedFiles.length}/3개 (최대 10MB)

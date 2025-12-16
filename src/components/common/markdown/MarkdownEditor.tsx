@@ -12,6 +12,7 @@ interface MarkdownEditorProps {
   onChange: Dispatch<SetStateAction<string>>
   onImageCountChange?: (count: number) => void
   allowImageDrop?: boolean
+  onUploadImage?: (file: File) => Promise<string>
 }
 
 export function MarkdownEditor({
@@ -19,6 +20,7 @@ export function MarkdownEditor({
   onChange: setValue,
   onImageCountChange,
   allowImageDrop = false,
+  onUploadImage,
 }: MarkdownEditorProps) {
   const { textareaRef, insertMarkdown } = useMarkdownEditor({ value, setValue })
   const [mode, setMode] = useState<'write' | 'preview'>('write')
@@ -32,7 +34,7 @@ export function MarkdownEditor({
   }, [value, onImageCountChange])
 
   // 드래그앤드롭으로 이미지 추가
-  const handleDrop = (e: React.DragEvent<HTMLTextAreaElement>) => {
+  const handleDrop = async (e: React.DragEvent<HTMLTextAreaElement>) => {
     e.preventDefault()
     const files = Array.from(e.dataTransfer.files).filter((file) =>
       file.type.startsWith('image/')
@@ -51,11 +53,25 @@ export function MarkdownEditor({
 
     const toInsert = files.slice(0, remaining)
     const insertPosition = textareaRef.current?.selectionStart ?? value.length
-    const blocks = toInsert
-      .map((file) => {
-        const url = URL.createObjectURL(file)
-        return `![업로드된 이미지](${url})`
-      })
+    const uploadedUrls: string[] = []
+
+    for (const file of toInsert) {
+      if (onUploadImage) {
+        try {
+          const url = await onUploadImage(file)
+          uploadedUrls.push(url)
+        } catch (err) {
+          showToast.error('이미지 업로드 실패', (err as Error)?.message ?? '')
+        }
+      } else {
+        uploadedUrls.push(URL.createObjectURL(file))
+      }
+    }
+
+    if (!uploadedUrls.length) return
+
+    const blocks = uploadedUrls
+      .map((url) => `![업로드된 이미지](${url})`)
       .join('\n')
 
     let nextCursor = insertPosition

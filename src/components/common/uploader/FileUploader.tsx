@@ -17,6 +17,7 @@ type FileUploaderProps = {
   onChange: (next: UploadedFile[]) => void
   maxCount?: number
   maxSize?: number
+  onUploadFile?: (file: File) => Promise<string>
 }
 
 export function FileUploader({
@@ -24,6 +25,7 @@ export function FileUploader({
   onChange,
   maxCount = 3,
   maxSize = 10 * 1024 * 1024,
+  onUploadFile,
 }: FileUploaderProps) {
   const remain = Math.max(0, maxCount - files.length)
 
@@ -33,7 +35,7 @@ export function FileUploader({
     return `${bytes} B`
   }
 
-  const handleDrop = (accepted: File[], rejected: FileRejection[]) => {
+  const handleDrop = async (accepted: File[], rejected: FileRejection[]) => {
     rejected.forEach((rej) => {
       const reason =
         rej.errors?.[0]?.message ??
@@ -55,12 +57,21 @@ export function FileUploader({
     const nextFiles: UploadedFile[] = []
     for (let i = 0; i < sliceEnd; i += 1) {
       const file = accepted[i]
+      let url = URL.createObjectURL(file)
+      if (onUploadFile) {
+        try {
+          url = await onUploadFile(file)
+        } catch (err) {
+          showToast.error('파일 업로드 실패', (err as Error)?.message ?? '')
+          continue
+        }
+      }
       nextFiles.push({
         id: `${file.name}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
         name: file.name,
         size: file.size,
         type: file.type,
-        url: URL.createObjectURL(file),
+        url,
       })
     }
 
@@ -82,14 +93,11 @@ export function FileUploader({
 
     if (file.type.startsWith('image/')) {
       return (
-        <>
-          <img
-            src={file.url}
-            alt="preview"
-            className="flex-center aspect-video h-32 w-full bg-gray-50"
-          />
-          {fileName}
-        </>
+        <img
+          src={file.url}
+          alt="preview"
+          className="flex-center aspect-video h-32 w-full bg-gray-50"
+        />
       )
     }
 
