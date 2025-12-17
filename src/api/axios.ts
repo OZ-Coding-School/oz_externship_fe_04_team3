@@ -29,7 +29,6 @@ axiosInstance.interceptors.response.use(
   async function (error) {
     const originalRequest = error.config //에러헤더
     const status = error.response?.status //에러응답코드
-    const statusText = error.response?.statusText //에러응답코드
 
     // 네트워크 에러 처리
     if (!error.response) {
@@ -60,10 +59,7 @@ axiosInstance.interceptors.response.use(
       status === 409 ||
       status === 500
     ) {
-      showToast.error(
-        `${status}${statusText} `,
-        `${error.response?.data?.error_detail}`
-      )
+      showToast.error(`오류`, `${error.response?.data?.error_detail}`)
       return Promise.reject(error)
     }
     return Promise.reject(error)
