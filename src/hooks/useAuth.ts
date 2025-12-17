@@ -10,16 +10,20 @@ export const useAuth = () => {
           const userData = await getUserInformationApi()
           useAuthStore.getState().setUser(userData)
         } else {
-          const accessToken = await getAccessTokenApi()
-          useAuthStore.getState().setAccessToken(accessToken)
+          try {
+            const accessToken = await getAccessTokenApi()
+            useAuthStore.getState().setAccessToken(accessToken)
+          } catch (error) {
+            console.log(error, '토큰발급에러')
+            return
+          }
           const userData = await getUserInformationApi()
           useAuthStore.getState().setUser(userData)
         }
       } catch (error) {
-        console.log('비회원입니다')
+        console.log(error, '비회원입니다')
       }
     }
-
     initAuth()
   }, [])
 }
