@@ -22,7 +22,27 @@ export const bookmarkHandlers = [
     const body = (await request.json()) as { lecture_id: number }
     const lecture_id = body.lecture_id
 
-    //북마크 되어있는지 확인
+    // 1순위: 인증 확인
+    const authHeader = request.headers.get('Authorization')
+    if (!authHeader) {
+      return HttpResponse.json(
+        { error_detail: '자격 인증 데이터가 제공되지 않았습니다.' },
+        { status: 401 }
+      )
+    }
+    // 2순위: 필수 필드 검증
+    if (!body.lecture_id) {
+      return HttpResponse.json(
+        {
+          error_detail: {
+            lecture_id: ['이 필드는 필수 항목입니다.'],
+          },
+        },
+        { status: 400 }
+      )
+    }
+
+    // 4순위: 비즈니스 로직 (중복 체크)
     if (bookmarkedLectureIds.includes(lecture_id)) {
       return HttpResponse.json(
         { error_detail: '이미 북마크된 강의입니다.' },
@@ -30,7 +50,7 @@ export const bookmarkHandlers = [
       )
     }
 
-    //강의가 실제로 존재하는지 확인
+    // 3순위: 리소스 존재 확인
     const lecture = mockLecture.results.find((i) => i.id === lecture_id)
     if (!lecture) {
       return HttpResponse.json(
