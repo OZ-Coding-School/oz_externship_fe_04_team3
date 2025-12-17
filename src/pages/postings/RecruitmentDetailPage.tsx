@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Navigate } from 'react-router-dom'
-import { getRecruitmentDetail, incrementRecruitmentViews } from '@/api/axios'
+import {
+  getRecruitmentDetail,
+  incrementRecruitmentViews,
+} from '@/api/recruitments'
 import type { Recruitment } from '@/mocks/recruitmentData'
 import loginStateStore from '@/store/loginStateStore'
 import DetailHeader from '@/components/postings/detail/DetailHeader'
