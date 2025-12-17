@@ -5,7 +5,7 @@ import {
   incrementRecruitmentViews,
 } from '@/api/recruitments'
 import type { Recruitment } from '@/mocks/recruitmentData'
-import loginStateStore from '@/store/loginStateStore'
+import { useAuthStore } from '@/store/userStore'
 import DetailHeader from '@/components/postings/detail/DetailHeader'
 import DetailInfo from '@/components/postings/detail/DetailInfo'
 import DetailContent from '@/components/postings/detail/DetailContent'
@@ -17,8 +17,7 @@ export default function RecruitmentDetailPage() {
   const [recruitment, setRecruitment] = useState<Recruitment | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const loginState = loginStateStore((state) => state.loginState)
-
+  const loginState = useAuthStore((state) => state.loginState)
   const currentUserId = 1
   const isAuthor = recruitment?.authorId === currentUserId
 

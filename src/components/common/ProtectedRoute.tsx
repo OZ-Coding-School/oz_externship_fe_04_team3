@@ -1,19 +1,19 @@
 import { Navigate, useLocation } from 'react-router-dom'
-import loginStateStore from '@/store/loginStateStore'
+import { useAuthStore } from '@/store/userStore'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
 }
 
 function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const loginState = loginStateStore((state) => state.loginState)
+  const loginState = useAuthStore((state) => state.loginState)
   const location = useLocation()
 
   if (loginState === 'GUEST') {
-    return <Navigate to="/login" state={{ from: location.pathname }} replace />
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />
   }
 
-  return children as React.ReactElement
+  return children
 }
 
 export default ProtectedRoute
