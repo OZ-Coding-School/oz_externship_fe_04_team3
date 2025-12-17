@@ -31,7 +31,7 @@ function MobileModal({ setIsModalOpen }: MobileModalProps) {
         </span>
         <div className="flex h-12 items-center gap-3">
           <img src={classIcon} alt="classIcon" />
-          <a href="">강의 목록</a>
+          <a href="/courses">강의 목록</a>
           {/* 강의목록 페이지로 렌더링 */}
         </div>
         <div className="flex h-12 items-center gap-3">
@@ -41,7 +41,7 @@ function MobileModal({ setIsModalOpen }: MobileModalProps) {
         </div>
         <div className="flex h-12 items-center gap-3">
           <img src={announcement} alt="announcementIcon" />
-          <a href="">구인 광고</a>
+          <a href="/recruitments">구인 광고</a>
           {/* 구인광고 페이지로 렌더링 */}
         </div>
       </div>

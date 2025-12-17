@@ -79,7 +79,7 @@ export default function LectureCard(lecture: Lecture) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardAction className="absolute z-10 justify-between px-3 py-3">
+        <CardAction className="absolute z-2 justify-between px-3 py-3">
           <div className="top-2 flex flex-col gap-2">
             <Badge variant={'platform'}>{platform}</Badge>
             <Badge variant={'discount'}>

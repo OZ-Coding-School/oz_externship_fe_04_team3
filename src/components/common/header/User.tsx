@@ -36,7 +36,10 @@ function User() {
             강의 목록
           </a>
           {/* 클릭하면 강의목록 페이지 렌더링 */}
-          <a href="" className="hover:text-primary-600 cursor-pointer">
+          <a
+            href="/recruitments"
+            className="hover:text-primary-600 cursor-pointer"
+          >
             스터디 그룹
           </a>
           {/* 클릭하면 스터디그룹 페이지로 렌더링 */}
@@ -85,11 +88,11 @@ function User() {
         className="relative ml-4 flex cursor-pointer items-center gap-2"
         onClick={handleUserModal}
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FEF9C3]">
+        <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-[#FEF9C3]">
           <img
             src={user?.profile_img_url}
             alt="profileIcon"
-            className="h-[25px] w-[25px]"
+            className="object-contain"
           />
         </div>
         <div className="text-primary-600 text-base">{user?.name}</div>
