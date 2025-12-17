@@ -6,7 +6,7 @@ import LectureList from '@/components/lecture/LectureList'
 import LectureRecommendSection from '@/components/lecture/LectureRecommendSection'
 import useInfiniteScroll from '@/hooks/quries/useInfiniteScroll'
 import { categoryData, sortData } from '@/mappers/lectures/lecture'
-import LoginStateStore from '@/store/loginStateStore'
+import { useAuthStore } from '@/store/userStore'
 import type { LecturesParams } from '@/types/lecture'
 import { ArrowDownWideNarrow, Folder, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -46,7 +46,7 @@ export default function Courses() {
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
   /* 유저 상태 */
-  const { loginState } = LoginStateStore()
+  const { loginState } = useAuthStore()
 
   return (
     <div className="page_courses flex flex-col gap-6">

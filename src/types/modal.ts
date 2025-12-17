@@ -4,6 +4,8 @@ export type ModalProps = {
   title: string
   description?: string
   content: React.ReactNode //form,card,grid등등 올 예정
+  contentClassName?: string
+  bodyClassName?: string
   trigger?: {
     text: string
     icon?: React.ReactNode

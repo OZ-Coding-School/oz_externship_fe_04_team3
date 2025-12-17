@@ -6,14 +6,11 @@ import RecruitmentListPage from '@/pages/postings/RecruitmentListPage'
 import RecruitmentDetailPage from '@/pages/postings/RecruitmentDetailPage'
 import WritePage from '@/pages/postings/Write'
 import YeeunTest from '@/pages/YeeunTest'
-import loginStateStore from '@/store/loginStateStore'
-import ProtectedRoute from '@/components/common/ProtectedRoute'
+import { useAuthStore } from '@/store/userStore'
 import { Navigate, Route, Routes } from 'react-router-dom'
 
 function AppRoutes() {
-  const loginState = loginStateStore((state) => state.loginState)
-  const isLoggedIn = loginState === 'USER'
-  const userName = isLoggedIn ? 'USER' : '사용자'
+  const { user, loginState } = useAuthStore()
 
   return (
     <Routes>
@@ -21,7 +18,7 @@ function AppRoutes() {
         <Route
           index
           element={
-            isLoggedIn ? (
+            loginState === 'USER' ? (
               <Navigate to="/recruitments/test" replace />
             ) : (
               <Navigate to="/recruitments" replace />
@@ -41,7 +38,10 @@ function AppRoutes() {
         <Route
           path="/recruitments/test"
           element={
-            <RecruitmentListPage isLoggedIn={isLoggedIn} userName={userName} />
+            <RecruitmentListPage
+              isLoggedIn={loginState === 'USER'}
+              userName={user?.name}
+            />
           }
         />
 
