@@ -57,10 +57,9 @@ export default function LectureReviewCard({
                 src={thumbnail_img_url}
                 alt={title}
                 className="h-auto w-full object-cover"
-                loading="lazy"
               />
             ) : (
-              <Skeleton></Skeleton>
+              <Skeleton className="h-24 w-24"></Skeleton>
             )}
           </CardHeader>
           <div className="review-content-section overflow-y-auto">

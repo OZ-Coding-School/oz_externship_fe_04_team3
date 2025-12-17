@@ -105,7 +105,6 @@ export default function LectureCard(lecture: Lecture) {
             src={thumbnail_img_url}
             alt={title}
             className="h-auto w-full object-cover"
-            loading="lazy"
           />
         ) : (
           <Skeleton></Skeleton>
