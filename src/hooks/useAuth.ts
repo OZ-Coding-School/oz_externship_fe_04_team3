@@ -1,4 +1,4 @@
-import { getAccessTokenApi, getUserInformationApi } from '@/api/userInformation'
+import { getUserInformationApi } from '@/api/userInformation'
 import { useAuthStore } from '@/store/userStore'
 import { useEffect } from 'react'
 
@@ -11,14 +11,12 @@ export const useAuth = () => {
           useAuthStore.getState().setUser(userData)
         } else {
           try {
-            const accessToken = await getAccessTokenApi()
-            useAuthStore.getState().setAccessToken(accessToken)
+            const userData = await getUserInformationApi()
+            useAuthStore.getState().setUser(userData)
           } catch (error) {
             console.log(error, '토큰발급에러')
             return
           }
-          const userData = await getUserInformationApi()
-          useAuthStore.getState().setUser(userData)
         }
       } catch (error) {
         console.log(error, '비회원입니다')

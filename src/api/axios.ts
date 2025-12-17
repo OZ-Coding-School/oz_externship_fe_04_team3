@@ -43,13 +43,8 @@ axiosInstance.interceptors.response.use(
         useAuthStore.getState().setAccessToken(access_token)
         originalRequest.headers.Authorization = `Bearer ${access_token}`
         return axiosInstance(originalRequest) //헤더에 토큰 다시 넣어서 재요청
-      } catch (refreshError) {
-        useAuthStore.getState().clearAuth()
-        //갱신 실패시, 로그인 페이지 이동
-        if (!window.location.pathname.includes('/login')) {
-          window.location.href = '/login'
-        }
-        return Promise.reject(refreshError)
+      } catch (error) {
+        return Promise.reject(error)
       }
     }
     // 401과 400을 제외한 에러코드
@@ -78,10 +73,7 @@ export const getRecruitments = async (params: {
   if (params.sort) queryParams.append('sort', params.sort)
 
   const response = await axiosInstance.get(
-    `/api/recruitments?${queryParams.toString()}`
+    `/v1/recruitments?${queryParams.toString()}`
   )
-  // 서버 응답이 배열인지 확인하고, 배열이 아니면 빈 배열 반환
-  return Array.isArray(response.data)
-    ? response.data
-    : response.data?.data || []
+  return response.data
 }
