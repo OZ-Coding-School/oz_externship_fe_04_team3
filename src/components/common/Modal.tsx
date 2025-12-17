@@ -57,6 +57,8 @@ export default function Modal({
   trigger,
   open,
   onOpenChange,
+  contentClassName,
+  bodyClassName,
 }: ModalProps) {
   return (
     <div>
@@ -70,7 +72,12 @@ export default function Modal({
               </Button>
             </DialogTrigger>
           )}
-          <DialogContent className="w-auto min-w-[400px] sm:max-w-2xl">
+          <DialogContent
+            className={cn(
+              'w-auto min-w-[400px] sm:max-w-2xl',
+              contentClassName
+            )}
+          >
             <DialogHeader>
               <DialogTitle>{title}</DialogTitle>
               <DialogDescription>{description}</DialogDescription>
@@ -84,10 +91,12 @@ export default function Modal({
               }}
             />
             {/*
-             * @features
-             - 컨텐츠 내용만 wrapper 하여 스크롤바 구현
-             */}
-            <div className="overflow-y-auto p-4">{content}</div>
+               * @features
+               - 컨텐츠 내용만 wrapper 하여 스크롤바 구현
+               */}
+            <div className={cn('overflow-y-auto p-4', bodyClassName)}>
+              {content}
+            </div>
             {footer && (
               <>
                 <Separator

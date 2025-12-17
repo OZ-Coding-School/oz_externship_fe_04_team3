@@ -3,9 +3,12 @@ import { DashedBox } from '@/components/common/DashedBox'
 import { DatePickerInput } from '@/components/common/date-picker/DatePickerInput'
 import { MarkdownEditor } from '@/components/common/markdown'
 import { Input } from '@/components/input'
-import { Plus, TagIcon } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
+import TagSvg from '@/assets/icons/Tag.svg'
 import { FileUploader } from '@/components/common/uploader/FileUploader'
 import { useWriteRecruitmentForm } from '@/hooks/useWriteRecruitmentForm'
+import { TagSelectModal, type TagOption } from './TagSelectModal'
+import { useState } from 'react'
 
 type WriteFormHook = ReturnType<typeof useWriteRecruitmentForm>
 
@@ -119,6 +122,8 @@ function ExtraInfoSection({
   state,
   actions,
 }: Pick<SectionProps, 'state' | 'actions'>) {
+  const [isTagModalOpen, setIsTagModalOpen] = useState(false)
+  const [selectedTags, setSelectedTags] = useState<TagOption[]>([])
   const { estimatedFee, uploadedFiles } = state
   const { setEstimatedFee, setUploadedFiles, onUploadFile } = actions
 
@@ -138,26 +143,65 @@ function ExtraInfoSection({
       <div>
         <p className="flex-between mb-2 text-sm text-gray-700">
           사용자 정의 태그
-          <Button variant={'primary'} type="button">
+          <Button
+            variant={'primary'}
+            type="button"
+            onClick={() => setIsTagModalOpen(true)}
+          >
             <Plus className="h-6 w-6" />
             태그 추가
           </Button>
         </p>
         <DashedBox
-          className="min-h-[106px] p-6"
-          color="#D1D5DB"
+          className={`p-6 ${
+            selectedTags.length > 0
+              ? 'border border-gray-200 bg-gray-50'
+              : 'min-h-[106px]'
+          }`}
+          color={
+            selectedTags.length > 0
+              ? 'var(--color-gray-200)'
+              : 'var(--color-gray-300)'
+          }
           borderRadius={8}
+          borderWidth={selectedTags.length > 0 ? 1 : 2}
+          dashLength={selectedTags.length > 0 ? 0 : 4}
+          dashGap={selectedTags.length > 0 ? 0 : 4}
         >
-          <p className="flex-center absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 flex-col text-sm text-[#6B7280]">
-            <TagIcon className="-scale-x-100" />
-            <span>선택된 태그가 없습니다</span>
-            <span className="text-[12px]">
-              태그 검색 버튼을 클릭해서 태그를 추가해보세요
-            </span>
-          </p>
+          {selectedTags.length === 0 ? (
+            <p className="flex-center absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 flex-col text-sm text-[#6B7280]">
+              <img src={TagSvg} alt="tag" />
+              <span>선택된 태그가 없습니다</span>
+              <span className="text-[12px]">
+                태그 검색 버튼을 클릭해서 태그를 추가해보세요
+              </span>
+            </p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {selectedTags.map((tag) => (
+                <span
+                  key={tag.id}
+                  className="bg-primary-50 text-primary-700 flex items-center gap-2 rounded-full px-3 py-1 text-sm"
+                >
+                  {tag.name}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSelectedTags((prev) =>
+                        prev.filter((item) => item.id !== tag.id)
+                      )
+                    }
+                    className="text-primary-500"
+                  >
+                    <X size={12} />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </DashedBox>
         <span className="text-sm text-gray-700">
-          태그는 최대 5개까지 선택할 수 있습니다 (0/5)
+          태그는 최대 5개까지 선택할 수 있습니다 ({selectedTags.length}/5)
         </span>
       </div>
 
@@ -173,6 +217,12 @@ function ExtraInfoSection({
           onUploadFile={onUploadFile}
         />
       </div>
+      <TagSelectModal
+        open={isTagModalOpen}
+        onOpenChange={setIsTagModalOpen}
+        initialSelected={selectedTags}
+        onConfirm={(tags) => setSelectedTags(tags)}
+      />
     </section>
   )
 }
