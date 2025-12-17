@@ -1,7 +1,7 @@
 import logoImg from '@/assets/images/logo.svg'
 import Guest from '@/components/common/header/Guest'
 import { ROUTE_PATHS } from '@/constant/route'
-import LoginStateStore from '@/store/loginStateStore'
+import { useAuthStore } from '@/store/userStore'
 import { Menu } from 'lucide-react'
 import { useNavigate } from 'react-router'
 import { Button } from '../Button'
@@ -13,20 +13,17 @@ interface HeaderProps {
 }
 function Header({ isSideBarOpen, setIsSideBarOpen }: HeaderProps) {
   const navigate = useNavigate()
-  const { loginState, setLoginState } = LoginStateStore()
+  const { loginState, setLoginState } = useAuthStore()
   const handleSideBar = () => {
     setIsSideBarOpen(!isSideBarOpen)
   }
 
   return (
     <div className="w-full border-b border-solid border-[#E5E7EB] bg-white">
-      <div className="mx-auto flex h-[64px] max-w-[1440px] items-center justify-between px-8">
+      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-8">
         {isSideBarOpen && <MobileModal setIsModalOpen={setIsSideBarOpen} />}
         <div className="flex items-center gap-[15px] md:hidden">
-          <Menu
-            className="h-[24px] w-[24px] cursor-pointer"
-            onClick={handleSideBar}
-          />
+          <Menu className="h-6 w-6 cursor-pointer" onClick={handleSideBar} />
           <img
             src={logoImg}
             alt="logoImg"

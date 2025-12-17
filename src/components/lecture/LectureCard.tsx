@@ -12,7 +12,7 @@ import getRatingStarsIcon from '@/helpers/getRatingStarsIcon'
 import { useIsDesktop } from '@/hooks'
 import { useBookmark } from '@/hooks/useBookmark'
 import { LectureLevel } from '@/mappers/lectures/lecture'
-import LoginStateStore from '@/store/loginStateStore'
+import { useAuthStore } from '@/store/userStore'
 import type { Lecture } from '@/types/lecture'
 import { AnimatePresence } from 'framer-motion'
 import { Bookmark, Plus } from 'lucide-react'
@@ -49,11 +49,10 @@ export default function LectureCard(lecture: Lecture) {
   /* 리뷰보기 모달창 상태 */
   const [showReviewModal, setReviewShowModal] = useState(false)
   /* 로그인 분기 처리 */
-  const { loginState } = LoginStateStore()
-  const isLoggedIn = loginState === 'USER' ? true : false
+  const { loginState } = useAuthStore()
   /* 북마크 커스텀 상태 */
   const { addBookmarkMutation, deleteBookmarkMutation, getBookmarkQuery } =
-    useBookmark(isLoggedIn)
+    useBookmark(loginState === 'USER')
 
   const bookmarks = getBookmarkQuery.data?.results || []
   const isBookmarked = bookmarks.some((i) => i.id === id)
@@ -80,7 +79,7 @@ export default function LectureCard(lecture: Lecture) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardAction className="absolute z-10 justify-between px-3 py-3">
+        <CardAction className="absolute z-2 justify-between px-3 py-3">
           <div className="top-2 flex flex-col gap-2">
             <Badge variant={'platform'}>{platform}</Badge>
             <Badge variant={'discount'}>
