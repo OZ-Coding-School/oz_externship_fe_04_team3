@@ -22,3 +22,7 @@ export default async function getMyRecruitmentListApi(
   )
   return data
 }
+
+export async function deleteMyRecruitment(id: string) {
+  await axiosInstance.delete(`/v1/recruitments/${id}`)
+}
