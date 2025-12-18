@@ -3,7 +3,7 @@ import {
   applicationSchema,
   type ApplicationFormData,
 } from '@/types/recruitment'
-import { postApplication } from '@/api/recruitment'
+import { postApplication } from '@/api/recruitments'
 
 export function useApplicationForm(recruitmentId: number) {
   const [formData, setFormData] = useState<ApplicationFormData>({
@@ -23,11 +23,12 @@ export function useApplicationForm(recruitmentId: number) {
     value: string | boolean
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
+
     if (errors[field]) {
       setErrors((prev) => {
-        const newErrors = { ...prev }
-        delete newErrors[field]
-        return newErrors
+        const next = { ...prev }
+        delete next[field]
+        return next
       })
     }
   }
@@ -40,9 +41,8 @@ export function useApplicationForm(recruitmentId: number) {
     if (!result.success) {
       const newErrors: Record<string, string> = {}
       result.error.errors.forEach((err) => {
-        if (err.path[0]) {
-          newErrors[String(err.path[0])] = err.message
-        }
+        const key = err.path[0]
+        if (key) newErrors[String(key)] = err.message
       })
       setErrors(newErrors)
       return false
@@ -52,8 +52,6 @@ export function useApplicationForm(recruitmentId: number) {
       setIsSubmitting(true)
       await postApplication(recruitmentId, formData)
       return true
-    } catch {
-      return false
     } finally {
       setIsSubmitting(false)
     }
