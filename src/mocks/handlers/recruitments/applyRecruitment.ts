@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw'
 
 export const applyRecruitmentHandler = [
-  http.post('/api/recruitments/:id/apply', async ({ params, request }) => {
+  http.post('/api/v1/recruitments/:id/apply', async ({ params, request }) => {
     const recruitmentId = Number(params.id)
     const body = (await request.json()) as {
       introduction: string
