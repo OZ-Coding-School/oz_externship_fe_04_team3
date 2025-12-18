@@ -14,21 +14,22 @@ type FilterKey = 'all' | 'unread' | 'read'
 export const useNotifications = (filter: FilterKey) => {
   const query = useCursorInfiniteQuery<AlarmItem>({
     queryKey: ['notifications', filter],
-    queryFn: async (cursor) => {
+    queryFn: async (cursorUrl) => {
       try {
         const isReadParam = filter === 'all' ? undefined : filter === 'read'
-        const { data } = await axiosInstance.get<NotificationListResponse>(
-          '/v1/notifications',
-          {
-            params: {
-              page_size: 10,
-              ...(typeof isReadParam === 'boolean'
-                ? { is_read: isReadParam }
-                : {}),
-              ...(cursor ? { cursor } : {}),
-            },
-          }
-        )
+        const { data } = cursorUrl
+          ? await axiosInstance.get<NotificationListResponse>(cursorUrl)
+          : await axiosInstance.get<NotificationListResponse>(
+              '/v1/notifications',
+              {
+                params: {
+                  page_size: 10,
+                  ...(typeof isReadParam === 'boolean'
+                    ? { is_read: isReadParam }
+                    : {}),
+                },
+              }
+            )
         return {
           next: data.next,
           previous: data.previous,
