@@ -4,7 +4,6 @@ import {
   Share2,
   Bookmark,
   Edit,
-  Send,
   User,
   Calendar,
   Eye,
@@ -17,15 +16,9 @@ interface Props {
   recruitment: Recruitment
   onBack: () => void
   onEdit?: () => void
-  onApply?: () => void
 }
 
-export default function DetailHeader({
-  recruitment,
-  onBack,
-  onEdit,
-  onApply,
-}: Props) {
+export default function DetailHeader({ recruitment, onBack, onEdit }: Props) {
   const [isBookmarked, setIsBookmarked] = useState(false)
 
   const formatDate = (dateStr?: string) => {
@@ -40,11 +33,10 @@ export default function DetailHeader({
   const handleBookmark = () => {
     const next = !isBookmarked
     setIsBookmarked(next)
-    if (next) {
-      showToast.success('북마크 추가', '북마크에 추가되었습니다')
-    } else {
-      showToast.success('북마크 제거', '북마크에서 제거되었습니다')
-    }
+    showToast.success(
+      next ? '북마크 추가' : '북마크 제거',
+      next ? '북마크에 추가되었습니다' : '북마크에서 제거되었습니다'
+    )
   }
 
   const handleShare = async () => {
@@ -88,7 +80,7 @@ export default function DetailHeader({
             />
           </Button>
 
-          {onEdit ? (
+          {onEdit && (
             <Button
               onClick={onEdit}
               variant="primary"
@@ -97,16 +89,7 @@ export default function DetailHeader({
               <Edit className="h-4 w-4" />
               편집하기
             </Button>
-          ) : onApply ? (
-            <Button
-              onClick={onApply}
-              variant="primary"
-              className="bg-yellow-400 hover:bg-yellow-500"
-            >
-              <Send className="h-4 w-4" />
-              지원하기
-            </Button>
-          ) : null}
+          )}
         </div>
       </div>
 

@@ -5,7 +5,6 @@ import {
   incrementRecruitmentViews,
 } from '@/api/recruitments'
 import type { Recruitment } from '@/mocks/recruitmentData'
-import { useAuthStore } from '@/store/userStore'
 import DetailHeader from '@/components/postings/detail/DetailHeader'
 import DetailInfo from '@/components/postings/detail/DetailInfo'
 import DetailContent from '@/components/postings/detail/DetailContent'
@@ -14,22 +13,15 @@ import DetailActions from '@/components/postings/detail/DetailActions'
 export default function RecruitmentDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+
   const [recruitment, setRecruitment] = useState<Recruitment | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const loginState = useAuthStore((state) => state.loginState)
+
   const currentUserId = 1
   const isAuthor = recruitment?.authorId === currentUserId
 
   useEffect(() => {
-    if (loginState === 'GUEST') {
-      navigate('/login', {
-        replace: true,
-        state: { from: `/recruitments/${id}` },
-      })
-      return
-    }
-
     const fetchDetail = async () => {
       if (!id) return
 
@@ -48,7 +40,7 @@ export default function RecruitmentDetailPage() {
     }
 
     fetchDetail()
-  }, [id, navigate, loginState])
+  }, [id])
 
   const handleBack = () => {
     navigate(-1)
@@ -58,9 +50,7 @@ export default function RecruitmentDetailPage() {
     navigate(`/recruitments/edit/${id}`)
   }
 
-  const handleApply = () => {
-    return
-  }
+  const handleApply = () => {}
 
   if (id && isNaN(Number(id))) {
     return <Navigate to="/recruitments" replace />
@@ -69,7 +59,7 @@ export default function RecruitmentDetailPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-lg text-gray-600">로딩 중...</div>
+        <div className="text-lg text-gray-600">로딩 중</div>
       </div>
     )
   }
@@ -99,12 +89,10 @@ export default function RecruitmentDetailPage() {
           recruitment={recruitment}
           onBack={handleBack}
           onEdit={isAuthor ? handleEdit : undefined}
-          onApply={!isAuthor ? handleApply : undefined}
         />
         <DetailInfo recruitment={recruitment} />
         <DetailContent recruitment={recruitment} />
         <DetailActions
-          isAuthor={isAuthor}
           onApply={handleApply}
           onBookmark={() => {}}
           onShare={() => {}}

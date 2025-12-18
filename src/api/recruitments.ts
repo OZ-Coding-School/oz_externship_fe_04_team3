@@ -1,26 +1,47 @@
 import { axiosInstance } from '@/api/axios'
 
-export const getRecruitments = async (params: {
+type RecruitmentParams = {
   search?: string
   category?: string
   sort?: string
-}) => {
+}
+
+export const getRecruitmentsV1 = async (params: RecruitmentParams) => {
   const queryParams = new URLSearchParams()
   if (params.search) queryParams.append('search', params.search)
   if (params.category) queryParams.append('category', params.category)
   if (params.sort) queryParams.append('sort', params.sort)
 
-  const response = await axiosInstance.get(
+  const res = await axiosInstance.get(
     `/v1/recruitments?${queryParams.toString()}`
   )
-  return response.data
+  return res.data
 }
 
-export const getRecruitmentDetail = async (id: string) => {
+export const getRecruitmentDetailV1 = async (id: string) => {
   const res = await axiosInstance.get(`/v1/recruitments/${id}`)
   return res.data
 }
 
-export const incrementRecruitmentViews = async (id: string) => {
+export const incrementRecruitmentViewsV1 = async (id: string) => {
   await axiosInstance.post(`/v1/recruitments/${id}/views`)
+}
+
+export const getRecruitments = async (params: RecruitmentParams) => {
+  const queryParams = new URLSearchParams()
+  if (params.search) queryParams.append('search', params.search)
+  if (params.category) queryParams.append('category', params.category)
+  if (params.sort) queryParams.append('sort', params.sort)
+
+  const res = await axiosInstance.get(`/recruitments?${queryParams.toString()}`)
+  return res.data
+}
+
+export const getRecruitmentDetail = async (id: string) => {
+  const res = await axiosInstance.get(`/recruitments/${id}`)
+  return res.data
+}
+
+export const incrementRecruitmentViews = async (id: string) => {
+  await axiosInstance.post(`/recruitments/${id}/views`)
 }
