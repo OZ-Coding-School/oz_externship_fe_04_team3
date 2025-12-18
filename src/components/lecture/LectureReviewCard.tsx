@@ -2,7 +2,14 @@ import { getDiscount } from '@/helpers/getDiscount'
 import getRatingStarsIcon from '@/helpers/getRatingStarsIcon'
 import { LectureLevel } from '@/mappers/lectures/lecture'
 import type { Lecture } from '@/types/lecture'
-import { Dialog, DialogContent } from '../common/Modal'
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '../common/Modal'
 import { Badge } from '../common/badge'
 import {
   Card,
@@ -42,6 +49,12 @@ export default function LectureReviewCard({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="m-0 p-0 **:data-[slot='dialog-close']:bg-gray-300">
+        <VisuallyHidden asChild>
+          <DialogTitle></DialogTitle>
+        </VisuallyHidden>
+        <VisuallyHidden asChild>
+          <DialogDescription></DialogDescription>
+        </VisuallyHidden>
         <Card className="w-full">
           <CardHeader>
             <CardAction className="absolute z-10 justify-between px-3 py-3">
