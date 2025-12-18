@@ -5,6 +5,7 @@ import {
   useNotificationActions,
   useNotifications,
 } from '@/hooks/quries/useNotifications'
+import type { AlarmItem } from '@/types/alarm'
 
 import NotificationCard from './NotificationCard'
 
@@ -19,13 +20,14 @@ export default function NotificationModal({
   onClose,
   onAnimationComplete,
 }: NotificationModalProps) {
+  const SCROLL_THRESHOLD = 80
   const [activeFilter, setActiveFilter] = useState<'all' | 'unread' | 'read'>(
     'all'
   )
   const {
-    data,
+    alarms,
     isLoading,
-    error,
+    errorMessage,
     refetch,
     fetchNextPage,
     hasNextPage,
@@ -33,9 +35,6 @@ export default function NotificationModal({
   } = useNotifications(activeFilter)
   const { markAllRead, markRead } = useNotificationActions()
   const listRef = useRef<HTMLDivElement | null>(null)
-  const pages = data?.pages ?? []
-  const alarms = pages.flatMap((p) => p.results ?? [])
-  const errorMessage = error ? error.message : null
   const totalCount = alarms.length
   const unreadCount = alarms.filter((a) => !a.isRead).length
   const readCount = totalCount - unreadCount
@@ -50,18 +49,73 @@ export default function NotificationModal({
   useEffect(() => {
     const el = listRef.current
     if (!el) return
+
     const handleScroll = () => {
-      if (
-        el.scrollTop + el.clientHeight >= el.scrollHeight - 80 &&
-        hasNextPage &&
-        !isFetchingNextPage
-      ) {
-        fetchNextPage()
-      }
+      const isNearBottom =
+        el.scrollTop + el.clientHeight >= el.scrollHeight - SCROLL_THRESHOLD
+      if (!isNearBottom) return
+      if (!hasNextPage || isFetchingNextPage) return
+      fetchNextPage()
     }
     el.addEventListener('scroll', handleScroll)
     return () => el.removeEventListener('scroll', handleScroll)
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
+
+  const handleMarkAll = () => {
+    markAllRead().finally(() => {
+      refetch()
+    })
+  }
+
+  const handleMarkOne = (alarm: AlarmItem) => {
+    markRead(alarm.id).finally(() => {
+      refetch()
+      if (alarm.backUrl) {
+        window.location.href = alarm.backUrl
+      } else {
+        window.location.href = '/'
+      }
+    })
+  }
+
+  const renderList = () => {
+    if (isLoading) {
+      return <div className="p-4 text-sm text-gray-500">불러오는 중...</div>
+    }
+    if (errorMessage) {
+      return <div className="p-4 text-sm text-red-500">{errorMessage}</div>
+    }
+    if (alarms.length === 0) {
+      return (
+        <div className="flex flex-col items-center justify-center gap-2 p-6 text-sm text-gray-500">
+          <span className="text-base font-semibold text-gray-700">
+            알림이 없습니다
+          </span>
+          <span className="text-xs text-gray-400">
+            새로운 알림이 오면 이곳에 표시됩니다
+          </span>
+        </div>
+      )
+    }
+    return (
+      <>
+        {alarms.map((alarm) => (
+          <NotificationCard
+            key={alarm.id}
+            message={alarm.message}
+            date={alarm.date}
+            isRead={alarm.isRead}
+            accent={alarm.accent}
+            iconType={alarm.iconType}
+            onClick={() => handleMarkOne(alarm)}
+          />
+        ))}
+        {isFetchingNextPage && (
+          <div className="p-4 text-xs text-gray-400">불러오는 중...</div>
+        )}
+      </>
+    )
+  }
 
   const filterOptions = [
     { key: 'all' as const, label: '전체보기', count: totalCount },
@@ -102,15 +156,7 @@ export default function NotificationModal({
         <div className="flex items-center gap-2">
           <h5>알림</h5>
         </div>
-        <button
-          className="text-primary-600 text-sm"
-          onClick={() => {
-            // 전체 읽기 요청 후 목록을 새로 불러온다
-            markAllRead().finally(() => {
-              refetch()
-            })
-          }}
-        >
+        <button className="text-primary-600 text-sm" onClick={handleMarkAll}>
           모두 읽음
         </button>
       </div>
@@ -134,46 +180,7 @@ export default function NotificationModal({
         })}
       </div>
       <div className="no-scrollbar h-[323px] overflow-y-auto" ref={listRef}>
-        {isLoading && (
-          <div className="p-4 text-sm text-gray-500">불러오는 중...</div>
-        )}
-        {errorMessage && (
-          <div className="p-4 text-sm text-red-500">{errorMessage}</div>
-        )}
-        {!isLoading && !errorMessage && (
-          <>
-            {alarms.length === 0 && (
-              <div className="flex flex-col items-center justify-center gap-2 p-6 text-sm text-gray-500">
-                <span className="text-base font-semibold text-gray-700">
-                  알림이 없습니다
-                </span>
-                <span className="text-xs text-gray-400">
-                  새로운 알림이 오면 이곳에 표시됩니다
-                </span>
-              </div>
-            )}
-            {alarms.length > 0 &&
-              alarms.map((alarm) => (
-                <NotificationCard
-                  key={alarm.id}
-                  message={alarm.message}
-                  date={alarm.date}
-                  isRead={alarm.isRead}
-                  accent={alarm.accent}
-                  iconType={alarm.iconType}
-                  onClick={() => {
-                    // 개별 읽기 요청 후 목록 새로고침
-                    markRead(alarm.id).finally(() => {
-                      refetch()
-                    })
-                  }}
-                />
-              ))}
-            {isFetchingNextPage && (
-              <div className="p-4 text-xs text-gray-400">불러오는 중...</div>
-            )}
-          </>
-        )}
+        {renderList()}
       </div>
       <div className="h-[45px] border-t border-gray-200 bg-gray-50"></div>
     </motion.div>
