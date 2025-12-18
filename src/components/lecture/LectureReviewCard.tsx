@@ -4,6 +4,7 @@ import { LectureLevel } from '@/mappers/lectures/lecture'
 import type { Lecture } from '@/types/lecture'
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden'
 
+import { useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -46,6 +47,9 @@ export default function LectureReviewCard({
     categories,
     reviews,
   } = lecture
+
+  const [imgLoaded, setImgLoaded] = useState(false)
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="m-0 p-0 **:data-[slot='dialog-close']:bg-gray-300">
@@ -65,15 +69,17 @@ export default function LectureReviewCard({
                 </Badge>
               </div>
             </CardAction>
-            {thumbnail_img_url ? (
-              <img
-                src={thumbnail_img_url}
-                alt={title}
-                className="h-auto w-full object-cover"
-              />
-            ) : (
-              <Skeleton className="h-24 w-24"></Skeleton>
+            {/* IMG 로딩중이면 스켈레톤  */}
+            {!imgLoaded && (
+              <Skeleton className="h-auto min-h-[210px] min-w-[390px]" />
             )}
+            <img
+              src={thumbnail_img_url}
+              alt={title}
+              onLoad={() => setImgLoaded(true)}
+              onError={() => setImgLoaded(true)}
+              className="h-auto w-full object-cover"
+            />
           </CardHeader>
           <div className="review-content-section overflow-y-auto">
             <CardContent>
