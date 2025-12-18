@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useAnimation } from 'framer-motion'
 
 import {
@@ -22,12 +22,22 @@ export default function NotificationModal({
   const [activeFilter, setActiveFilter] = useState<'all' | 'unread' | 'read'>(
     'all'
   )
-  const { data, isLoading, error, refetch } = useNotifications(activeFilter)
+  const {
+    data,
+    isLoading,
+    error,
+    refetch,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useNotifications(activeFilter)
   const { markAllRead, markRead } = useNotificationActions()
-  const alarms = data?.alarms ?? []
+  const listRef = useRef<HTMLDivElement | null>(null)
+  const pages = data?.pages ?? []
+  const alarms = pages.flatMap((p) => p.results ?? [])
   const errorMessage = error ? error.message : null
-  const totalCount = data?.totalCount ?? 0
-  const unreadCount = data?.unreadCount ?? 0
+  const totalCount = alarms.length
+  const unreadCount = alarms.filter((a) => !a.isRead).length
   const readCount = totalCount - unreadCount
   const controls = useAnimation()
 
@@ -35,6 +45,23 @@ export default function NotificationModal({
   useEffect(() => {
     controls.start({ y: 0, opacity: 1 })
   }, [controls])
+
+  // 스크롤 끝에 가까워지면 다음 페이지 요청
+  useEffect(() => {
+    const el = listRef.current
+    if (!el) return
+    const handleScroll = () => {
+      if (
+        el.scrollTop + el.clientHeight >= el.scrollHeight - 80 &&
+        hasNextPage &&
+        !isFetchingNextPage
+      ) {
+        fetchNextPage()
+      }
+    }
+    el.addEventListener('scroll', handleScroll)
+    return () => el.removeEventListener('scroll', handleScroll)
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
   const filterOptions = [
     { key: 'all' as const, label: '전체보기', count: totalCount },
@@ -106,7 +133,7 @@ export default function NotificationModal({
           )
         })}
       </div>
-      <div className="no-scrollbar h-[323px] overflow-y-auto">
+      <div className="no-scrollbar h-[323px] overflow-y-auto" ref={listRef}>
         {isLoading && (
           <div className="p-4 text-sm text-gray-500">불러오는 중...</div>
         )}
@@ -142,6 +169,9 @@ export default function NotificationModal({
                   }}
                 />
               ))}
+            {isFetchingNextPage && (
+              <div className="p-4 text-xs text-gray-400">불러오는 중...</div>
+            )}
           </>
         )}
       </div>

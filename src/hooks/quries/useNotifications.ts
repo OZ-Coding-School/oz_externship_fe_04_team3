@@ -7,6 +7,7 @@ import {
   type NotificationListResponse,
 } from '@/mappers/notification/mapper'
 import type { AlarmItem } from '@/types/alarm'
+import { useCursorInfiniteQuery } from './useCursorInfiniteQuery'
 
 type FilterKey = 'all' | 'unread' | 'read'
 
@@ -41,18 +42,38 @@ const fetchNotifications = async (filter: FilterKey) => {
 }
 
 export const useNotifications = (filter: FilterKey) =>
-  useQuery<
-    { alarms: AlarmItem[]; totalCount: number; unreadCount: number },
-    Error
-  >({
+  useCursorInfiniteQuery<AlarmItem>({
     queryKey: ['notifications', filter],
-    queryFn: () => fetchNotifications(filter),
-    // 초기 로딩 중에도 안전하게 사용
-    initialData: { alarms: [] as AlarmItem[], totalCount: 0, unreadCount: 0 },
-    staleTime: 0, // 실시간성을 위해 캐싱하지 않고 매번 신선하게 취급
-    gcTime: 0,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
+    queryFn: async (cursor) => {
+      try {
+        const isReadParam = filter === 'all' ? undefined : filter === 'read'
+        const { data } = await axiosInstance.get<NotificationListResponse>(
+          '/v1/notifications',
+          {
+            params: {
+              page_size: 4,
+              ...(typeof isReadParam === 'boolean'
+                ? { is_read: isReadParam }
+                : {}),
+              ...(cursor ? { cursor } : {}),
+            },
+          }
+        )
+        return {
+          next: data.next,
+          previous: data.previous,
+          results: data.results.map(alarmMapper),
+        }
+      } catch (err) {
+        if (isAxiosError(err)) {
+          const detail = (
+            err.response?.data as { error_detail?: string } | undefined
+          )?.error_detail
+          throw new Error(detail || '알림을 불러오지 못했습니다.')
+        }
+        throw err
+      }
+    },
   })
 
 export const useNotificationActions = () => {
