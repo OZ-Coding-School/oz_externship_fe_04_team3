@@ -7,11 +7,11 @@ import { Badge } from '@/components/common/badge'
 import { Skeleton } from '@/components/common/skeleton'
 import { getTypeIcon } from '@/helpers/icons'
 import type { ManageRecruitment } from '@/types/myRecruitment'
-import ManageApplicantsModal from './ManageApplicantsModal'
 import ApplicantDetailModal from './ApplicantDetailModal'
 import type { Applicant, ApplicantDetail } from './applicantTypes'
 import { deleteMyRecruitment } from '@/api/myRecruitment'
 import { showToast } from '@/components/common/toast/Toast'
+import ManageApplicantsModal from './ManageApplicantsModal'
 
 type ManageCardProps = {
   posting: ManageRecruitment
