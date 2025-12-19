@@ -5,8 +5,10 @@ import {
   useNotificationActions,
   useNotifications,
 } from '@/hooks/quries/useNotifications'
+import { getAccessTokenApi } from '@/api/userInformation'
 import { useNotificationStream } from '@/hooks/useNotificationStream'
 import type { AlarmItem } from '@/types/alarm'
+import { useAuthStore } from '@/store/userStore'
 
 import NotificationCard from './NotificationCard'
 
@@ -40,10 +42,22 @@ export default function NotificationModal({
   const unreadCount = alarms.filter((a) => !a.isRead).length
   const readCount = totalCount - unreadCount
   const controls = useAnimation()
+  const { setAccessToken, clearAuth } = useAuthStore((s) => ({
+    setAccessToken: s.setAccessToken,
+    clearAuth: s.clearAuth,
+  }))
 
   useNotificationStream({
     onMessage: () => {
       refetch()
+    },
+    onUnauthorized: async () => {
+      try {
+        const newToken = await getAccessTokenApi()
+        setAccessToken(newToken)
+      } catch (err) {
+        clearAuth()
+      }
     },
   })
 
