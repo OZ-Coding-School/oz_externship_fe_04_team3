@@ -25,7 +25,6 @@ export default function RecruitmentDetailPage() {
 
   const { user, loginState } = useAuthStore()
   const isLoggedIn = loginState === 'USER'
-
   const isAuthor = isLoggedIn && recruitment?.authorId === user?.id
 
   useEffect(() => {
@@ -69,16 +68,7 @@ export default function RecruitmentDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-4xl p-4">
-        <DetailHeader
-          recruitment={recruitment}
-          onBack={() => navigate(-1)}
-          onEdit={
-            isAuthor ? () => navigate(`/recruitments/edit/${id}`) : undefined
-          }
-          onApply={
-            !isAuthor ? () => setIsApplicationModalOpen(true) : undefined
-          }
-        />
+        <DetailHeader recruitment={recruitment} onBack={() => navigate(-1)} />
 
         <DetailInfo recruitment={recruitment} />
         <DetailContent recruitment={recruitment} />
