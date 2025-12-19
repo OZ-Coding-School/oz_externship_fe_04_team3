@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { API_BASE_URL } from '@/constant/api'
@@ -16,6 +16,12 @@ type UseNotificationStreamOptions = {
 export function useNotificationStream(options?: UseNotificationStreamOptions) {
   const queryClient = useQueryClient()
   const accessToken = useAuthStore((s) => s.accessToken)
+  const optionsRef = useRef(options)
+  const handledUnauthorizedRef = useRef(false)
+
+  useEffect(() => {
+    optionsRef.current = options
+  }, [options])
 
   useEffect(() => {
     if (!accessToken) return
@@ -33,7 +39,7 @@ export function useNotificationStream(options?: UseNotificationStreamOptions) {
         const raw = JSON.parse(event.data) as NotificationApiItem
         const alarm = alarmMapper(raw)
         queryClient.invalidateQueries({ queryKey: ['notifications'] })
-        options?.onMessage?.(alarm)
+        optionsRef.current?.onMessage?.(alarm)
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error('SSE parse error', e)
@@ -43,12 +49,15 @@ export function useNotificationStream(options?: UseNotificationStreamOptions) {
     type SSEErrorEvent = Event & { status?: number }
 
     es.onerror = (event: SSEErrorEvent) => {
-      if (event.status === 401) options?.onUnauthorized?.()
+      if (event.status === 401 && !handledUnauthorizedRef.current) {
+        handledUnauthorizedRef.current = true
+        optionsRef.current?.onUnauthorized?.()
+      }
       es.close()
     }
 
     return () => {
       es.close()
     }
-  }, [accessToken, options, queryClient])
+  }, [accessToken, queryClient])
 }

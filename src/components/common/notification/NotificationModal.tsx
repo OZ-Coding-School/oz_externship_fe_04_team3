@@ -42,10 +42,8 @@ export default function NotificationModal({
   const unreadCount = alarms.filter((a) => !a.isRead).length
   const readCount = totalCount - unreadCount
   const controls = useAnimation()
-  const { setAccessToken, clearAuth } = useAuthStore((s) => ({
-    setAccessToken: s.setAccessToken,
-    clearAuth: s.clearAuth,
-  }))
+  const setAccessToken = useAuthStore((s) => s.setAccessToken)
+  const clearAuth = useAuthStore((s) => s.clearAuth)
 
   useNotificationStream({
     onMessage: () => {
