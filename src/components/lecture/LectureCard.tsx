@@ -78,7 +78,7 @@ export default function LectureCard(lecture: Lecture) {
     }
   }, [isDesktop])
   return (
-    <Card className="w-full">
+    <Card>
       <CardHeader>
         <CardAction className="absolute justify-between px-3 py-3">
           <div className="absolute top-2 flex flex-col gap-2">
@@ -102,13 +102,13 @@ export default function LectureCard(lecture: Lecture) {
           </Button>
         </CardAction>
         {/* IMG 로딩중이면 스켈레톤  */}
-        {!imgLoaded && <Skeleton className="h-[210px] w-[390px]" />}
+        {!imgLoaded && <Skeleton className="h-[210px] w-full" />}
         <img
           src={thumbnail_img_url}
           alt={title}
           onLoad={() => setImgLoaded(true)}
           onError={() => setImgLoaded(true)}
-          className="h-auto w-full object-cover"
+          className="aspect-auto max-h-[210px] w-full object-cover"
         />
       </CardHeader>
       <CardContent>

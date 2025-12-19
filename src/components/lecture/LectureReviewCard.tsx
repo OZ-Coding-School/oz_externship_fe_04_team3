@@ -59,7 +59,7 @@ export default function LectureReviewCard({
         <VisuallyHidden asChild>
           <DialogDescription></DialogDescription>
         </VisuallyHidden>
-        <Card className="w-full">
+        <Card>
           <CardHeader>
             <CardAction className="absolute z-10 justify-between px-3 py-3">
               <div className="top-2 flex flex-col gap-2">
@@ -78,7 +78,7 @@ export default function LectureReviewCard({
               alt={title}
               onLoad={() => setImgLoaded(true)}
               onError={() => setImgLoaded(true)}
-              className="h-auto w-full object-cover"
+              className="aspect-auto max-h-[210px] w-full object-cover"
             />
           </CardHeader>
           <div className="review-content-section overflow-y-auto">
