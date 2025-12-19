@@ -86,7 +86,7 @@ function BasicInfoSection({
             </p>
             <div className="space-y-1 text-sm text-[#A16207]">
               {lectures.map((lec) => (
-                <div key={lec.id} className="flex items-center justify-between">
+                <div key={lec.id} className="flex-between">
                   <span>{lec.title}</span>
                   <span>
                     {lec.price > 0
@@ -100,11 +100,13 @@ function BasicInfoSection({
                   강의 가격 불러오는 중...
                 </div>
               )}
-              <div className="mt-2 border-t border-orange-200 pt-2 text-sm font-medium">
-                총 강의 비용{' '}
-                {totalLecturePrice > 0
-                  ? `${totalLecturePrice.toLocaleString()}원`
-                  : '정보 없음'}
+              <div className="flex-between mt-2 border-t border-orange-200 pt-2 text-sm font-medium">
+                <span>총 강의 비용</span>
+                <span>
+                  {totalLecturePrice > 0
+                    ? `${totalLecturePrice.toLocaleString()}원`
+                    : '정보 없음'}
+                </span>
               </div>
             </div>
           </div>
