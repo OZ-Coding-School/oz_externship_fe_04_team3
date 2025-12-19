@@ -1,21 +1,22 @@
-import { Bookmark, Share2, Send } from 'lucide-react'
-import { showToast } from '@/components/common/toast/Toast'
+import { Bookmark, Share2, Send, Edit, Trash2 } from 'lucide-react'
 
 interface Props {
+  isAuthor: boolean
   onApply?: () => void
-  onBookmark?: () => void
-  onShare?: () => void
+  onEdit?: () => void
+  onDelete?: () => void
+  onBookmark: () => void
+  onShare: () => void
 }
 
-export default function DetailActions({ onApply, onBookmark, onShare }: Props) {
-  const handleApplyClick = () => {
-    if (!onApply) {
-      showToast.success('준비 중', '지원 기능은 곧 제공될 예정입니다.')
-      return
-    }
-    onApply()
-  }
-
+export default function DetailActions({
+  isAuthor,
+  onApply,
+  onEdit,
+  onDelete,
+  onBookmark,
+  onShare,
+}: Props) {
   return (
     <section className="mt-8 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex items-center justify-between">
@@ -37,13 +38,34 @@ export default function DetailActions({ onApply, onBookmark, onShare }: Props) {
           </button>
         </div>
 
-        <button
-          onClick={handleApplyClick}
-          className="flex items-center justify-center gap-2 rounded-lg bg-yellow-400 px-8 py-2 text-sm font-bold text-white hover:bg-yellow-500"
-        >
-          <Send className="h-4 w-4" />
-          지원하기
-        </button>
+        {isAuthor && onEdit && onDelete ? (
+          <div className="flex gap-2">
+            <button
+              onClick={onEdit}
+              className="flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-6 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              <Edit className="h-4 w-4" />
+              수정
+            </button>
+            <button
+              onClick={onDelete}
+              className="flex items-center justify-center gap-2 rounded-lg border border-red-300 px-6 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
+            >
+              <Trash2 className="h-4 w-4" />
+              삭제
+            </button>
+          </div>
+        ) : (
+          onApply && (
+            <button
+              onClick={onApply}
+              className="flex items-center justify-center gap-2 rounded-lg bg-yellow-400 px-8 py-2 text-sm font-bold text-white hover:bg-yellow-500"
+            >
+              <Send className="h-4 w-4" />
+              지원하기
+            </button>
+          )
+        )}
       </div>
     </section>
   )

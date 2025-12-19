@@ -12,6 +12,7 @@ import DetailActions from '@/components/postings/detail/DetailActions'
 import Modal from '@/components/common/Modal'
 import ApplicationForm from '@/components/postings/recruitment/ApplicationForm'
 import { showToast } from '@/components/common/toast/Toast'
+import { useAuthStore } from '@/store/userStore'
 
 export default function RecruitmentDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -22,8 +23,10 @@ export default function RecruitmentDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [isApplicationModalOpen, setIsApplicationModalOpen] = useState(false)
 
-  const currentUserId = 1
-  const isAuthor = recruitment?.authorId === currentUserId
+  const { user, loginState } = useAuthStore()
+  const isLoggedIn = loginState === 'USER'
+  const isAuthor = isLoggedIn && recruitment?.authorId === user?.id
+  // const isAuthor = true 임시(작성자) 환경 테스트 코드
 
   useEffect(() => {
     if (!id) return
@@ -35,7 +38,7 @@ export default function RecruitmentDetailPage() {
       try {
         const data = await getRecruitmentDetail(id)
         setRecruitment(data)
-        await incrementRecruitmentViews(id)
+        await incrementRecruitmentViews(id).catch(() => {})
       } catch {
         setError('공고를 불러오는데 실패했습니다.')
       } finally {
@@ -51,11 +54,29 @@ export default function RecruitmentDetailPage() {
   }
 
   if (isLoading) {
-    return <div className="p-10 text-center">로딩 중</div>
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">로딩 중</p>
+        </div>
+      </div>
+    )
   }
 
   if (error || !recruitment) {
-    return <div className="p-10 text-center">{error}</div>
+    return (
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <div className="text-center">
+          <p className="mb-4 text-xl font-bold text-gray-800">{error}</p>
+          <button
+            onClick={() => navigate('/recruitments')}
+            className="mt-6 rounded-lg bg-yellow-400 px-6 py-2 font-medium text-white hover:bg-yellow-500"
+          >
+            목록으로 돌아가기
+          </button>
+        </div>
+      </div>
+    )
   }
 
   const handleApplySuccess = () => {
@@ -63,41 +84,48 @@ export default function RecruitmentDetailPage() {
     showToast.success('지원 완료', '지원서가 성공적으로 제출되었습니다!')
   }
 
+  const handleDelete = () => {
+    showToast.error('준비 중', '삭제 기능은 준비 중입니다.')
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-4xl p-4">
-        <DetailHeader
-          recruitment={recruitment}
-          onBack={() => navigate(-1)}
-          onEdit={
-            isAuthor ? () => navigate(`/recruitments/edit/${id}`) : undefined
-          }
-          onApply={
-            !isAuthor ? () => setIsApplicationModalOpen(true) : undefined
-          }
-        />
+        <DetailHeader recruitment={recruitment} onBack={() => navigate(-1)} />
 
         <DetailInfo recruitment={recruitment} />
         <DetailContent recruitment={recruitment} />
+
         <DetailActions
-          onApply={() => setIsApplicationModalOpen(true)}
+          isAuthor={isAuthor}
+          onApply={
+            isLoggedIn && !isAuthor
+              ? () => setIsApplicationModalOpen(true)
+              : undefined
+          }
+          onEdit={
+            isAuthor ? () => navigate(`/recruitments/edit/${id}`) : undefined
+          }
+          onDelete={isAuthor ? handleDelete : undefined}
           onBookmark={() => {}}
           onShare={() => {}}
         />
       </div>
 
-      <Modal
-        open={isApplicationModalOpen}
-        onOpenChange={setIsApplicationModalOpen}
-        title="스터디 지원서 작성"
-        content={
-          <ApplicationForm
-            recruitmentId={Number(id)}
-            onSuccess={handleApplySuccess}
-            onCancel={() => setIsApplicationModalOpen(false)}
-          />
-        }
-      />
+      {isLoggedIn && !isAuthor && (
+        <Modal
+          open={isApplicationModalOpen}
+          onOpenChange={setIsApplicationModalOpen}
+          title="스터디 지원서 작성"
+          content={
+            <ApplicationForm
+              recruitmentId={Number(id)}
+              onSuccess={handleApplySuccess}
+              onCancel={() => setIsApplicationModalOpen(false)}
+            />
+          }
+        />
+      )}
     </div>
   )
 }
