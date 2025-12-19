@@ -139,6 +139,22 @@ export const recruitmentHandlers = [
 
     return HttpResponse.json(response)
   }),
+  http.get('/api/v1/recruitments/:id', ({ params }) => {
+    const id = params.id as string
+    const target = recruitmentStore.list.find((item) => item.uuid === id)
+    if (!target) {
+      return HttpResponse.json(
+        { error_detail: '해당 공고를 찾을 수 없습니다.' },
+        { status: 404 }
+      )
+    }
+    return HttpResponse.json({
+      ...target,
+      content: `${target.title} 내용입니다.\n상세 설명을 작성하세요.`,
+      estimated_fee: 0,
+      image_urls: [],
+    })
+  }),
   http.delete('/api/v1/recruitments/:id', ({ params }) => {
     const id = params.id as string
     const before = recruitmentStore.list.length

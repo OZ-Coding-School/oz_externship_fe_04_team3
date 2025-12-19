@@ -197,13 +197,13 @@ export default function ManageCard({ posting, onDeleted }: ManageCardProps) {
               <span>{posting.bookmarkCount}</span>
             </div>
             <button
-              className="text-gray-500 hover:text-gray-700"
+              className="hover:text-primary-500 cursor-pointer text-gray-500"
               onClick={() => navigate(`/write?recruitmentId=${posting.uuid}`)}
             >
               <Pencil size={16} />
             </button>
             <button
-              className="text-gray-500 hover:text-gray-700"
+              className="hover:text-danger-600 cursor-pointer text-gray-500"
               onClick={() => setIsDeleteModalOpen(true)}
             >
               <Trash2 size={16} />
