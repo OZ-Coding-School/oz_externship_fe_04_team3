@@ -5,6 +5,7 @@ import {
   useNotificationActions,
   useNotifications,
 } from '@/hooks/quries/useNotifications'
+import { useNotificationStream } from '@/hooks/useNotificationStream'
 import type { AlarmItem } from '@/types/alarm'
 
 import NotificationCard from './NotificationCard'
@@ -39,6 +40,12 @@ export default function NotificationModal({
   const unreadCount = alarms.filter((a) => !a.isRead).length
   const readCount = totalCount - unreadCount
   const controls = useAnimation()
+
+  useNotificationStream({
+    onMessage: () => {
+      refetch()
+    },
+  })
 
   // 진입 위치 초기화
   useEffect(() => {
