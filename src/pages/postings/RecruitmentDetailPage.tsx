@@ -13,7 +13,6 @@ import Modal from '@/components/common/Modal'
 import ApplicationForm from '@/components/postings/recruitment/ApplicationForm'
 import { showToast } from '@/components/common/toast/Toast'
 import { useAuthStore } from '@/store/userStore'
-import { mapRecruitmentDetail } from '@/mappers/recruitment/mapper'
 
 export default function RecruitmentDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -37,7 +36,7 @@ export default function RecruitmentDetailPage() {
 
       try {
         const data = await getRecruitmentDetail(id)
-        setRecruitment(mapRecruitmentDetail(data))
+        setRecruitment(data)
         await incrementRecruitmentViews(id).catch(() => {})
       } catch {
         setError('공고를 불러오는데 실패했습니다.')
