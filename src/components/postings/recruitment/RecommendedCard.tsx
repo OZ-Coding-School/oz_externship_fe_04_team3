@@ -1,5 +1,5 @@
 import { Bookmark, Calendar, Eye, User } from 'lucide-react'
-import type { Recruitment } from '@/mocks/recruitmentData'
+import type { Recruitment } from '@/types/recruitment'
 
 interface Props {
   recruitment: Recruitment
@@ -66,7 +66,7 @@ export default function RecommendedCard({ recruitment, onClick }: Props) {
         )}
 
         <div className="flex flex-wrap gap-2">
-          {recruitment.tags.map((tag, index) => (
+          {recruitment.tags.map((tag: string, index: number) => (
             <span
               key={index}
               className="rounded bg-yellow-100 px-2 py-1 text-xs text-yellow-800"

@@ -50,7 +50,11 @@ export function useApplicationForm(recruitmentId: number) {
 
     try {
       setIsSubmitting(true)
-      await postApplication(recruitmentId, formData)
+      await postApplication({
+        recruitmentId,
+        content: JSON.stringify(formData),
+        contact: formData.availableTime,
+      })
       return true
     } finally {
       setIsSubmitting(false)

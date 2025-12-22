@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { getRecruitments } from '@/api/recruitments'
 import type { Recruitment } from '@/types/recruitment'
-import { mapRecruitmentDetail } from '@/mappers/recruitment/mapper'
 
 export function useRecruitments() {
   const [searchKeyword, setSearchKeyword] = useState('')
@@ -16,8 +15,7 @@ export function useRecruitments() {
       try {
         setIsLoading(true)
         const data = await getRecruitments()
-        const mappedData = data.map(mapRecruitmentDetail)
-        setRecruitments(mappedData)
+        setRecruitments(data)
       } catch {
         setRecruitments([])
       } finally {

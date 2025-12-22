@@ -1,5 +1,5 @@
 import { Sparkles } from 'lucide-react'
-import type { Recruitment } from '@/mocks/recruitmentData'
+import type { Recruitment } from '@/types/recruitment'
 import RecommendedCard from './RecommendedCard'
 
 interface Props {

@@ -1,4 +1,4 @@
-import type { Recruitment } from '@/mocks/recruitmentData'
+import type { Recruitment } from '@/types/recruitment'
 
 export const getRecruitments = async (): Promise<Recruitment[]> => {
   const response = await fetch('/api/v1/recruitments')
