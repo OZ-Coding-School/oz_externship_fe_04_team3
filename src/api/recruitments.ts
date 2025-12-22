@@ -1,4 +1,5 @@
-import type { Recruitment } from '@/types/recruitment'
+import type { Recruitment, RecruitmentApiItem } from '@/types/recruitment'
+import { mapRecruitmentDetail } from '@/mappers/recruitment/mapper'
 
 export const getRecruitments = async (): Promise<Recruitment[]> => {
   const response = await fetch('/api/v1/recruitments')
@@ -7,7 +8,8 @@ export const getRecruitments = async (): Promise<Recruitment[]> => {
     throw new Error('공고 목록을 불러오는데 실패했습니다.')
   }
 
-  return response.json()
+  const data: RecruitmentApiItem[] = await response.json()
+  return data.map(mapRecruitmentDetail)
 }
 
 export const getRecruitmentDetail = async (
@@ -19,7 +21,8 @@ export const getRecruitmentDetail = async (
     throw new Error('공고를 불러오는데 실패했습니다.')
   }
 
-  return response.json()
+  const data: RecruitmentApiItem = await response.json()
+  return mapRecruitmentDetail(data)
 }
 
 export const incrementRecruitmentViews = async (id: string): Promise<void> => {

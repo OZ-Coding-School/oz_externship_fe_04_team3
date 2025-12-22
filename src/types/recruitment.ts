@@ -1,4 +1,3 @@
-import type { WeekNumberProps } from 'react-day-picker'
 import { z } from 'zod'
 
 export const applicationSchema = z.object({
@@ -64,10 +63,11 @@ export interface Recruitment {
   title: string
   content: string
   maxParticipants: number
-  participants?: WeekNumberProps
+  participants?: number
   deadline?: string
   studyType?: string
   authorId?: number
+  author?: { id: number; name: string }
   views: number
   createdAt: string
   thumbnail?: string

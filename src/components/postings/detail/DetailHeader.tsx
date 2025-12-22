@@ -108,10 +108,7 @@ export default function DetailHeader({
       <div className="mb-2 flex flex-wrap items-center gap-4 text-sm text-gray-600">
         <div className="flex items-center gap-1.5">
           <User className="h-4 w-4" />
-          <span>
-            작성자 :{' '}
-            {recruitment.authorId ? `작성자 #${recruitment.authorId}` : '익명'}
-          </span>
+          <span>작성자 : {recruitment.author?.name || '익명'}</span>
         </div>
 
         <div className="flex items-center gap-1.5">

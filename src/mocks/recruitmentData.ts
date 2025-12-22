@@ -71,7 +71,7 @@ export const mockRecruitments: MockRecruitment[] = [
   {
     id: 1,
     title: 'Unity 게임 개발 프로젝트 팀원 모집',
-    author: { id: 1, name: '연은식' },
+    author: { id: 1, name: '엄준식' },
     createdAt: '2025.11.28',
     participants: 4,
     maxParticipants: 5,
@@ -334,7 +334,7 @@ export const mockRecruitments: MockRecruitment[] = [
   {
     id: 6,
     title: '알고리즘 코딩테스트 대비 스터디',
-    author: { id: 1, name: '연은식' },
+    author: { id: 1, name: '엄준식' },
     createdAt: '2025.12.02',
     participants: 6,
     maxParticipants: 8,

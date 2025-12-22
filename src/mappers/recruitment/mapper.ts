@@ -1,14 +1,16 @@
 import type { RecruitmentApiItem, Recruitment } from '@/types/recruitment'
 
 export const mapRecruitmentDetail = (data: RecruitmentApiItem): Recruitment => {
-  return {
+  const result = {
     id: data.id,
     title: data.title,
     content: data.content ?? '',
     maxParticipants: data.max_participants ?? 0,
+    participants: data.participants ?? 0,
     deadline: data.deadline,
     studyType: data.study_type,
     authorId: data.author?.id,
+    author: data.author,
     views: data.views ?? 0,
     createdAt: data.created_at,
     thumbnail: data.thumbnail,
@@ -18,4 +20,6 @@ export const mapRecruitmentDetail = (data: RecruitmentApiItem): Recruitment => {
     lectureList: data.lecture_list,
     attachments: data.attachments,
   }
+
+  return result
 }
