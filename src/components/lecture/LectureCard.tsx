@@ -53,7 +53,7 @@ export default function LectureCard(lecture: Lecture) {
   const { loginState } = useAuthStore()
   /* 북마크 커스텀 상태 */
   const { addBookmarkMutation, deleteBookmarkMutation, getBookmarkQuery } =
-    useBookmark(loginState === 'USER')
+    useBookmark()
 
   const bookmarks = getBookmarkQuery.data?.results || []
   const isBookmarked = bookmarks.some((i) => i.id === id)
