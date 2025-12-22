@@ -4,6 +4,7 @@ import GuestRecommendSection from '@/components/common/GuestRecommendSection'
 import { Input } from '@/components/input'
 import LectureList from '@/components/lecture/LectureList'
 import LectureRecommendSection from '@/components/lecture/LectureRecommendSection'
+import NoSearchResult from '@/components/notFound/NoSearchResult'
 import useInfiniteScroll from '@/hooks/quries/useInfiniteScroll'
 import { categoryData, sortData } from '@/mappers/lectures/lecture'
 import { useAuthStore } from '@/store/userStore'
@@ -34,6 +35,10 @@ export default function Courses() {
           sort,
         }),
     })
+
+  // 검색어 결과값 있는지 확인
+  const hasNoResult = data?.pages.every((page) => page.results.length === 0)
+  console.log('검색어 없으면 true hasNoResult?', hasNoResult)
   //무한스크롤
   const { ref } = useInView({
     threshold: 0,
@@ -102,8 +107,14 @@ export default function Courses() {
           }}
         ></Select>
       </section>
+
       <section className="courses_cardlist">
-        <LectureList data={data}></LectureList>
+        {/* 검색결과 없으면 NoSearchResult */}
+        {hasNoResult ? (
+          <NoSearchResult searchResult={inputValue} />
+        ) : (
+          <LectureList data={data}></LectureList>
+        )}
       </section>
       {!hasNextPage ? (
         <div className="flex-center mt-12 h-12 rounded-md bg-gray-400 text-center text-white">
