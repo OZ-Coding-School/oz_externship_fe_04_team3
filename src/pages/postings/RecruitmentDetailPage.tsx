@@ -4,7 +4,7 @@ import {
   getRecruitmentDetail,
   incrementRecruitmentViews,
 } from '@/api/recruitments'
-import type { Recruitment } from '@/mocks/recruitmentData'
+import type { Recruitment } from '@/types/recruitment'
 import DetailHeader from '@/components/postings/detail/DetailHeader'
 import DetailInfo from '@/components/postings/detail/DetailInfo'
 import DetailContent from '@/components/postings/detail/DetailContent'
@@ -13,6 +13,7 @@ import Modal from '@/components/common/Modal'
 import ApplicationForm from '@/components/postings/recruitment/ApplicationForm'
 import { showToast } from '@/components/common/toast/Toast'
 import { useAuthStore } from '@/store/userStore'
+import { mapRecruitmentDetail } from '@/mappers/recruitment/mapper'
 
 export default function RecruitmentDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -26,7 +27,6 @@ export default function RecruitmentDetailPage() {
   const { user, loginState } = useAuthStore()
   const isLoggedIn = loginState === 'USER'
   const isAuthor = isLoggedIn && recruitment?.authorId === user?.id
-  // const isAuthor = true 임시(작성자) 환경 테스트 코드
 
   useEffect(() => {
     if (!id) return
@@ -37,7 +37,7 @@ export default function RecruitmentDetailPage() {
 
       try {
         const data = await getRecruitmentDetail(id)
-        setRecruitment(data)
+        setRecruitment(mapRecruitmentDetail(data))
         await incrementRecruitmentViews(id).catch(() => {})
       } catch {
         setError('공고를 불러오는데 실패했습니다.')
@@ -56,9 +56,7 @@ export default function RecruitmentDetailPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600">로딩 중</p>
-        </div>
+        <p className="text-gray-600">로딩 중</p>
       </div>
     )
   }
@@ -81,21 +79,15 @@ export default function RecruitmentDetailPage() {
 
   const handleApplySuccess = () => {
     setIsApplicationModalOpen(false)
-    showToast.success('지원 완료', '지원서가 성공적으로 제출되었습니다!')
-  }
-
-  const handleDelete = () => {
-    showToast.error('준비 중', '삭제 기능은 준비 중입니다.')
+    showToast.success('지원 완료', '지원서가 제출되었습니다.')
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-4xl p-4">
         <DetailHeader recruitment={recruitment} onBack={() => navigate(-1)} />
-
         <DetailInfo recruitment={recruitment} />
         <DetailContent recruitment={recruitment} />
-
         <DetailActions
           isAuthor={isAuthor}
           onApply={
@@ -106,7 +98,11 @@ export default function RecruitmentDetailPage() {
           onEdit={
             isAuthor ? () => navigate(`/recruitments/edit/${id}`) : undefined
           }
-          onDelete={isAuthor ? handleDelete : undefined}
+          onDelete={
+            isAuthor
+              ? () => showToast.warning('준비 중', '삭제 기능 준비중')
+              : undefined
+          }
           onBookmark={() => {}}
           onShare={() => {}}
         />

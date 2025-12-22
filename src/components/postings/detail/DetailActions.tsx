@@ -1,4 +1,5 @@
 import { Bookmark, Share2, Send, Edit, Trash2 } from 'lucide-react'
+import { Button } from '@/components/common'
 
 interface Props {
   isAuthor: boolean
@@ -21,21 +22,23 @@ export default function DetailActions({
     <section className="mt-8 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          <button
+          <Button
+            variant="outline"
             onClick={onBookmark}
-            className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            className="flex items-center gap-2"
           >
             <Bookmark className="h-4 w-4" />
             북마크
-          </button>
+          </Button>
 
-          <button
+          <Button
+            variant="outline"
             onClick={onShare}
-            className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            className="flex items-center gap-2"
           >
             <Share2 className="h-4 w-4" />
             공유하기
-          </button>
+          </Button>
         </div>
 
         {isAuthor && onEdit && onDelete ? (
