@@ -1,6 +1,28 @@
 import { http, HttpResponse } from 'msw'
-import { mockRecruitments, filterByCategory } from '@/mocks/recruitmentData'
+import {
+  mockRecruitments,
+  filterByCategory,
+  type MockRecruitment,
+} from '@/mocks/recruitmentData'
 import { applyRecruitmentHandler } from './applyRecruitment'
+
+const mapToApiFormat = (recruitment: MockRecruitment) => ({
+  id: recruitment.id,
+  title: recruitment.title,
+  content: recruitment.description,
+  max_participants: recruitment.maxParticipants,
+  deadline: recruitment.deadline,
+  views: recruitment.views,
+  created_at: recruitment.createdAt,
+  author: recruitment.author,
+  thumbnail: recruitment.thumbnail,
+  thumbnailType: recruitment.thumbnailType,
+  tags: recruitment.tags,
+  participants: recruitment.participants,
+  bookmarks: recruitment.bookmarks,
+  lecture_list: recruitment.lectureList,
+  attachments: recruitment.attachments,
+})
 
 export const recruitmentHandlers = [
   http.get('/api/v1/recruitments', ({ request }) => {
@@ -9,7 +31,7 @@ export const recruitmentHandlers = [
     const category = url.searchParams.get('category') || '전체 카테고리'
     const sort = url.searchParams.get('sort') || '최신순'
 
-    let result = [...mockRecruitments]
+    let result: MockRecruitment[] = [...mockRecruitments]
 
     if (search.trim()) {
       result = result.filter((item) =>
@@ -29,22 +51,27 @@ export const recruitmentHandlers = [
       default:
         result.sort(
           (a, b) =>
-            new Date(b.createdAt ?? '2025-01-01').getTime() -
-            new Date(a.createdAt ?? '2025-01-01').getTime()
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
     }
 
-    return HttpResponse.json(result)
+    return HttpResponse.json(result.map(mapToApiFormat))
   }),
 
   http.get('/api/v1/recruitments/:id', ({ params }) => {
-    const recruitment = mockRecruitments.find((r) => r.id === Number(params.id))
+    const numId = Number(params.id)
+
+    if (Number.isNaN(numId)) {
+      return HttpResponse.json({ message: 'Not Found' }, { status: 404 })
+    }
+
+    const recruitment = mockRecruitments.find((r) => r.id === numId)
 
     if (!recruitment) {
       return HttpResponse.json({ message: 'Not Found' }, { status: 404 })
     }
 
-    return HttpResponse.json(recruitment)
+    return HttpResponse.json(mapToApiFormat(recruitment))
   }),
 
   http.post('/api/v1/recruitments/:id/views', ({ params }) => {
