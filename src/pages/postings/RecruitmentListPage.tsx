@@ -36,7 +36,7 @@ export default function RecruitmentListPage() {
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
-  const handleRecruitmentClick = (id: number) => {
+  const handleRecruitmentClick = (id: string) => {
     navigate(`/recruitments/${id}`)
   }
 

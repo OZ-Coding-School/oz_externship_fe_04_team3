@@ -3,7 +3,7 @@ import type { Recruitment } from '@/types/recruitment'
 
 interface RecruitmentCardProps {
   recruitment: Recruitment
-  onClick?: (id: number) => void
+  onClick?: (id: string) => void
 }
 
 export default function RecruitmentCard({

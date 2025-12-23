@@ -7,21 +7,25 @@ import {
 import { applyRecruitmentHandler } from './applyRecruitment'
 
 const mapToApiFormat = (recruitment: MockRecruitment) => ({
-  id: recruitment.id,
+  uuid: String(recruitment.id),
   title: recruitment.title,
   content: recruitment.description,
-  max_participants: recruitment.maxParticipants,
-  deadline: recruitment.deadline,
-  views: recruitment.views,
+  thumbnail_img_url: recruitment.thumbnail,
+  expected_headcount: recruitment.maxParticipants,
+  close_at: recruitment.deadline,
   created_at: recruitment.createdAt,
-  author: recruitment.author,
-  thumbnail: recruitment.thumbnail,
-  thumbnailType: recruitment.thumbnailType,
-  tags: recruitment.tags,
+  estimated_fee: String(recruitment.points || 0),
+  views_count: recruitment.views,
+  bookmark_count: recruitment.bookmarks,
   participants: recruitment.participants,
-  bookmarks: recruitment.bookmarks,
-  lecture_list: recruitment.lectureList,
-  attachments: recruitment.attachments,
+  study_type: recruitment.studyType,
+  author: recruitment.author,
+  lectures: recruitment.lectureList,
+  tags: recruitment.tags.map((tag, index) => ({
+    id: index,
+    name: tag,
+  })),
+  files: recruitment.attachments,
 })
 
 export const recruitmentHandlers = [
@@ -59,13 +63,12 @@ export const recruitmentHandlers = [
   }),
 
   http.get('/api/v1/recruitments/:id', ({ params }) => {
-    const numId = Number(params.id)
+    const id = String(params.id)
+    const numId = Number(id)
 
-    if (Number.isNaN(numId)) {
-      return HttpResponse.json({ message: 'Not Found' }, { status: 404 })
-    }
-
-    const recruitment = mockRecruitments.find((r) => r.id === numId)
+    const recruitment = mockRecruitments.find(
+      (r) => r.id === numId || String(r.id) === id
+    )
 
     if (!recruitment) {
       return HttpResponse.json({ message: 'Not Found' }, { status: 404 })
@@ -75,7 +78,12 @@ export const recruitmentHandlers = [
   }),
 
   http.post('/api/v1/recruitments/:id/views', ({ params }) => {
-    const recruitment = mockRecruitments.find((r) => r.id === Number(params.id))
+    const id = String(params.id)
+    const numId = Number(id)
+
+    const recruitment = mockRecruitments.find(
+      (r) => r.id === numId || String(r.id) === id
+    )
 
     if (!recruitment) {
       return HttpResponse.json({ message: 'Not Found' }, { status: 404 })

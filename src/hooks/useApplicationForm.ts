@@ -5,7 +5,7 @@ import {
 } from '@/types/recruitment'
 import { postApplication } from '@/api/recruitments'
 
-export function useApplicationForm(recruitmentId: number) {
+export function useApplicationForm(recruitmentId: string) {
   const [formData, setFormData] = useState<ApplicationFormData>({
     introduction: '',
     motivation: '',

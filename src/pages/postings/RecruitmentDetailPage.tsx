@@ -48,7 +48,7 @@ export default function RecruitmentDetailPage() {
     fetchDetail()
   }, [id])
 
-  if (id && isNaN(Number(id))) {
+  if (!id) {
     return <Navigate to="/recruitments" replace />
   }
 
@@ -114,7 +114,7 @@ export default function RecruitmentDetailPage() {
           title="스터디 지원서 작성"
           content={
             <ApplicationForm
-              recruitmentId={Number(id)}
+              recruitmentId={id}
               onSuccess={handleApplySuccess}
               onCancel={() => setIsApplicationModalOpen(false)}
             />

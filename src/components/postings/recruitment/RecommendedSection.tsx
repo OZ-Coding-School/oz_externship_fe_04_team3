@@ -5,7 +5,7 @@ import RecommendedCard from './RecommendedCard'
 interface Props {
   userName: string
   recommended: Recruitment[]
-  onClick: (id: number) => void
+  onClick: (id: string) => void
 }
 
 export default function RecommendedSection({
@@ -29,8 +29,12 @@ export default function RecommendedSection({
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {recommended.map((item) => (
-          <RecommendedCard key={item.id} recruitment={item} onClick={onClick} />
+        {recommended.map((item, index) => (
+          <RecommendedCard
+            key={item.id ?? `recommended-${index}`}
+            recruitment={item}
+            onClick={onClick}
+          />
         ))}
       </div>
     </div>
