@@ -9,10 +9,16 @@ import { axiosInstance } from '@/api/axios'
 import type { UploadedFile } from '@/components/common/uploader/FileUploader'
 
 const formatCloseAt = (date: Date) => {
+  // 로컬 타임존 기준으로 00:00:00.000 시각을 ISO+오프셋 형태로 생성
   const yyyy = date.getFullYear()
   const mm = String(date.getMonth() + 1).padStart(2, '0')
   const dd = String(date.getDate()).padStart(2, '0')
-  return `${yyyy}-${mm}-${dd} 00:00:00`
+  const offsetMin = -new Date().getTimezoneOffset()
+  const sign = offsetMin >= 0 ? '+' : '-'
+  const pad = (n: number) => String(Math.abs(n)).padStart(2, '0')
+  const hhOffset = pad(Math.floor(Math.abs(offsetMin) / 60))
+  const mmOffset = pad(Math.abs(offsetMin) % 60)
+  return `${yyyy}-${mm}-${dd}T00:00:00.000${sign}${hhOffset}:${mmOffset}`
 }
 
 const RecruitmentPayloadSchema = z.object({
@@ -21,7 +27,7 @@ const RecruitmentPayloadSchema = z.object({
   content: z.string().min(1, '내용을 입력해주세요.'),
   expected_headcount: z.number().int().positive(),
   close_at: z.string().min(1),
-  estimated_fee: z.number().int().optional(),
+  estimated_fee: z.number().int().nonnegative(),
   tags: z.array(z.number().int()).optional(),
   image_urls: z.array(z.string().url()).max(5).optional(),
   files: z
@@ -41,7 +47,7 @@ export function useWriteRecruitmentForm() {
   const [title, setTitle] = useState('')
   const [estimatedFee, setEstimatedFee] = useState('')
   const [imageCount, setImageCount] = useState(0)
-  const [imageKeys, setImageKeys] = useState<string[]>([])
+  const [imageUrls, setImageUrls] = useState<string[]>([])
   const [tagIds, setTagIds] = useState<number[]>([])
   const [studyGroupId, setStudyGroupId] = useState<string>('')
   const [expectedHeadcount, setExpectedHeadcount] = useState<string>('')
@@ -104,7 +110,7 @@ export function useWriteRecruitmentForm() {
       file_ext: ext,
     })
     await uploadToPresigned(presigned.upload_url, file, presigned.headers)
-    setImageKeys((prev) => [...prev, presigned.key])
+    setImageUrls((prev) => [...prev, presigned.file_url])
     return presigned.file_url
   }
 
@@ -118,7 +124,7 @@ export function useWriteRecruitmentForm() {
       file_ext: ext,
     })
     await uploadToPresigned(presigned.upload_url, file, presigned.headers)
-    return presigned.file_url
+    return { previewUrl: presigned.file_url, key: presigned.key }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -129,7 +135,8 @@ export function useWriteRecruitmentForm() {
       !expectedHeadcount ||
       !deadline ||
       !title ||
-      !content
+      !content ||
+      estimatedFee === ''
     ) {
       showToast.warning('입력값 확인', '필수 항목을 모두 입력해주세요.')
       return
@@ -141,12 +148,12 @@ export function useWriteRecruitmentForm() {
       content,
       expected_headcount: Number(expectedHeadcount),
       close_at: formatCloseAt(deadline),
-      estimated_fee: estimatedFee ? Number(estimatedFee) : undefined,
+      estimated_fee: Number(estimatedFee),
       tags: tagIds.length ? tagIds : undefined,
-      image_urls: imageKeys,
+      image_urls: imageUrls,
       files: uploadedFiles.map((f) => ({
-        file_name: f.name,
-        file_url: f.url,
+        file_name: f.name, // 확장자 포함 원본 이름
+        file_url: f.url, // presigned 응답의 file_url(전체 URL)
       })),
     }
 
@@ -177,7 +184,7 @@ export function useWriteRecruitmentForm() {
     expectedHeadcount,
     uploadedFiles,
     tagIds,
-    imageKeys,
+    imageUrls,
   }
 
   const actions = {
