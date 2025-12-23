@@ -35,20 +35,17 @@ export default function NotificationModal({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    totalCount,
+    unreadCount,
+    readCount,
   } = useNotifications(activeFilter)
   const { markAllRead, markRead } = useNotificationActions()
   const listRef = useRef<HTMLDivElement | null>(null)
-  const totalCount = alarms.length
-  const unreadCount = alarms.filter((a) => !a.isRead).length
-  const readCount = totalCount - unreadCount
   const controls = useAnimation()
   const setAccessToken = useAuthStore((s) => s.setAccessToken)
   const clearAuth = useAuthStore((s) => s.clearAuth)
 
   useNotificationStream({
-    onMessage: () => {
-      refetch()
-    },
     onUnauthorized: async () => {
       try {
         const newToken = await getAccessTokenApi()

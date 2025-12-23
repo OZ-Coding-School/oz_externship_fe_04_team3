@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQueryClient, type InfiniteData } from '@tanstack/react-query'
 import { EventSourcePolyfill } from 'event-source-polyfill'
 import { API_BASE_URL } from '@/constant/api'
 import {
@@ -38,7 +38,36 @@ export function useNotificationStream(options?: UseNotificationStreamOptions) {
       try {
         const raw = JSON.parse(event.data) as NotificationApiItem
         const alarm = alarmMapper(raw)
-        queryClient.invalidateQueries({ queryKey: ['notifications'] })
+        // 새 알림을 캐시에 바로 반영해 추가 페칭을 줄입니다.
+        const filters: Array<'all' | 'unread' | 'read'> = [
+          'all',
+          'unread',
+          'read',
+        ]
+        filters.forEach((filterKey) => {
+          if (filterKey === 'unread' && alarm.isRead) return
+          if (filterKey === 'read' && !alarm.isRead) return
+          type CursorPage = {
+            next: string | null
+            previous: string | null
+            results: ReturnType<typeof alarmMapper>[]
+          }
+          queryClient.setQueryData<InfiniteData<CursorPage>>(
+            ['notifications', filterKey],
+            (prev) => {
+              if (!prev) return prev
+              const [firstPage, ...rest] = prev.pages
+              const updatedFirstPage = {
+                ...firstPage,
+                results: [alarm, ...firstPage.results],
+              }
+              return {
+                ...prev,
+                pages: [updatedFirstPage, ...rest],
+              }
+            }
+          )
+        })
         optionsRef.current?.onMessage?.(alarm)
       } catch (e) {
         // eslint-disable-next-line no-console
