@@ -9,7 +9,7 @@ import { categoryData, sortData } from '@/mappers/lectures/lecture'
 import { useAuthStore } from '@/store/userStore'
 import type { LecturesParams } from '@/types/lecture'
 import { ArrowDownWideNarrow, Folder, Search } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 
 export default function Courses() {
@@ -19,6 +19,8 @@ export default function Courses() {
     LecturesParams['category'] | undefined
   >()
   const [sort, setSort] = useState<LecturesParams['sort'] | undefined>()
+
+  //추천강의 불러오기
 
   //무한쿼리 불러오기
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -33,17 +35,15 @@ export default function Courses() {
         }),
     })
   //무한스크롤
-  const { ref, inView } = useInView({
+  const { ref } = useInView({
     threshold: 0,
     rootMargin: '50px',
+    onChange(inView) {
+      if (inView && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage()
+      }
+    },
   })
-
-  //inView 변할 때 마다, 다음페이지 호출
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
-    }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
   /* 유저 상태 */
   const { loginState } = useAuthStore()
@@ -58,9 +58,7 @@ export default function Courses() {
           </p>
         </div>
         {loginState === 'USER' ? (
-          <LectureRecommendSection
-            lectureList={data?.pages.flatMap((page) => page.results) || []}
-          ></LectureRecommendSection>
+          <LectureRecommendSection />
         ) : (
           <GuestRecommendSection
             title="강의를"
@@ -112,12 +110,7 @@ export default function Courses() {
           더 이상 강의가 없습니다.
         </div>
       ) : (
-        <div
-          className="bg-primary-500 flex-center mt-12 h-12 rounded-md text-center text-white"
-          ref={ref}
-        >
-          더많은 강의 보기
-        </div>
+        <div ref={ref}></div>
       )}
     </div>
   )
