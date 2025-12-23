@@ -31,6 +31,8 @@ export type MockRecruitment = {
   views: number
   bookmarks: number
   deadline: string
+  points?: number
+  studyType?: string
 }
 
 export const CATEGORY_MAP: Record<string, string[]> = {
