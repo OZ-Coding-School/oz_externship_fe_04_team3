@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import { getStudyGroupDetail, getStudyGroups } from '@/api/studyGroup'
-import { getPresignedUrl } from '@/api/uploads'
+import { getPresignedUrl, uploadToPresigned } from '@/api/uploads'
 import { showToast } from '@/components/common/toast/Toast'
 import { axiosInstance } from '@/api/axios'
 import type { UploadedFile } from '@/components/common/uploader/FileUploader'
@@ -41,7 +41,7 @@ export function useWriteRecruitmentForm() {
   const [title, setTitle] = useState('')
   const [estimatedFee, setEstimatedFee] = useState('')
   const [imageCount, setImageCount] = useState(0)
-  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [imageKeys, setImageKeys] = useState<string[]>([])
   const [tagIds, setTagIds] = useState<number[]>([])
   const [studyGroupId, setStudyGroupId] = useState<string>('')
   const [expectedHeadcount, setExpectedHeadcount] = useState<string>('')
@@ -95,24 +95,26 @@ export function useWriteRecruitmentForm() {
   }
 
   const onUploadImage = async (file: File) => {
-    const ext = file.name.split('.').pop() ?? 'png'
+    const ext = (file.name.split('.').pop() ?? 'png').toLowerCase()
+    const contentType = file.type || 'application/octet-stream'
     const presigned = await getPresignedUrl({
       type: 'RECRUITMENT_IMAGE',
-      content_type: file.type,
-      file_name: file.name.replace(`.${ext}`, ''),
+      content_type: contentType,
+      file_name: file.name, // 확장자 포함 원본 이름 그대로 전송
       file_ext: ext,
     })
-    // TODO: presigned.upload_url로 실제 이미지를 PUT 전송한 뒤 성공 시 file_url을 사용하도록 연동 필요
-    setImageUrls((prev) => [...prev, presigned.file_url])
+    await uploadToPresigned(presigned.upload_url, file, presigned.headers)
+    setImageKeys((prev) => [...prev, presigned.key])
     return presigned.file_url
   }
 
   const onUploadFile = async (file: File) => {
-    const ext = file.name.split('.').pop() ?? 'dat'
+    const ext = (file.name.split('.').pop() ?? 'dat').toLowerCase()
+    const contentType = file.type || 'application/octet-stream'
     const presigned = await getPresignedUrl({
       type: 'RECRUITMENT_ATTACHMENT',
-      content_type: file.type || 'application/octet-stream',
-      file_name: file.name.replace(`.${ext}`, ''),
+      content_type: contentType,
+      file_name: file.name, // 확장자 포함 원본 이름 그대로 전송
       file_ext: ext,
     })
     // TODO: presigned.upload_url로 실제 파일을 PUT 업로드하도록 백엔드 연동 필요
@@ -141,7 +143,7 @@ export function useWriteRecruitmentForm() {
       close_at: formatCloseAt(deadline),
       estimated_fee: estimatedFee ? Number(estimatedFee) : undefined,
       tags: tagIds.length ? tagIds : undefined,
-      image_urls: imageUrls,
+      image_urls: imageKeys,
       files: uploadedFiles.map((f) => ({
         file_name: f.name,
         file_url: f.url,
@@ -175,6 +177,7 @@ export function useWriteRecruitmentForm() {
     expectedHeadcount,
     uploadedFiles,
     tagIds,
+    imageKeys,
   }
 
   const actions = {
