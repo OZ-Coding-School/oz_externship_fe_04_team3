@@ -94,7 +94,7 @@ export default function NotificationModal({
           const targetGroupId = groupMatch[1].trim()
           const url = new URL(window.location.href)
           url.searchParams.set('group_id', targetGroupId)
-          window.location.href = url.toString()
+          window.history.replaceState({}, '', url.toString())
           return
         }
 
