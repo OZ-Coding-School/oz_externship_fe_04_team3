@@ -9,6 +9,7 @@ import { getAccessTokenApi } from '@/api/userInformation'
 import { useNotificationStream } from '@/hooks/useNotificationStream'
 import type { AlarmItem } from '@/types/alarm'
 import { useAuthStore } from '@/store/userStore'
+import { API_BASE_URL } from '@/constant/api'
 
 import NotificationCard from './NotificationCard'
 
@@ -84,14 +85,21 @@ export default function NotificationModal({
   }
 
   const handleMarkOne = (alarm: AlarmItem) => {
-    markRead(alarm.id).finally(() => {
-      refetch()
-      if (alarm.backUrl) {
-        window.location.href = alarm.backUrl
-      } else {
-        window.location.href = '/'
-      }
-    })
+    markRead(alarm.id)
+      .then(() => {
+        if (!alarm.backUrl) return
+        const backendHost = new URL(API_BASE_URL).host
+        const targetHost = new URL(alarm.backUrl).host
+        const shouldNewTab = backendHost !== targetHost
+        if (shouldNewTab) {
+          window.open(alarm.backUrl, '_blank', 'noopener,noreferrer')
+        } else {
+          window.location.href = alarm.backUrl
+        }
+      })
+      .catch(() => {
+        // 읽기 실패 시에는 이동하지 않음
+      })
   }
 
   const renderList = () => {
