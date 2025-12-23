@@ -7,12 +7,13 @@ import {
 } from '@/mappers/notification/mapper'
 import type { AlarmItem } from '@/types/alarm'
 import { useCursorInfiniteQuery } from './useCursorInfiniteQuery'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 type FilterKey = 'all' | 'unread' | 'read'
 
 // 커서 기반 알림 조회 훅
 export const useNotifications = (filter: FilterKey) => {
+  const queryClient = useQueryClient()
   // 총합/미읽음 카운트용 쿼리
   const totalCountQuery = useQuery<number>({
     queryKey: ['notifications-total-count'],
@@ -98,9 +99,25 @@ export const useNotifications = (filter: FilterKey) => {
 }
 
 export const useNotificationActions = () => {
-  const markAllRead = () => axiosInstance.post('/v1/notifications/read-all')
-  const markRead = (id: string | number) =>
-    axiosInstance.post(`/v1/notifications/${id}/read`)
+  const queryClient = useQueryClient()
+
+  const invalidateNotificationCaches = () => {
+    queryClient.invalidateQueries({ queryKey: ['notifications-total-count'] })
+    queryClient.invalidateQueries({ queryKey: ['notifications-unread-count'] })
+    queryClient.invalidateQueries({ queryKey: ['notifications'] })
+  }
+
+  const markAllRead = async () => {
+    const res = await axiosInstance.post('/v1/notifications/read-all')
+    invalidateNotificationCaches()
+    return res
+  }
+
+  const markRead = async (id: string | number) => {
+    const res = await axiosInstance.post(`/v1/notifications/${id}/read`)
+    invalidateNotificationCaches()
+    return res
+  }
 
   return { markAllRead, markRead }
 }
