@@ -56,6 +56,11 @@ export function useNotificationStream(options?: UseNotificationStreamOptions) {
             ['notifications', filterKey],
             (prev) => {
               if (!prev) return prev
+              // 중복 알림은 추가하지 않음
+              const exists = prev.pages.some((p) =>
+                p.results.some((item) => item.id === alarm.id)
+              )
+              if (exists) return prev
               const [firstPage, ...rest] = prev.pages
               const updatedFirstPage = {
                 ...firstPage,
@@ -67,6 +72,13 @@ export function useNotificationStream(options?: UseNotificationStreamOptions) {
               }
             }
           )
+        })
+        // 카운트 쿼리도 무효화하여 상단 카운트 반영
+        queryClient.invalidateQueries({
+          queryKey: ['notifications-total-count'],
+        })
+        queryClient.invalidateQueries({
+          queryKey: ['notifications-unread-count'],
         })
         optionsRef.current?.onMessage?.(alarm)
       } catch (e) {
