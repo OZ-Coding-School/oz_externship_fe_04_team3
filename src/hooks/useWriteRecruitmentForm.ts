@@ -117,7 +117,7 @@ export function useWriteRecruitmentForm() {
       file_name: file.name, // 확장자 포함 원본 이름 그대로 전송
       file_ext: ext,
     })
-    // TODO: presigned.upload_url로 실제 파일을 PUT 업로드하도록 백엔드 연동 필요
+    await uploadToPresigned(presigned.upload_url, file, presigned.headers)
     return presigned.file_url
   }
 
