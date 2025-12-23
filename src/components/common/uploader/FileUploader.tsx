@@ -30,12 +30,6 @@ export function FileUploader({
 }: FileUploaderProps) {
   const remain = Math.max(0, maxCount - files.length)
 
-  const formatSize = (bytes: number) => {
-    if (bytes >= 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(1)} MB`
-    if (bytes >= 1024) return `${(bytes / 1024).toFixed(1)} KB`
-    return `${bytes} B`
-  }
-
   const handleDrop = async (accepted: File[], rejected: FileRejection[]) => {
     rejected.forEach((rej) => {
       const reason =
@@ -192,7 +186,7 @@ export function FileUploader({
                 <X size={14} />
               </Button>
               <div className="mt-1 px-1 text-[11px] text-gray-500">
-                {file.type || 'unknown'} · {formatSize(file.size)}
+                {file.name}
               </div>
             </div>
           ))}

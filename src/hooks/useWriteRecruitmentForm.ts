@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
@@ -40,7 +40,10 @@ const RecruitmentPayloadSchema = z.object({
     .optional(),
 })
 
-export function useWriteRecruitmentForm() {
+export function useWriteRecruitmentForm(
+  recruitmentId?: string,
+  isEditing = false
+) {
   const navigate = useNavigate()
   const [deadline, setDeadline] = useState<Date | undefined>()
   const [content, setContent] = useState('')
@@ -52,6 +55,8 @@ export function useWriteRecruitmentForm() {
   const [studyGroupId, setStudyGroupId] = useState<string>('')
   const [expectedHeadcount, setExpectedHeadcount] = useState<string>('')
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
+  const [totalLecturePrice, setTotalLecturePrice] = useState(0)
+  const [originalFileUrls, setOriginalFileUrls] = useState<string[]>([])
 
   const { data: studyGroups = [] } = useQuery({
     queryKey: ['study-groups'],
@@ -76,6 +81,29 @@ export function useWriteRecruitmentForm() {
   const remainingHeadcount = groupDetail
     ? Math.max(0, groupDetail.max_headcount - groupDetail.current_headcount)
     : 0
+
+  // 그룹 강의 비용 합계 계산
+  useEffect(() => {
+    if (!groupDetail?.lectures?.length) {
+      setTotalLecturePrice(0)
+      return
+    }
+    type LecturePrice = {
+      discounted_price?: number
+      discount_price?: number
+      original_price?: number
+    }
+    const sum = groupDetail.lectures.reduce((acc, lec) => {
+      const candidate = lec as LecturePrice
+      const price =
+        candidate.discounted_price ??
+        candidate.discount_price ??
+        candidate.original_price ??
+        0
+      return acc + price
+    }, 0)
+    setTotalLecturePrice(sum)
+  }, [groupDetail])
 
   const headcountOptions = useMemo(() => {
     if (remainingHeadcount <= 0) return []
@@ -130,13 +158,20 @@ export function useWriteRecruitmentForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    let estimatedFeeValue = estimatedFee
+    if (estimatedFeeValue === '') {
+      const fallback = totalLecturePrice > 0 ? totalLecturePrice : 0
+      estimatedFeeValue = String(fallback)
+      setEstimatedFee(estimatedFeeValue)
+    }
+
     if (
       !studyGroupId ||
       !expectedHeadcount ||
       !deadline ||
       !title ||
       !content ||
-      estimatedFee === ''
+      estimatedFeeValue === ''
     ) {
       showToast.warning('입력값 확인', '필수 항목을 모두 입력해주세요.')
       return
@@ -148,13 +183,23 @@ export function useWriteRecruitmentForm() {
       content,
       expected_headcount: Number(expectedHeadcount),
       close_at: formatCloseAt(deadline),
-      estimated_fee: Number(estimatedFee),
+      estimated_fee: Number(estimatedFeeValue),
       tags: tagIds.length ? tagIds : undefined,
       image_urls: imageUrls,
-      files: uploadedFiles.map((f) => ({
-        file_name: f.name, // 확장자 포함 원본 이름
-        file_url: f.url, // presigned 응답의 file_url(전체 URL)
-      })),
+      // TODO: 백엔드와 첨부파일 수정 정책 협의 필요
+      //  - 덮어쓰기 방식인지(보낸 목록으로 교체), 삭제 API가 별도로 있는지 확인 후 로직 보완
+      //  - 현재는 기존 파일은 재전송하지 않고, 새로 추가된 파일만 전송
+      files: isEditing
+        ? uploadedFiles
+            .filter((f) => !originalFileUrls.includes(f.url)) // 기존 파일은 재전송하지 않음
+            .map((f) => ({
+              file_name: f.name,
+              file_url: f.url,
+            }))
+        : uploadedFiles.map((f) => ({
+            file_name: f.name, // 확장자 포함 원본 이름
+            file_url: f.url, // presigned 응답의 file_url(전체 URL)
+          })),
     }
 
     const parsed = RecruitmentPayloadSchema.safeParse(payload)
@@ -166,8 +211,16 @@ export function useWriteRecruitmentForm() {
     }
 
     try {
-      await axiosInstance.post('/v1/recruitments', parsed.data)
-      showToast.success('공고 등록', '공고가 등록되었습니다.')
+      if (isEditing && recruitmentId) {
+        await axiosInstance.patch(
+          `/v1/recruitments/${recruitmentId}`,
+          parsed.data
+        )
+        showToast.success('공고 수정', '공고가 수정되었습니다.')
+      } else {
+        await axiosInstance.post('/v1/recruitments', parsed.data)
+        showToast.success('공고 등록', '공고가 등록되었습니다.')
+      }
       navigate('/manage')
     } catch (err) {
       showToast.error('공고 등록 실패', (err as Error)?.message ?? '')
@@ -197,6 +250,8 @@ export function useWriteRecruitmentForm() {
     setExpectedHeadcount,
     setUploadedFiles,
     setTagIds,
+    setImageUrls,
+    setOriginalFileUrls,
     onUploadImage,
     onUploadFile,
     handleSubmit,
