@@ -13,7 +13,6 @@ type FilterKey = 'all' | 'unread' | 'read'
 
 // 커서 기반 알림 조회 훅
 export const useNotifications = (filter: FilterKey) => {
-  const queryClient = useQueryClient()
   // 총합/미읽음 카운트용 쿼리
   const totalCountQuery = useQuery<number>({
     queryKey: ['notifications-total-count'],
