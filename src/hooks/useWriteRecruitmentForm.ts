@@ -56,7 +56,6 @@ export function useWriteRecruitmentForm(
   const [expectedHeadcount, setExpectedHeadcount] = useState<string>('')
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
   const [totalLecturePrice, setTotalLecturePrice] = useState(0)
-  const [originalFileUrls, setOriginalFileUrls] = useState<string[]>([])
 
   const { data: studyGroups = [] } = useQuery({
     queryKey: ['study-groups'],
@@ -186,20 +185,11 @@ export function useWriteRecruitmentForm(
       estimated_fee: Number(estimatedFeeValue),
       tags: tagIds.length ? tagIds : undefined,
       image_urls: imageUrls,
-      // TODO: 백엔드와 첨부파일 수정 정책 협의 필요
-      //  - 덮어쓰기 방식인지(보낸 목록으로 교체), 삭제 API가 별도로 있는지 확인 후 로직 보완
-      //  - 현재는 기존 파일은 재전송하지 않고, 새로 추가된 파일만 전송
-      files: isEditing
-        ? uploadedFiles
-            .filter((f) => !originalFileUrls.includes(f.url)) // 기존 파일은 재전송하지 않음
-            .map((f) => ({
-              file_name: f.name,
-              file_url: f.url,
-            }))
-        : uploadedFiles.map((f) => ({
-            file_name: f.name, // 확장자 포함 원본 이름
-            file_url: f.url, // presigned 응답의 file_url(전체 URL)
-          })),
+      // TODO: 첨부파일 수정 정책(덮어쓰기 vs 개별 삭제)이 확정되면 로직 보완 필요
+      files: uploadedFiles.map((f) => ({
+        file_name: f.name, // 확장자 포함 원본 이름
+        file_url: f.url, // presigned 응답의 file_url(전체 URL)
+      })),
     }
 
     const parsed = RecruitmentPayloadSchema.safeParse(payload)
@@ -251,7 +241,6 @@ export function useWriteRecruitmentForm(
     setUploadedFiles,
     setTagIds,
     setImageUrls,
-    setOriginalFileUrls,
     onUploadImage,
     onUploadFile,
     handleSubmit,

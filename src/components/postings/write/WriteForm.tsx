@@ -370,6 +370,9 @@ export default function WriteForm() {
       return res
     },
     enabled: !!recruitmentId,
+    staleTime: 0, // 페이지 진입 시마다 최신 정보 조회
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 
   const formattedLectures = lectureDetails.map((lec) => ({
@@ -415,10 +418,15 @@ export default function WriteForm() {
     }
     if (detail.files?.length) {
       const presetFiles = detail.files.map((f, idx) => {
-        const lower = f.file_name.toLowerCase()
+        const lowerName = f.file_name.toLowerCase()
+        const lowerUrl = f.file_url.toLowerCase()
+        const isImage =
+          /\.(png|jpe?g|webp)$/.test(lowerName) ||
+          /\.(png|jpe?g|webp)$/.test(lowerUrl)
+        const isPdf = lowerName.endsWith('.pdf') || lowerUrl.endsWith('.pdf')
         let type = 'application/octet-stream'
-        if (lower.match(/\.(png|jpe?g|webp)$/)) type = 'image/'
-        else if (lower.endsWith('.pdf')) type = 'application/pdf'
+        if (isImage) type = 'image/'
+        else if (isPdf) type = 'application/pdf'
         return {
           id: `${f.file_name}-${idx}`,
           name: f.file_name,
@@ -428,7 +436,6 @@ export default function WriteForm() {
         }
       })
       actions.setUploadedFiles(presetFiles)
-      actions.setOriginalFileUrls(detail.files.map((f) => f.file_url))
     }
     if (detail.image_urls) {
       const urls = Array.isArray(detail.image_urls)
