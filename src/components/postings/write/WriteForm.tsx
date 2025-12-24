@@ -17,8 +17,12 @@ import {
 } from 'react'
 import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { getRecruitmentDetail } from '@/api/recruitments'
+import { getMyRecruitmentDetail } from '@/api/myRecruitment'
 import { getLecturesApi } from '@/api/lecture'
+import {
+  mapMyRecruitmentDetailToWrite,
+  type WriteRecruitmentDetail,
+} from '@/mappers/recruitment/myRecruitmentMapper'
 
 type WriteFormHook = ReturnType<typeof useWriteRecruitmentForm>
 
@@ -346,34 +350,18 @@ export default function WriteForm() {
     enabled: lecturesFromGroup.length > 0,
   })
 
-  type WriteRecruitmentDetail = {
-    title: string
-    content: string
-    estimated_fee?: number
-    expected_headcount: number
-    close_at: string
-    tags: { id: number; name: string }[]
-    image_urls?: string | string[]
-    study_group?: number
-    files?: { file_name: string; file_url: string }[]
-  }
-
   const { data: detail } = useQuery<WriteRecruitmentDetail | undefined>({
     queryKey: ['my-recruitment-detail', recruitmentId],
     queryFn: async () => {
       if (!recruitmentId) return undefined
-      const res = (await getRecruitmentDetail(
-        recruitmentId
-      )) as unknown as WriteRecruitmentDetail
-      // 디버깅용: 상세 데이터 확인
-      // eslint-disable-next-line no-console
-      console.log('Recruitment detail', res)
-      return res
+      const res = await getMyRecruitmentDetail(recruitmentId)
+      return mapMyRecruitmentDetailToWrite(res)
     },
     enabled: !!recruitmentId,
     staleTime: 0, // 페이지 진입 시마다 최신 정보 조회
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+    refetchOnMount: 'always',
   })
 
   const formattedLectures = lectureDetails.map((lec) => ({

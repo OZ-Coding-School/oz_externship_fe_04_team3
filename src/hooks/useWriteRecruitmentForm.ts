@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { z } from 'zod'
 import { getStudyGroupDetail, getStudyGroups } from '@/api/studyGroup'
 import { getPresignedUrl, uploadToPresigned } from '@/api/uploads'
@@ -45,6 +45,7 @@ export function useWriteRecruitmentForm(
   isEditing = false
 ) {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [deadline, setDeadline] = useState<Date | undefined>()
   const [content, setContent] = useState('')
   const [title, setTitle] = useState('')
@@ -206,6 +207,9 @@ export function useWriteRecruitmentForm(
           `/v1/recruitments/${recruitmentId}`,
           parsed.data
         )
+        queryClient.invalidateQueries({
+          queryKey: ['my-recruitment-detail', recruitmentId],
+        })
         showToast.success('공고 수정', '공고가 수정되었습니다.')
       } else {
         await axiosInstance.post('/v1/recruitments', parsed.data)
