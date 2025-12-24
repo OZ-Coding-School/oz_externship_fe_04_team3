@@ -89,7 +89,7 @@ export default function NotificationModal({
       .then(() => {
         if (!alarm.backUrl) return
         // 채팅방 이동: backUrl이 "group_id:{study_group_id}" 형태일 때 현재 페이지에 쿼리 파라미터로 붙여 이동
-        const groupMatch = alarm.backUrl.match(/^group_id\s*:\s*(.+)$/)
+        const groupMatch = alarm.backUrl.match(/^study_group_id\s*:\s*(.+)$/)
         if (groupMatch?.[1]) {
           const targetGroupId = groupMatch[1].trim()
           const url = new URL(window.location.href)
