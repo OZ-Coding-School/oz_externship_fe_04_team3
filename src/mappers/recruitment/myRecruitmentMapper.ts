@@ -18,10 +18,10 @@ export const mapMyRecruitmentDetailToWrite = (
   title: res.title,
   content: res.content ?? '',
   estimated_fee: res.estimated_fee,
-  expected_headcount: res.expected_headcount ?? 0,
+  expected_headcount: res.expected_headcount,
   close_at: res.close_at ?? '',
   tags: res.tags ?? [],
   image_urls: res.image_urls,
-  study_group: res.study_group,
+  study_group: res.study_group ?? res.study_group_id,
   files: res.files,
 })

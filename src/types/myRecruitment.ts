@@ -56,7 +56,7 @@ export type MyRecruitmentDetailResponse = {
   close_at?: string
   created_at?: string
   updated_at?: string
-  study_group?: number
+  study_group_id?: number
   lectures?: Array<{
     id: number
     title: string

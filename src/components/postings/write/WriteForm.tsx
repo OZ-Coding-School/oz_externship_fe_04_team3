@@ -387,10 +387,17 @@ export default function WriteForm() {
     if (!state.studyGroupId) return
     if (prevGroupIdRef.current !== state.studyGroupId) {
       const fallback = totalLecturePrice > 0 ? totalLecturePrice : 0
-      actions.setEstimatedFee(String(fallback))
+      setEstimatedFee(String(fallback))
       prevGroupIdRef.current = state.studyGroupId
     }
-  }, [state.studyGroupId, totalLecturePrice, actions])
+  }, [state.studyGroupId, totalLecturePrice, setEstimatedFee])
+
+  // 그룹/옵션이 준비되면 상세의 예상 모집 인원을 select에 반영
+  // 상세 응답으로 받은 스터디 그룹 id가 있는데 아직 설정되지 않았다면 반영
+  useEffect(() => {
+    if (!detail?.study_group || state.studyGroupId) return
+    actions.setStudyGroupId(String(detail.study_group))
+  }, [detail?.study_group, state.studyGroupId, actions])
 
   useEffect(() => {
     if (!detail || initialized) return
