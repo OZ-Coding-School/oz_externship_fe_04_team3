@@ -6,7 +6,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter } from 'react-router'
 
 async function enableMocking() {
-  if (process.env.NODE_ENV !== 'development') {
+  if (
+    process.env.NODE_ENV !== 'development' ||
+    import.meta.env.VITE_USE_MOCK !== 'true'
+  ) {
     return
   }
 
