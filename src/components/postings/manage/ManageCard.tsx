@@ -14,6 +14,8 @@ import { showToast } from '@/components/common/toast/Toast'
 import ManageApplicantsModal from './ManageApplicantsModal'
 import { useApplicants } from '@/hooks/quries/useApplicants'
 import { useApplicantDetail } from '@/hooks/quries/useApplicantDetail'
+import { useMutation } from '@tanstack/react-query'
+import { approveApplication, rejectApplication } from '@/api/applications'
 
 type ManageCardProps = {
   posting: ManageRecruitment
@@ -86,6 +88,29 @@ export default function ManageCard({ posting, onDeleted }: ManageCardProps) {
     applicantsQuery.data?.pages.flatMap((page) => page.results) ?? []
   const totalApplicants = applicantList.length
   const detailQuery = useApplicantDetail(selectedApplicantId ?? undefined)
+  const approveMutation = useMutation({
+    mutationFn: (id: number) => approveApplication(id),
+    onSuccess: () => {
+      showToast.success('승인 완료', '지원이 승인되었습니다.')
+      applicantsQuery.refetch()
+      detailQuery.refetch()
+    },
+    onError: (err) => {
+      showToast.error('승인 실패', (err as Error)?.message ?? '')
+    },
+  })
+
+  const rejectMutation = useMutation({
+    mutationFn: (id: number) => rejectApplication(id),
+    onSuccess: () => {
+      showToast.success('거절 완료', '지원이 거절되었습니다.')
+      applicantsQuery.refetch()
+      detailQuery.refetch()
+    },
+    onError: (err) => {
+      showToast.error('거절 실패', (err as Error)?.message ?? '')
+    },
+  })
 
   const handleLoadMore = async () => {
     if (applicantsQuery.hasNextPage && !applicantsQuery.isFetchingNextPage) {
@@ -93,19 +118,7 @@ export default function ManageCard({ posting, onDeleted }: ManageCardProps) {
     }
   }
 
-  const fallbackApplicant =
-    applicantList.find((a) => a.id === selectedApplicantId) ?? null
-  const selectedApplicant: ApplicantDetail | null =
-    detailQuery.data ??
-    (fallbackApplicant
-      ? {
-          ...fallbackApplicant,
-          selfIntro: '자기소개 정보가 준비 중입니다.',
-          motivation: '지원 동기 정보가 준비 중입니다.',
-          goal: '스터디 목표 정보가 준비 중입니다.',
-          experienceDetail: '스터디 경험 상세가 준비 중입니다.',
-        }
-      : null)
+  const selectedApplicant: ApplicantDetail | null = detailQuery.data ?? null
 
   const handleDelete = async () => {
     setIsDeleting(true)
@@ -233,6 +246,17 @@ export default function ManageCard({ posting, onDeleted }: ManageCardProps) {
         }
         applicant={selectedApplicant}
         isLoading={detailQuery.isLoading}
+        onApprove={
+          selectedApplicantId
+            ? () => approveMutation.mutate(Number(selectedApplicantId))
+            : undefined
+        }
+        onReject={
+          selectedApplicantId
+            ? () => rejectMutation.mutate(Number(selectedApplicantId))
+            : undefined
+        }
+        isActionLoading={approveMutation.isPending || rejectMutation.isPending}
       />
       <ConfirmDeleteModal
         open={isDeleteModalOpen}

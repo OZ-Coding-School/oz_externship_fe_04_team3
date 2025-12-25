@@ -19,6 +19,7 @@ type ApplicantDetailModalProps = {
   onApprove?: (id: string) => void
   onReject?: (id: string) => void
   isLoading?: boolean
+  isActionLoading?: boolean
 }
 
 export default function ApplicantDetailModal({
@@ -28,6 +29,7 @@ export default function ApplicantDetailModal({
   onApprove,
   onReject,
   isLoading,
+  isActionLoading,
 }: ApplicantDetailModalProps) {
   if (!applicant && !isLoading) return null
 
@@ -136,17 +138,19 @@ export default function ApplicantDetailModal({
               variant="danger"
               className="w-[84px]"
               onClick={() => applicant && onReject?.(applicant.id)}
+              disabled={isActionLoading}
             >
               {getTypeIcon('rejected')}
-              거절
+              {isActionLoading ? '처리 중' : '거절'}
             </Button>
             <Button
               variant="success"
               className="w-[84px]"
               onClick={() => applicant && onApprove?.(applicant.id)}
+              disabled={isActionLoading}
             >
               {getTypeIcon('approved')}
-              승인
+              {isActionLoading ? '처리 중' : '승인'}
             </Button>
           </DialogFooter>
         )}
