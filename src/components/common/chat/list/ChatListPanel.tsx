@@ -1,3 +1,4 @@
+import type { ChatRoomListItem } from '@/types/chat'
 import { ChatHeader } from '../common'
 import { ChatList } from './ChatList'
 
