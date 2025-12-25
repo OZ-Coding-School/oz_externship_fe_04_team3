@@ -1,5 +1,5 @@
 import { Bookmark, Calendar, Eye, Pencil, Trash2, Users } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { Button, Modal } from '@/components/common'
@@ -20,6 +20,8 @@ import { approveApplication, rejectApplication } from '@/api/applications'
 type ManageCardProps = {
   posting: ManageRecruitment
   onDeleted?: () => void
+  autoOpen?: boolean
+  onAutoOpenConsumed?: () => void
 }
 
 type DeleteModalProps = {
@@ -74,7 +76,12 @@ function ConfirmDeleteModal({
   )
 }
 
-export default function ManageCard({ posting, onDeleted }: ManageCardProps) {
+export default function ManageCard({
+  posting,
+  onDeleted,
+  autoOpen = false,
+  onAutoOpenConsumed,
+}: ManageCardProps) {
   const [imgLoaded, setImgLoaded] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedApplicantId, setSelectedApplicantId] = useState<string | null>(
@@ -117,6 +124,12 @@ export default function ManageCard({ posting, onDeleted }: ManageCardProps) {
       await applicantsQuery.fetchNextPage()
     }
   }
+
+  useEffect(() => {
+    if (!autoOpen || isModalOpen) return
+    setIsModalOpen(true)
+    onAutoOpenConsumed?.()
+  }, [autoOpen, isModalOpen, onAutoOpenConsumed])
 
   const selectedApplicant: ApplicantDetail | null = detailQuery.data ?? null
 
