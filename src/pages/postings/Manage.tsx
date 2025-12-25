@@ -94,11 +94,7 @@ export default function Manage() {
             onAutoOpenConsumed={() => setAutoOpenId(null)}
           />
           {isFetchingNextPage && <ManageCardSkeleton count={6} />}
-          {!hasNextPage ? (
-            <div className="flex-center mt-12 h-12 rounded-md bg-gray-400 text-center text-white">
-              더 이상 공고가 없습니다.
-            </div>
-          ) : (
+          {!hasNextPage ? null : (
             <div
               className="bg-primary-500 flex-center mt-12 h-12 cursor-pointer rounded-md text-center text-white"
               ref={!isFetchingNextPage ? ref : undefined}
