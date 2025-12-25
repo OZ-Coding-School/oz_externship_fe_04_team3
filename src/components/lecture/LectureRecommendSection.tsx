@@ -1,23 +1,20 @@
-import { getUserRecommendsLecturesApi } from '@/api/lecture'
 import { useAuthStore } from '@/store/userStore'
-import { useQuery } from '@tanstack/react-query'
+import type { Lecture } from '@/types/lecture'
 import { Badge } from '../common/badge'
 import LectureCard from './LectureCard'
 import LectureCardSkeleton from './LectureCardSkeleton'
 
-export default function LectureRecommendSection() {
+type recommendLectureProps = {
+  data: Lecture[]
+  isLoading: boolean
+}
+export default function LectureRecommendSection(
+  recommendLecture: recommendLectureProps
+) {
   /* 추천 강의 불러오기 */
-  const { user, loginState } = useAuthStore()
-  const { isLoading, data } = useQuery({
-    queryKey: ['lecture-recommend'],
-    queryFn: async () => {
-      console.time('API 호출 시간')
-      const data = await getUserRecommendsLecturesApi()
-      console.timeEnd('API 호출 시간')
-      return data
-    },
-    enabled: loginState === 'USER',
-  })
+  const { data, isLoading } = recommendLecture
+  const { user } = useAuthStore()
+
   return (
     <div className="border-primary-200 rounded-xl border bg-linear-to-r from-[#FFF7ED] to-[#FEFCE8] px-4 py-8 md:p-8">
       <div>
