@@ -5,6 +5,12 @@ import './index.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter } from 'react-router'
 
+declare global {
+  interface Window {
+    __TANSTACK_QUERY_CLIENT__: import('@tanstack/query-core').QueryClient
+  }
+}
+
 async function enableMocking() {
   if (
     process.env.NODE_ENV !== 'development' ||
@@ -19,7 +25,19 @@ async function enableMocking() {
     onUnhandledRequest: 'bypass',
   })
 }
-const queryClient = new QueryClient()
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+})
+
+if (process.env.NODE_ENV === 'development') {
+  window.__TANSTACK_QUERY_CLIENT__ = queryClient
+}
+
 enableMocking().then(() => {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>

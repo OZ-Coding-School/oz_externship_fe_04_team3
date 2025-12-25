@@ -1,9 +1,15 @@
-import { useInfiniteQuery, type QueryKey } from '@tanstack/react-query'
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  type QueryKey,
+} from '@tanstack/react-query'
 
 type CursorPage<T> = {
   next: string | null
   previous: string | null
   results: T[]
+  total?: number
+  unread_total?: number
 }
 
 type UseCursorInfiniteQueryParams<T> = {
@@ -24,5 +30,6 @@ export function useCursorInfiniteQuery<T>({
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => lastPage.next ?? undefined,
     enabled,
+    placeholderData: keepPreviousData,
   })
 }

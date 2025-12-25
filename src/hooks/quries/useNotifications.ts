@@ -7,40 +7,13 @@ import {
 } from '@/mappers/notification/mapper'
 import type { AlarmItem } from '@/types/alarm'
 import { useCursorInfiniteQuery } from './useCursorInfiniteQuery'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 
 type FilterKey = 'all' | 'unread' | 'read'
 
 // 커서 기반 알림 조회 훅
 export const useNotifications = (filter: FilterKey) => {
-  // 총합/미읽음 카운트용 쿼리
-  const totalCountQuery = useQuery<number>({
-    queryKey: ['notifications-total-count'],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<NotificationListResponse>(
-        '/v1/notifications',
-        { params: { page_size: 1 } }
-      )
-      return data.total_count ?? data.results.length
-    },
-    staleTime: 1000 * 60,
-  })
-
-  const unreadCountQuery = useQuery<number>({
-    queryKey: ['notifications-unread-count'],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<NotificationListResponse>(
-        '/v1/notifications',
-        { params: { page_size: 1, is_read: false } }
-      )
-      // 백엔드가 unread_count를 내려주면 활용, 없으면 total_count 대체
-      const unread =
-        data.unread_count ?? data.total_count ?? data.results.length
-      return unread
-    },
-    staleTime: 1000 * 60,
-  })
-
   const query = useCursorInfiniteQuery<AlarmItem>({
     queryKey: ['notifications', filter],
     queryFn: async (cursorUrl) => {
@@ -59,10 +32,19 @@ export const useNotifications = (filter: FilterKey) => {
                 },
               }
             )
+        const mapped = data.results.map((item) =>
+          alarmMapper({
+            ...item,
+            // 서버가 is_read를 잘못 내려줄 때를 대비해 필터에 따라 보정
+            is_read: filter === 'unread' ? false : item.is_read,
+          })
+        )
         return {
           next: data.next,
           previous: data.previous,
-          results: data.results.map(alarmMapper),
+          total: data.total,
+          unread_total: (data as any).unread_total,
+          results: mapped,
         }
       } catch (err) {
         if (isAxiosError(err)) {
@@ -79,8 +61,21 @@ export const useNotifications = (filter: FilterKey) => {
   const alarms = query.data?.pages.flatMap((p) => p.results ?? []) ?? []
   const errorMessage = query.error ? query.error.message : null
 
-  const totalCount = totalCountQuery.data ?? 0
-  const unreadCount = unreadCountQuery.data ?? 0
+  // 카운트 깜빡임 방지를 위해 상태에 보관 후 값이 달라질 때만 업데이트
+  const [counts, setCounts] = useState({ total: 0, unread: 0 })
+  useEffect(() => {
+    const meta = query.data?.pages?.[0]
+    if (!meta) return
+    const nextTotal = meta.total ?? alarms.length
+    const nextUnread = meta.unread_total ?? counts.unread
+    if (nextTotal !== counts.total || nextUnread !== counts.unread) {
+      setCounts({ total: nextTotal, unread: nextUnread })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query.data?.pages, alarms.length])
+
+  const totalCount = counts.total
+  const unreadCount = counts.unread
   const readCount = Math.max(0, totalCount - unreadCount)
 
   return {
@@ -101,8 +96,6 @@ export const useNotificationActions = () => {
   const queryClient = useQueryClient()
 
   const invalidateNotificationCaches = () => {
-    queryClient.invalidateQueries({ queryKey: ['notifications-total-count'] })
-    queryClient.invalidateQueries({ queryKey: ['notifications-unread-count'] })
     queryClient.invalidateQueries({ queryKey: ['notifications'] })
   }
 

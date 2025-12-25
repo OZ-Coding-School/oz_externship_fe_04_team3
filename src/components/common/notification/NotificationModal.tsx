@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, useAnimation } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
 import {
   useNotificationActions,
@@ -9,7 +10,6 @@ import { getAccessTokenApi } from '@/api/userInformation'
 import { useNotificationStream } from '@/hooks/useNotificationStream'
 import type { AlarmItem } from '@/types/alarm'
 import { useAuthStore } from '@/store/userStore'
-import { API_BASE_URL } from '@/constant/api'
 
 import NotificationCard from './NotificationCard'
 
@@ -24,6 +24,7 @@ export default function NotificationModal({
   onClose,
   onAnimationComplete,
 }: NotificationModalProps) {
+  const navigate = useNavigate()
   const SCROLL_THRESHOLD = 80
   const [activeFilter, setActiveFilter] = useState<'all' | 'unread' | 'read'>(
     'all'
@@ -98,13 +99,13 @@ export default function NotificationModal({
           return
         }
 
-        const backendHost = new URL(API_BASE_URL).host
-        const targetHost = new URL(alarm.backUrl).host
-        const shouldNewTab = backendHost !== targetHost
-        if (shouldNewTab) {
-          window.open(alarm.backUrl, '_blank', 'noopener,noreferrer')
+        const urlObj = new URL(alarm.backUrl, window.location.origin)
+        const isSameOrigin = urlObj.origin === window.location.origin
+        if (isSameOrigin) {
+          navigate(urlObj.pathname + urlObj.search + urlObj.hash)
         } else {
-          window.location.href = alarm.backUrl
+          // 도메인이 다르면 현재 창에서 이동
+          window.location.href = urlObj.toString()
         }
       })
       .catch(() => {

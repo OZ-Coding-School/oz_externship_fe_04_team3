@@ -3,16 +3,19 @@ import ManageHeader from '@/components/postings/manage/ManageHeader'
 import ManageList from '@/components/postings/manage/ManageList'
 import ManageSearch from '@/components/postings/manage/ManageSearch'
 import ManageCardSkeleton from '@/components/postings/manage/ManageCardSkeleton'
+import Loading from '@/components/common/Loading'
 import { useState, useEffect } from 'react'
 import type { MyRecruitmentParams } from '@/types/myRecruitment'
 import { useMyRecruitments } from '@/hooks/quries/useMyRecruitments'
 import { useInView } from 'react-intersection-observer'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 
 export default function Manage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [status, setStatus] = useState<'all' | 'open' | 'closed'>('all')
   const [sort, setSort] = useState<MyRecruitmentParams['sort']>('latest')
+  const [autoOpenId, setAutoOpenId] = useState<string | null>(null)
 
   const {
     data,
@@ -35,6 +38,22 @@ export default function Manage() {
     threshold: 0,
     rootMargin: '50px',
   })
+
+  // 페이지 진입 시 스크롤 최상단으로 이동
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' })
+  }, [])
+
+  // 알림/링크로 전달된 recruitment_uuid 또는 state 처리
+  useEffect(() => {
+    const state = location.state as { openRecruitmentId?: string } | null
+    const searchParams = new URLSearchParams(location.search)
+    const queryId = searchParams.get('recruitment_uuid')
+    if (state?.openRecruitmentId || queryId) {
+      setAutoOpenId(state?.openRecruitmentId ?? queryId ?? null)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location.state, location.search, location.pathname, navigate])
 
   useEffect(() => {
     if (!inView || !hasNextPage || isFetchingNextPage) return
@@ -61,7 +80,7 @@ export default function Manage() {
         onStatusChange={(value) => setStatus(value)}
         onSortChange={(value) => setSort(value)}
       />
-      {isLoading && <ManageList postings={[]} isLoading />}
+      {isLoading && <Loading />}
       {error && (
         <div className="border-danger-500 bg-danger rounded-lg border p-6 text-sm text-gray-800">
           공고 목록을 불러오지 못했습니다.
@@ -69,13 +88,14 @@ export default function Manage() {
       )}
       {!isLoading && !error && (
         <>
-          <ManageList postings={data} onDeleted={() => refetch()} />
+          <ManageList
+            postings={data}
+            onDeleted={() => refetch()}
+            autoOpenId={autoOpenId}
+            onAutoOpenConsumed={() => setAutoOpenId(null)}
+          />
           {isFetchingNextPage && <ManageCardSkeleton count={6} />}
-          {!hasNextPage ? (
-            <div className="flex-center mt-12 h-12 rounded-md bg-gray-400 text-center text-white">
-              더 이상 공고가 없습니다.
-            </div>
-          ) : (
+          {!hasNextPage ? null : (
             <div
               className="bg-primary-500 flex-center mt-12 h-12 cursor-pointer rounded-md text-center text-white"
               ref={!isFetchingNextPage ? ref : undefined}
