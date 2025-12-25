@@ -22,6 +22,6 @@ export const mapMyRecruitmentDetailToWrite = (
   close_at: res.close_at ?? '',
   tags: res.tags ?? [],
   image_urls: res.image_urls,
-  study_group: res.study_group ?? res.study_group_id,
+  study_group: res.study_group_id,
   files: res.files,
 })
