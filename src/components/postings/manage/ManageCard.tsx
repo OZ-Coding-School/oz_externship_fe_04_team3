@@ -1,5 +1,5 @@
 import { Bookmark, Calendar, Eye, Pencil, Trash2, Users } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { Button, Modal } from '@/components/common'
@@ -13,6 +13,7 @@ import { deleteMyRecruitment } from '@/api/myRecruitment'
 import { showToast } from '@/components/common/toast/Toast'
 import ManageApplicantsModal from './ManageApplicantsModal'
 import { useApplicants } from '@/hooks/quries/useApplicants'
+import { useApplicantDetail } from '@/hooks/quries/useApplicantDetail'
 
 type ManageCardProps = {
   posting: ManageRecruitment
@@ -81,30 +82,30 @@ export default function ManageCard({ posting, onDeleted }: ManageCardProps) {
   const [isDeleting, setIsDeleting] = useState(false)
   const navigate = useNavigate()
   const applicantsQuery = useApplicants(posting.uuid)
-  const applicantList = useMemo(
-    () => applicantsQuery.data?.pages.flatMap((page) => page.results) ?? [],
-    [applicantsQuery.data]
-  )
+  const applicantList =
+    applicantsQuery.data?.pages.flatMap((page) => page.results) ?? []
   const totalApplicants = applicantList.length
+  const detailQuery = useApplicantDetail(selectedApplicantId ?? undefined)
 
-  const handleLoadMore = () => {
+  const handleLoadMore = async () => {
     if (applicantsQuery.hasNextPage && !applicantsQuery.isFetchingNextPage) {
-      applicantsQuery.fetchNextPage()
+      await applicantsQuery.fetchNextPage()
     }
   }
 
-  const selectedApplicant: ApplicantDetail | null = useMemo(() => {
-    const target = applicantList.find((a) => a.id === selectedApplicantId)
-    if (!target) return null
-    // 상세 API가 아직 없으므로 리스트 데이터를 기반으로 간략히 노출
-    return {
-      ...target,
-      selfIntro: '자기소개 정보가 준비 중입니다.',
-      motivation: '지원 동기 정보가 준비 중입니다.',
-      goal: '스터디 목표 정보가 준비 중입니다.',
-      experienceDetail: '스터디 경험 상세가 준비 중입니다.',
-    }
-  }, [applicantList, selectedApplicantId])
+  const fallbackApplicant =
+    applicantList.find((a) => a.id === selectedApplicantId) ?? null
+  const selectedApplicant: ApplicantDetail | null =
+    detailQuery.data ??
+    (fallbackApplicant
+      ? {
+          ...fallbackApplicant,
+          selfIntro: '자기소개 정보가 준비 중입니다.',
+          motivation: '지원 동기 정보가 준비 중입니다.',
+          goal: '스터디 목표 정보가 준비 중입니다.',
+          experienceDetail: '스터디 경험 상세가 준비 중입니다.',
+        }
+      : null)
 
   const handleDelete = async () => {
     setIsDeleting(true)
@@ -231,6 +232,7 @@ export default function ManageCard({ posting, onDeleted }: ManageCardProps) {
           setSelectedApplicantId(open ? selectedApplicantId : null)
         }
         applicant={selectedApplicant}
+        isLoading={detailQuery.isLoading}
       />
       <ConfirmDeleteModal
         open={isDeleteModalOpen}

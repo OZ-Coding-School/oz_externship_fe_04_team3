@@ -25,7 +25,8 @@ type ApplicantListResponse = {
 }
 
 const mapApplicant = (item: ApplicantApiItem): Applicant => ({
-  id: item.uuid ?? String(item.id),
+  // 백엔드 상세 조회는 application id 기반이라 id를 우선 사용
+  id: String(item.id),
   name: item.applicant?.nickname ?? '알 수 없음',
   gender: item.applicant?.gender ?? '',
   status: (item.status as any) ?? 'PENDING',

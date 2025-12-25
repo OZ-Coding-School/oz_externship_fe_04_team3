@@ -5,7 +5,8 @@ import { getTypeIcon } from '@/helpers/icons'
 import { Button } from '@/components/common'
 import { applicantStatusColor, applicantStatusLabel } from './applicantStatus'
 import type { Applicant } from './applicantTypes'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useInView } from 'react-intersection-observer'
 
 type ManageApplicantsModalProps = {
   open: boolean
@@ -16,7 +17,7 @@ type ManageApplicantsModalProps = {
   isLoading?: boolean
   isFetchingNext?: boolean
   hasNextPage?: boolean
-  onLoadMore?: () => void
+  onLoadMore?: () => Promise<unknown> | void
   onApplicantClick?: (id: string) => void
 }
 
@@ -33,6 +34,25 @@ export default function ManageApplicantsModal({
   onApplicantClick,
 }: ManageApplicantsModalProps) {
   const renderSkeletons = Array.from({ length: 6 })
+  const listRef = useRef<HTMLDivElement | null>(null)
+  const loadingRef = useRef(false)
+  const lastFetchRef = useRef(0)
+  const { ref: setSentinelRef, inView } = useInView({
+    root: listRef.current,
+    rootMargin: '120px 0px',
+    threshold: 0,
+  })
+
+  useEffect(() => {
+    if (!inView || !hasNextPage || isFetchingNext || loadingRef.current) return
+    const now = Date.now()
+    if (now - lastFetchRef.current < 400) return
+    lastFetchRef.current = now
+    loadingRef.current = true
+    Promise.resolve(onLoadMore?.()).finally(() => {
+      loadingRef.current = false
+    })
+  }, [inView, hasNextPage, isFetchingNext, onLoadMore])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -56,7 +76,10 @@ export default function ManageApplicantsModal({
             </Button>
           </DialogClose>
         </div>
-        <div className="grid h-[calc(80dvh-100px)] grid-cols-1 gap-3 overflow-y-auto p-4 sm:h-auto sm:p-6 md:grid-cols-2">
+        <div
+          ref={listRef}
+          className="grid h-[calc(80dvh-100px)] grid-cols-1 gap-3 overflow-y-auto p-4 sm:h-auto sm:p-6 md:grid-cols-2"
+        >
           {(isLoading ? renderSkeletons : applicants).map((item, idx) => {
             const applicant = isLoading
               ? undefined
@@ -72,18 +95,8 @@ export default function ManageApplicantsModal({
               />
             )
           })}
+          <div ref={setSentinelRef} aria-hidden />
         </div>
-        {hasNextPage && (
-          <div className="flex justify-center border-t border-gray-200 p-4">
-            <Button
-              variant="outline"
-              onClick={onLoadMore}
-              disabled={isFetchingNext}
-            >
-              {isFetchingNext ? '불러오는 중...' : '더 불러오기'}
-            </Button>
-          </div>
-        )}
       </DialogContent>
     </Dialog>
   )
