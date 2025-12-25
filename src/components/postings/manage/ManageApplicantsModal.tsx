@@ -5,6 +5,7 @@ import { getTypeIcon } from '@/helpers/icons'
 import { Button } from '@/components/common'
 import { applicantStatusColor, applicantStatusLabel } from './applicantStatus'
 import type { Applicant } from './applicantTypes'
+import { useState } from 'react'
 
 type ManageApplicantsModalProps = {
   open: boolean
@@ -12,6 +13,10 @@ type ManageApplicantsModalProps = {
   recruitmentTitle: string
   totalCount: number
   applicants: Applicant[]
+  isLoading?: boolean
+  isFetchingNext?: boolean
+  hasNextPage?: boolean
+  onLoadMore?: () => void
   onApplicantClick?: (id: string) => void
 }
 
@@ -21,8 +26,14 @@ export default function ManageApplicantsModal({
   recruitmentTitle,
   totalCount,
   applicants,
+  isLoading,
+  isFetchingNext,
+  hasNextPage,
+  onLoadMore,
   onApplicantClick,
 }: ManageApplicantsModalProps) {
+  const renderSkeletons = Array.from({ length: 6 })
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -46,66 +57,110 @@ export default function ManageApplicantsModal({
           </DialogClose>
         </div>
         <div className="grid h-[calc(80dvh-100px)] grid-cols-1 gap-3 overflow-y-auto p-4 sm:h-auto sm:p-6 md:grid-cols-2">
-          {applicants.map((applicant) => (
-            <div
-              onClick={() => onApplicantClick?.(applicant.id)}
-              className="flex cursor-pointer gap-3 rounded-lg bg-gray-100 p-4 text-left transition hover:bg-gray-200"
-              key={applicant.id}
-            >
-              <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full">
-                {applicant.thumbnail ? (
-                  <img
-                    src={applicant.thumbnail}
-                    alt={applicant.name}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <Skeleton className="h-full w-full bg-gray-400" />
-                )}
-              </div>
-              <div className="flex flex-1 flex-col gap-2">
-                <div className="flex-between gap-2">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-base font-semibold">
-                      {applicant.name}
-                    </span>
-                    <span className="text-sm text-gray-600">
-                      {applicant.gender}
-                    </span>
-                  </div>
-                  <Badge variant={applicantStatusColor[applicant.status]}>
-                    {applicantStatusLabel[applicant.status]}
-                  </Badge>
-                </div>
-                <div className="text-sm text-gray-700">
-                  <div className="mb-3 flex items-center gap-1">
-                    <span className="text-gray-500">지원 일시:</span>
-                    <span>{applicant.appliedAt}</span>
-                  </div>
-                  <div className="mb-3 flex flex-col">
-                    <span className="mb-1 text-[12px] font-medium text-gray-700">
-                      가능한 시간대
-                    </span>
-                    <span className="line-clamp-2">
-                      {applicant.availableTime}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[12px] font-medium text-gray-700">
-                      스터디 경험
-                    </span>
-                    <Badge
-                      variant={applicant.hasExperience ? 'success' : 'danger'}
-                    >
-                      {applicant.hasExperience ? '경험 있음' : '경험 없음'}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+          {(isLoading ? renderSkeletons : applicants).map((item, idx) => {
+            const applicant = isLoading
+              ? undefined
+              : (item as Applicant | undefined)
+            const key = applicant?.id ?? `skeleton-${idx}`
+            return (
+              <ApplicantCard
+                key={key}
+                applicant={applicant}
+                onClick={() =>
+                  applicant ? onApplicantClick?.(applicant.id) : undefined
+                }
+              />
+            )
+          })}
         </div>
+        {hasNextPage && (
+          <div className="flex justify-center border-t border-gray-200 p-4">
+            <Button
+              variant="outline"
+              onClick={onLoadMore}
+              disabled={isFetchingNext}
+            >
+              {isFetchingNext ? '불러오는 중...' : '더 불러오기'}
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
+  )
+}
+
+function ApplicantCard({
+  applicant,
+  onClick,
+}: {
+  applicant?: Applicant
+  onClick?: () => void
+}) {
+  const [imgOk, setImgOk] = useState(true)
+  const showImg = applicant?.thumbnail && imgOk
+
+  return (
+    <div
+      onClick={onClick}
+      className={`flex cursor-pointer gap-3 rounded-lg bg-gray-100 p-4 text-left transition ${applicant ? 'hover:bg-gray-200' : ''}`}
+    >
+      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full">
+        {showImg ? (
+          <img
+            src={applicant?.thumbnail}
+            alt={applicant?.name ?? '지원자'}
+            className="h-full w-full object-cover"
+            onError={() => setImgOk(false)}
+          />
+        ) : (
+          <Skeleton className="h-full w-full bg-gray-400" />
+        )}
+      </div>
+      <div className="flex flex-1 flex-col gap-2">
+        <div className="flex-between gap-2">
+          <div className="flex flex-col gap-1">
+            <span className="text-base font-semibold">
+              {applicant?.name ?? '로딩 중'}
+            </span>
+            <span className="text-sm text-gray-600">
+              {applicant?.gender ?? ''}
+            </span>
+          </div>
+          <Badge
+            variant={
+              applicant ? applicantStatusColor[applicant.status] : 'default'
+            }
+          >
+            {applicant ? applicantStatusLabel[applicant.status] : '...'}
+          </Badge>
+        </div>
+        <div className="text-sm text-gray-700">
+          <div className="mb-3 flex items-center gap-1">
+            <span className="text-gray-500">지원 일시:</span>
+            <span>{applicant?.appliedAt ?? '...'}</span>
+          </div>
+          <div className="mb-3 flex flex-col">
+            <span className="mb-1 text-[12px] font-medium text-gray-700">
+              가능한 시간대
+            </span>
+            <span className="line-clamp-2">
+              {applicant?.availableTime ?? '...'}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-[12px] font-medium text-gray-700">
+              스터디 경험
+            </span>
+            <Badge variant={applicant?.hasExperience ? 'success' : 'danger'}>
+              {applicant
+                ? applicant.hasExperience
+                  ? '경험 있음'
+                  : '경험 없음'
+                : '...'}
+            </Badge>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
