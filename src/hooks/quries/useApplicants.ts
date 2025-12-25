@@ -36,7 +36,11 @@ const mapApplicant = (item: ApplicantApiItem): Applicant => ({
   thumbnail: item.applicant?.profile_img_url ?? undefined,
 })
 
-export const useApplicants = (recruitmentUuid?: string, pageSize = 10) =>
+export const useApplicants = (
+  recruitmentUuid?: string,
+  pageSize = 10,
+  enabled = true
+) =>
   useInfiniteQuery({
     queryKey: ['applicants', recruitmentUuid],
     queryFn: async ({ pageParam }) => {
@@ -48,7 +52,7 @@ export const useApplicants = (recruitmentUuid?: string, pageSize = 10) =>
       )
       return data
     },
-    enabled: !!recruitmentUuid,
+    enabled: !!recruitmentUuid && enabled,
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.next ?? undefined,
     placeholderData: (prev) => prev,

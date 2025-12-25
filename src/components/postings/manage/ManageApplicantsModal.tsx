@@ -7,6 +7,7 @@ import { applicantStatusColor, applicantStatusLabel } from './applicantStatus'
 import type { Applicant } from './applicantTypes'
 import { useEffect, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
+import CardSkeleton from '@/components/common/CardSkeleton'
 
 type ManageApplicantsModalProps = {
   open: boolean
@@ -54,6 +55,8 @@ export default function ManageApplicantsModal({
     })
   }, [inView, hasNextPage, isFetchingNext, onLoadMore])
 
+  const noData = !isLoading && applicants.length === 0
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -80,21 +83,30 @@ export default function ManageApplicantsModal({
           ref={listRef}
           className="grid h-[calc(80dvh-100px)] grid-cols-1 gap-3 overflow-y-auto p-4 sm:h-auto sm:p-6 md:grid-cols-2"
         >
-          {(isLoading ? renderSkeletons : applicants).map((item, idx) => {
-            const applicant = isLoading
-              ? undefined
-              : (item as Applicant | undefined)
-            const key = applicant?.id ?? `skeleton-${idx}`
-            return (
+          {isLoading &&
+            renderSkeletons.map((_, idx) => <CardSkeleton key={`sk-${idx}`} />)}
+
+          {!isLoading &&
+            !noData &&
+            applicants.map((applicant) => (
               <ApplicantCard
-                key={key}
+                key={applicant.id}
                 applicant={applicant}
-                onClick={() =>
-                  applicant ? onApplicantClick?.(applicant.id) : undefined
-                }
+                onClick={() => onApplicantClick?.(applicant.id)}
               />
-            )
-          })}
+            ))}
+
+          {noData && (
+            <div className="col-span-2 flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-200 bg-white p-8 text-sm text-gray-500">
+              <span className="text-base font-semibold text-gray-700">
+                지원자가 없습니다
+              </span>
+              <span className="text-xs text-gray-400">
+                새로운 지원자가 등록되면 이곳에 표시됩니다
+              </span>
+            </div>
+          )}
+
           <div ref={setSentinelRef} aria-hidden />
         </div>
       </DialogContent>

@@ -90,7 +90,7 @@ export default function ManageCard({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const navigate = useNavigate()
-  const applicantsQuery = useApplicants(posting.uuid)
+  const applicantsQuery = useApplicants(posting.uuid, 10, isModalOpen)
   const applicantList =
     applicantsQuery.data?.pages.flatMap((page) => page.results) ?? []
   const totalApplicants = applicantList.length
