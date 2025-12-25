@@ -1,6 +1,5 @@
-import { Navigate, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/store/userStore'
-import { showToast } from '@/components/common/toast/Toast'
 import { useEffect } from 'react'
 
 interface ProtectedRouteProps {
@@ -13,19 +12,15 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   useEffect(() => {
     if (loginState === 'GUEST') {
-      showToast.error('로그인 필요', '로그인이 필요한 페이지입니다.')
+      const currentUrl = window.location.href
+      const redirectUrl = `https://account.ozcoding.site/login?from=${encodeURIComponent(
+        currentUrl
+      )}`
+      window.location.href = redirectUrl
     }
-  }, [loginState])
+  }, [loginState, location])
 
-  if (loginState === 'GUEST') {
-    return (
-      <Navigate
-        to="/recruitments"
-        replace
-        state={{ from: location.pathname }}
-      />
-    )
-  }
+  if (loginState === 'GUEST') return null
 
   return children
 }
