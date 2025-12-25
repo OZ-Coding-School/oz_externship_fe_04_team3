@@ -8,6 +8,10 @@ import {
 } from '@/mappers/notification/mapper'
 import { useAuthStore } from '@/store/userStore'
 
+type StreamMessage =
+  | (NotificationApiItem & { id: number | string })
+  | { type: 'connected'; id?: undefined }
+
 type UseNotificationStreamOptions = {
   onMessage?: (data: ReturnType<typeof alarmMapper>) => void
   onUnauthorized?: () => void
@@ -36,12 +40,10 @@ export function useNotificationStream(options?: UseNotificationStreamOptions) {
 
     es.onmessage = (event: MessageEvent) => {
       try {
-        const raw = JSON.parse(event.data) as NotificationApiItem & {
-          type?: string
-          id?: number | string
-        }
+        const raw = JSON.parse(event.data) as StreamMessage
+        const msgType = (raw as StreamMessage)['type']
         // keepalive/connected 이벤트는 무시
-        if (!raw.id || raw.type === 'connected') {
+        if (!raw.id || msgType === 'connected') {
           return
         }
         const alarm = alarmMapper(raw)
