@@ -1,11 +1,7 @@
 import { axiosInstance } from '@/api/axios'
 import { mapRecruitmentDetail } from '@/mappers/recruitment/mapper'
 import type { MyRecruitmentParams } from '@/types/myRecruitment'
-import type {
-  Recruitment,
-  RecruitmentApiDetail,
-  RecruitmentApiItem,
-} from '@/types/recruitment'
+import type { Recruitment, RecruitmentApiDetail } from '@/types/recruitment'
 
 export const getRecruitments = async (params: MyRecruitmentParams = {}) => {
   // 객체타입 Record<키값:키밸류>
