@@ -1,13 +1,11 @@
+import { axiosInstance } from '@/api/axios'
+import { mapRecruitmentDetail } from '@/mappers/recruitment/mapper'
+import type { MyRecruitmentParams } from '@/types/myRecruitment'
 import type {
   Recruitment,
-  RecruitmentApiItem,
   RecruitmentApiDetail,
+  RecruitmentApiItem,
 } from '@/types/recruitment'
-import {
-  mapRecruitmentItem,
-  mapRecruitmentDetail,
-} from '@/mappers/recruitment/mapper'
-import { axiosInstance } from '@/api/axios'
 
 interface PaginatedResponse {
   count: number
@@ -16,37 +14,22 @@ interface PaginatedResponse {
   results: RecruitmentApiItem[]
 }
 
-export const getRecruitments = async (): Promise<Recruitment[]> => {
-  let allRecruitments: Recruitment[] = []
-  let nextUrl: string | null = '/v1/recruitments?page_size=100'
+export const getRecruitments = async (params: MyRecruitmentParams = {}) => {
+  // 객체타입 Record<키값:키밸류>
+  const queryParams: Record<string, string | number> = {}
 
-  while (nextUrl) {
-    const response = await axiosInstance.get<PaginatedResponse>(nextUrl)
-    const data: PaginatedResponse = response.data
-    const items: RecruitmentApiItem[] = Array.isArray(data)
-      ? data
-      : (data?.results ?? [])
+  if (params.page) queryParams.page = params.page
+  if (params.page_size) queryParams.page_size = params.page_size
+  if (params.search) queryParams.search = params.search
+  if (params.sort) queryParams.sort = params.sort
 
-    allRecruitments = [...allRecruitments, ...items.map(mapRecruitmentItem)]
-
-    if (data?.next) {
-      try {
-        const urlObj: URL = new URL(data.next)
-        nextUrl = urlObj.pathname + urlObj.search
-      } catch {
-        nextUrl = null
-      }
-    } else {
-      nextUrl = null
-    }
-  }
-
-  return allRecruitments
+  const { data } = await axiosInstance.get('/v1/recruitments', {
+    params: queryParams,
+  })
+  return data
 }
 
-export const getRecruitmentDetail = async (
-  id: string
-): Promise<Recruitment> => {
+export const getRecruitmentDetail = async (id: string) => {
   if (!id) {
     throw new Error('유효하지 않은 공고 ID입니다.')
   }
@@ -58,14 +41,12 @@ export const getRecruitmentDetail = async (
   return mapRecruitmentDetail(item)
 }
 
-export const incrementRecruitmentViews = async (id: string): Promise<void> => {
+export const incrementRecruitmentViews = async (id: string) => {
   if (!id) return
   await axiosInstance.post(`/v1/recruitments/${id}/views`).catch(() => {})
 }
 
-export const createRecruitment = async (
-  payload: Partial<Recruitment>
-): Promise<Recruitment> => {
+export const createRecruitment = async (payload: Partial<Recruitment>) => {
   const { data } = await axiosInstance.post('/v1/recruitments', payload)
   return data?.data ?? data
 }
@@ -73,7 +54,7 @@ export const createRecruitment = async (
 export const updateRecruitment = async (
   id: string,
   payload: Partial<Recruitment>
-): Promise<Recruitment> => {
+) => {
   const { data } = await axiosInstance.put(`/v1/recruitments/${id}`, payload)
   return data?.data ?? data
 }
