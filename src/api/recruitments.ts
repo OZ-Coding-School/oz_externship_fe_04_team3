@@ -7,13 +7,6 @@ import type {
   RecruitmentApiItem,
 } from '@/types/recruitment'
 
-interface PaginatedResponse {
-  count: number
-  next: string | null
-  previous: string | null
-  results: RecruitmentApiItem[]
-}
-
 export const getRecruitments = async (params: MyRecruitmentParams = {}) => {
   // 객체타입 Record<키값:키밸류>
   const queryParams: Record<string, string | number> = {}

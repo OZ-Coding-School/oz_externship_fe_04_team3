@@ -29,7 +29,6 @@ export default function RecruitmentListPage() {
     handleTagChange,
     handleSortChange,
     handleLoadMore,
-    recommendedRecruitments,
   } = useRecruitments()
 
   // 태그 목록 가져오기
